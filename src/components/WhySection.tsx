@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Droplets, Zap, Wind, TrendingUp, Shield } from "lucide-react";
+import { AlertTriangle, Droplets, Zap, Wind, TrendingUp, Shield, Skull, Droplet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const WhySection = () => {
@@ -22,6 +22,18 @@ export const WhySection = () => {
       stat: "38%",
       description: "of inspected properties have code violations",
     },
+    {
+      icon: Skull,
+      title: "Air Quality Risks",
+      stat: "52%",
+      description: "of homes exceed safe VOC and PM2.5 levels affecting respiratory health",
+    },
+    {
+      icon: Droplet,
+      title: "Mold & Allergens",
+      stat: "41%",
+      description: "of properties have hidden mold growth causing allergies and asthma",
+    },
   ];
 
   return (
@@ -34,8 +46,8 @@ export const WhySection = () => {
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Hidden Defects Increase
-            <span className="block text-accent">Future Costs</span>
+            Hidden Defects & Health Risks
+            <span className="block text-accent">Increase Future Costs</span>
           </h2>
           
           <p className="text-xl text-muted-foreground leading-relaxed">
@@ -45,7 +57,7 @@ export const WhySection = () => {
         </div>
 
         {/* Risk Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
           {risks.map((risk, index) => (
             <Card 
               key={index}
