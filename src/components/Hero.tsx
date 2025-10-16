@@ -9,11 +9,19 @@ export const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
+      {/* Background Video with Overlay */}
+      <div className="absolute inset-0 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="https://cdn.pixabay.com/video/2022/11/07/138366-769531947_large.mp4" type="video/mp4" />
+          {/* Fallback image if video doesn't load */}
+          <img src={heroImage} alt="Dubai skyline" className="w-full h-full object-cover" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-transparent" />
       </div>
 
