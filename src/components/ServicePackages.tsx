@@ -36,8 +36,8 @@ export const ServicePackages = () => {
         "Noise & particle measurement",
         "Mold test (1 session)",
       ],
-      freeExtras: ["Same-day report", "1x Online consult", "Mold (1)"],
-      discounts: "10-20% based on size",
+  freeExtras: [],
+  discounts: "",
     },
     {
       name: "Comprehensive",
@@ -52,8 +52,8 @@ export const ServicePackages = () => {
         "Full inspection video (1 year storage)",
         "3D LiDAR scan",
       ],
-      freeExtras: ["Free Negative Pressure Test"],
-      discounts: "10-20% based on size",
+  freeExtras: [],
+  discounts: "",
     },
     {
       name: "VIP",
@@ -67,8 +67,8 @@ export const ServicePackages = () => {
         "Advanced air quality check",
         "Pre/post-repair report (1 in 3 months)",
       ],
-      freeExtras: ["2nd inspection (1x)"],
-      discounts: "10-20% based on size",
+  freeExtras: [],
+  discounts: "",
     },
     {
       name: "Estate",
@@ -84,8 +84,8 @@ export const ServicePackages = () => {
         "24/7 priority booking",
         "Root cause analysis",
       ],
-      freeExtras: ["Pre-report", "2nd check"],
-      discounts: "15-25% for estates",
+  freeExtras: [],
+  discounts: "",
     },
     {
       name: "Air Quality Pack",
@@ -99,8 +99,8 @@ export const ServicePackages = () => {
         "Mold measurement",
         "Full air quality analysis",
       ],
-      freeExtras: ["Post-fix check (free)"],
-      discounts: "10-20% based on size",
+  freeExtras: [],
+  discounts: "",
     },
     {
       name: "Investor Pack",
@@ -115,8 +115,8 @@ export const ServicePackages = () => {
         "Electrical/water test",
         "1 VIP service included",
       ],
-      freeExtras: ["1 quick scan", "5 consults"],
-      discounts: "Fixed pricing",
+  freeExtras: [],
+  discounts: "",
     },
   ];
 
@@ -138,7 +138,7 @@ export const ServicePackages = () => {
           {packages.map((pkg, index) => (
             <Card
               key={index}
-              className={`relative p-6 transition-all duration-300 hover:scale-105 ${
+              className={`relative p-6 transition-all duration-300 hover:scale-105 flex flex-col h-full ${
                 pkg.popular
                   ? "border-2 border-accent shadow-[0_8px_30px_-4px_hsl(43_74%_66%/0.3)]"
                   : "border hover:border-accent/50"
@@ -171,25 +171,29 @@ export const ServicePackages = () => {
                   </ul>
                 </div>
 
-                <div>
-                  <h4 className="text-sm font-semibold text-accent mb-2">Free Extras</h4>
-                  <ul className="space-y-1">
-                    {pkg.freeExtras.map((extra, idx) => (
-                      <li key={idx} className="text-xs text-muted-foreground">
-                        ✓ {extra}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {pkg.freeExtras && pkg.freeExtras.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-semibold text-accent mb-2">Free Extras</h4>
+                    <ul className="space-y-1">
+                      {pkg.freeExtras.map((extra, idx) => (
+                        <li key={idx} className="text-xs text-muted-foreground">
+                          ✓ {extra}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-                <div className="text-xs text-muted-foreground">
-                  <span className="font-medium">Discounts:</span> {pkg.discounts}
-                </div>
+                {pkg.discounts && pkg.discounts.length > 0 && (
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-medium">Discounts:</span> {pkg.discounts}
+                  </div>
+                )}
               </div>
 
               <Button
                 variant={pkg.popular ? "premium" : "outline"}
-                className="w-full text-sm"
+                className="w-full text-sm mt-auto"
                 size="lg"
               >
                 {useCtaLabel(pkg)}
