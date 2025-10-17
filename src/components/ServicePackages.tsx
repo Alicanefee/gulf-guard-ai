@@ -202,7 +202,7 @@ export const ServicePackages = () => {
 
         <div className="text-center">
           <p className="text-muted-foreground mb-4">
-            All packages include ISO/IEC 17025:2017 compliant testing and detailed PDF reports
+            Book now and get complimentary test
           </p>
           <p className="text-sm text-accent font-medium mb-2">
             ⏰ Book within 48 hours and get an additional 5% discount!
