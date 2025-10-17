@@ -36,9 +36,12 @@ export const Hero = () => {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            Your Investment. Your Health.
+            Your Investment.
+            <span className="block">
+              Your Health.
+            </span>
             <span className="block bg-gradient-to-r from-accent to-amber-300 bg-clip-text text-transparent">
-              verified.
+              Verified.
             </span>
           </h1>
           
@@ -53,7 +56,7 @@ export const Hero = () => {
               onClick={() => scrollToSection('booking')}
               className="group"
             >
-              Calculate Your AI Risk Score & Schedule Your Concierge Inspection
+              Calculate Your AI Risk Score
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
@@ -61,25 +64,11 @@ export const Hero = () => {
               variant="premium-outline"
               onClick={() => scrollToSection('booking')}
             >
-              Book Inspection
+              Schedule Your Concierge Inspection
             </Button>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-6 pt-8 border-t border-primary-foreground/20">
-            <div>
-              <div className="text-3xl font-bold text-accent mb-1">2000+</div>
-              <div className="text-sm text-primary-foreground/80">Inspections</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-accent mb-1">98%</div>
-              <div className="text-sm text-primary-foreground/80">Satisfaction</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-accent mb-1">24h</div>
-              <div className="text-sm text-primary-foreground/80">Report Delivery</div>
-            </div>
-          </div>
+          {/* Stats removed as requested */}
         </div>
       </div>
 
