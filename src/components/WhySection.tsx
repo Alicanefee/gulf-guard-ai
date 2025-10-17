@@ -45,9 +45,9 @@ export const WhySection = () => {
     <section id="why" className="py-20 bg-gradient-to-b from-background to-secondary/30">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center gap-2 bg-accent/10 px-4 py-2 rounded-full mb-6">
-            <Shield className="w-4 h-4 text-accent" />
-            <span className="text-sm font-semibold text-foreground">Critical Insights</span>
+          <div className="inline-flex items-center gap-3 bg-accent/10 px-4 py-2 rounded-full mb-6">
+            <Shield className="w-5 h-5 text-accent" />
+            <span className="text-[1.2rem] font-semibold text-foreground">Critical Insights</span>
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
