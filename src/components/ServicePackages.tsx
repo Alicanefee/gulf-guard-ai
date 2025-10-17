@@ -2,6 +2,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Check, Sparkles, Building2, Users, Home, Heart, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import { useBooking } from "./booking/BookingProvider";
+import InlineBookingCard from "./booking/InlineBookingCard";
 
 export const ServicePackages = () => {
   const useCtaLabel = (pkg: any) => {
@@ -136,69 +139,7 @@ export const ServicePackages = () => {
         {/* Package Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-16">
           {packages.map((pkg, index) => (
-            <Card
-              key={index}
-              className={`relative p-6 transition-all duration-300 hover:scale-105 flex flex-col h-full ${
-                pkg.popular
-                  ? "border-2 border-accent shadow-[0_8px_30px_-4px_hsl(43_74%_66%/0.3)]"
-                  : "border hover:border-accent/50"
-              }`}
-            >
-              {pkg.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
-                  Most Popular
-                </div>
-              )}
-
-              <div className="text-center mb-6">
-                <div className="bg-accent/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <pkg.icon className="w-7 h-7 text-accent" />
-                </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">{pkg.name}</h3>
-                {/* Price info removed per request */}
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-2">Core Features</h4>
-                  <ul className="space-y-2">
-                    {pkg.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                        <span className="text-xs text-muted-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {pkg.freeExtras && pkg.freeExtras.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-semibold text-accent mb-2">Free Extras</h4>
-                    <ul className="space-y-1">
-                      {pkg.freeExtras.map((extra, idx) => (
-                        <li key={idx} className="text-xs text-muted-foreground">
-                          ✓ {extra}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {pkg.discounts && pkg.discounts.length > 0 && (
-                  <div className="text-xs text-muted-foreground">
-                    <span className="font-medium">Discounts:</span> {pkg.discounts}
-                  </div>
-                )}
-              </div>
-
-              <Button
-                variant={pkg.popular ? "premium" : "outline"}
-                className="w-full text-sm mt-auto"
-                size="lg"
-              >
-                {useCtaLabel(pkg)}
-              </Button>
-            </Card>
+            <PackageCard key={index} pkg={pkg} useCtaLabel={useCtaLabel} />
           ))}
         </div>
 
@@ -211,5 +152,64 @@ export const ServicePackages = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+// PackageCard subcomponent (scoped to this file)
+const PackageCard: React.FC<any> = ({ pkg, useCtaLabel }) => {
+  const { openBookingCard, bookingPackage } = useBooking();
+  const [inlineOpen, setInlineOpen] = useState(false);
+
+  const onCardClick = () => openBookingCard(pkg.name);
+
+  return (
+    <div>
+      <Card
+        onClick={onCardClick}
+        className={`relative p-6 transition-all duration-300 hover:scale-105 flex flex-col h-full cursor-pointer ${
+          pkg.popular
+            ? "border-2 border-accent shadow-[0_8px_30px_-4px_hsl(43_74%_66%/0.3)]"
+            : "border hover:border-accent/50"
+        } ${bookingPackage && bookingPackage !== pkg.name ? 'booking-package--inactive' : ''} ${bookingPackage===pkg.name? 'booking-package--selected':''}`}
+      >
+        {pkg.popular && (
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
+            Most Popular
+          </div>
+        )}
+
+        <div className="text-center mb-6">
+          <div className="bg-accent/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+            <pkg.icon className="w-7 h-7 text-accent" />
+          </div>
+          <h3 className="text-xl font-bold text-foreground mb-2">{pkg.name}</h3>
+        </div>
+
+        <div className="space-y-4 mb-6">
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-2">Core Features</h4>
+            <ul className="space-y-2">
+              {pkg.features.map((feature: string, idx: number) => (
+                <li key={idx} className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                  <span className="text-xs text-muted-foreground">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="flex gap-2 mt-auto">
+          <Button variant={pkg.popular ? "premium" : "outline"} className="w-full text-sm" size="lg" onClick={(e:any)=>{e.stopPropagation(); setInlineOpen((s)=>!s);}}>
+            Book This Service
+          </Button>
+          <Button variant={pkg.popular ? "premium" : "outline"} className="w-full text-sm" size="lg" onClick={(e:any)=>{e.stopPropagation(); openBookingCard(pkg.name);}}>
+            {useCtaLabel(pkg)}
+          </Button>
+        </div>
+      </Card>
+
+      {inlineOpen && <InlineBookingCard pkgId={pkg.name} onClose={()=>setInlineOpen(false)} />}
+    </div>
   );
 };
