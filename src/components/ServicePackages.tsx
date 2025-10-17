@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Check, Sparkles, Building2, Users, Home, Heart, TrendingUp } from "lucide-react";
 import { useBooking } from "./booking/BookingProvider";
 
@@ -23,9 +22,6 @@ export const ServicePackages = () => {
     {
       name: "Essential",
       icon: Home,
-      basePrice: "2 AED/sqft",
-      minPrice: "1,200 AED",
-      minArea: "600 sqft+",
       popular: false,
       cta: "Lock in for 1,199 AED",
       features: [
@@ -37,14 +33,10 @@ export const ServicePackages = () => {
         "Noise & particle measurement",
         "Mold test (1 session)",
       ],
-  freeExtras: [],
-  discounts: "",
     },
     {
       name: "Comprehensive",
       icon: Sparkles,
-      basePrice: "2.5 AED/sqft",
-      addOns: "+ 300 AED video + 1.5 AED/sqft 3D",
       popular: true,
       cta: "Upgrade to 2,999 AED – get 3D scan",
       features: [
@@ -53,14 +45,10 @@ export const ServicePackages = () => {
         "Full inspection video (1 year storage)",
         "3D LiDAR scan",
       ],
-  freeExtras: [],
-  discounts: "",
     },
     {
       name: "VIP",
       icon: TrendingUp,
-      basePrice: "3 AED/sqft",
-      addOns: "+ 1.5 AED/sqft neg + 2 AED/sqft air",
       popular: false,
       cta: "Go VIP for 4,000 AED – 2nd check free",
       features: [
@@ -68,14 +56,10 @@ export const ServicePackages = () => {
         "Advanced air quality check",
         "Pre/post-repair report (1 in 3 months)",
       ],
-  freeExtras: [],
-  discounts: "",
     },
     {
       name: "Estate",
       icon: Building2,
-      basePrice: "3.5 AED/sqft",
-      addOns: "+ all premium add-ons",
       popular: false,
       cta: "Enjoy estate status benefits",
       features: [
@@ -85,14 +69,10 @@ export const ServicePackages = () => {
         "24/7 priority booking",
         "Root cause analysis",
       ],
-  freeExtras: [],
-  discounts: "",
     },
     {
       name: "Air Quality Pack",
       icon: Heart,
-      basePrice: "1.5 AED/sqft",
-      addOns: "+ 0.5 AED/sqft mold + 2 AED/sqft air",
       popular: false,
       cta: "Start healthy at 2,700 AED",
       features: [
@@ -100,14 +80,10 @@ export const ServicePackages = () => {
         "Mold measurement",
         "Full air quality analysis",
       ],
-  freeExtras: [],
-  discounts: "",
     },
     {
       name: "Investor Pack",
       icon: Users,
-      basePrice: "Fixed price",
-      minPrice: "6,500-12,500 AED",
       popular: false,
       cta: "Protect your investment: Go VIP",
       features: [
@@ -116,8 +92,6 @@ export const ServicePackages = () => {
         "Electrical/water test",
         "1 VIP service included",
       ],
-  freeExtras: [],
-  discounts: "",
     },
   ];
 
