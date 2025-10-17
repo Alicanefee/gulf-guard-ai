@@ -10,44 +10,44 @@ import { Button } from "@/components/ui/button";
 export const FAQSection = () => {
   const faqs = [
     {
-      question: "How long does a typical inspection take?",
-      answer: "Standard villa inspections take 2-3 hours, apartments 1.5-2 hours. Complex properties or larger villas may require 3-4 hours. We never rush - thoroughness is our priority.",
+      question: "Yabancılar Dubai'de ev alabilir mi?",
+      answer: "Evet, yabancılar birçok bölgede tam mülkiyetle konut, villa veya ofis satın alabilir.",
     },
     {
-      question: "What standards do you follow?",
-      answer: "We comply with ISO/IEC 17025:2017 for testing laboratories, InterNACHI standards, and Dubai Municipality building codes. All equipment is calibrated annually.",
+      question: "Dubai'de ev alırken neden ekspertiz/inspection yaptırmak gerekir?",
+      answer: "Dubai iklimi ve inşaat süreçleri sebebiyle birçok evde gizli kusurlar olabilir. Inspection işlemiyle, alım öncesi yapısal, teknik ve tesisatla ilgili tüm sorunlar tespit edilir, beklenmedik masraflar ve riskler önlenir.",
     },
     {
-      question: "Do I need to be present during inspection?",
-      answer: "Not required, but recommended. Being present allows you to ask questions and understand issues firsthand. We provide photo/video documentation regardless.",
+      question: "Dubai'de evlerde en çok hangi sorunlarla karşılaşılır?",
+      answer: "En yaygın problemler arasında klima arızaları, su baskınları ve sızıntılar, rutubet ve küf, elektrik-mekanik arızalar, haşere sorunları, yalıtım ve gürültü problemleri, fatura ve aidat karmaşası öne çıkmaktadır.",
     },
     {
-      question: "What if serious issues are found?",
-      answer: "We document everything with photos, thermal images, and measurements. Your report includes severity ratings, repair cost estimates, and negotiation guidance.",
+      question: "Ev inspectionu hangi kusurları ortaya çıkarır?",
+      answer: "Tesisat sorunları, temel yapı çatlakları, nem ve rutubet, pencere/kapı sızdırmazlığı, mekanik-elektrik hataları, inşaat kalitesindeki eksiklikler ve görünmeyen teknik problemleri tespit eder.",
     },
     {
-      question: "Can you inspect during handover?",
-      answer: "Yes! Pre-handover inspections are ideal. We identify developer defects before you sign, giving you leverage for corrections or compensation.",
+      question: "Ev inspectionu almak yatırımcıya ne sağlar?",
+      answer: "Yüksek, beklenmedik onarım giderlerinin önüne geçmeyi, gerçek değeri belirlemeyi, müzakere gücü kazanmayı ve uzun vadeli yatırım güvenliği sağlamayı sağlar.",
     },
     {
-      question: "Do you test for mold in Dubai's humidity?",
-      answer: "Absolutely. We use moisture meters, thermal imaging, and air quality testing (including mold spore counts). Dubai's humidity makes this critical.",
+      question: "Inspection sırasında eve zarar gelir mi, rapor ne zaman alınır?",
+      answer: "Modern cihazlarla yapılan inspectionlarda eve zarar gelmez. Detaylı rapor genellikle 1-2 gün içinde görsellerle birlikte sunulur.",
     },
     {
-      question: "What payment methods do you accept?",
-      answer: "We accept bank transfer, credit cards, and cash. Payment is due on inspection day, before the report is released.",
+      question: "Dubai'de ev alırken toplam hangi masraflar çıkar?",
+      answer: "Satın alımda transfer ücreti, kayıt ücreti, ajans komisyonu, yıllık aidat ve topluluk bakım giderleri gibi masraflar çıkar.",
     },
     {
-      question: "Can I use the report for legal purposes?",
-      answer: "Yes. Our reports meet Dubai Court standards and have been used in numerous property disputes and insurance claims.",
+      question: "Yatırıma zarar verebilecek başlıca riskler nelerdir?",
+      answer: "Yüksek bakım ve onarım maliyetleri, tasarım ve inşaat kusurları, yapısal arızaların hızlı çözülmemesi, piyasa dalgalanmalarında değer kaybı ve işgal oranı düşüklüğü gibi riskler yatırımcı için önemlidir.",
     },
     {
-      question: "Do you offer re-inspections after repairs?",
-      answer: "Yes, at 50% of the original package price. We verify repairs meet standards and provide updated documentation.",
+      question: "Inspection sonrası sorun bulunursa satıcıyla nasıl bir süreç olur?",
+      answer: "Soruna göre fiyat indirimi, onarım talebi, masraf paylaşımı veya alım iptali gibi opsiyonlar ortaya çıkar. Alıcı sözleşmeye inspection şartı ekleyebilir.",
     },
     {
-      question: "What areas of Dubai do you cover?",
-      answer: "All of Dubai, including Palm Jumeirah, Dubai Marina, Downtown, Arabian Ranches, and surrounding Emirates by arrangement.",
+      question: "Dubai'de yatırımcılar için en doğru önlemler hangileridir?",
+      answer: "Profesyonel inspection yaptırmak, güvenilir müteahhit/firma seçmek, bakım ve aidat kontratlarını dikkatlice incelemek ve resmi kurumlarla işlem yapmak yatırımcı için en önemli adımlardır.",
     },
   ];
 
@@ -57,8 +57,8 @@ export const FAQSection = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Frequently Asked
-              <span className="block text-accent">Questions</span>
+              Sık Sorulan
+              <span className="block text-accent">Sorular</span>
             </h2>
             <p className="text-xl text-muted-foreground">
               Quick answers to common queries about our inspection service

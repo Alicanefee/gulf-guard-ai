@@ -1,61 +1,84 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar, Clock, Phone, Mail, MapPin, Home, Package } from "lucide-react";
+import { Phone, Mail, MapPin, Home, Package, CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const BookingSection = () => {
   const { toast } = useToast();
-  const [timeLeft, setTimeLeft] = useState(48 * 60 * 60); // 48 hours in seconds
+  const [currentStep, setCurrentStep] = useState(1);
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+  const [showCalculation, setShowCalculation] = useState(false);
   const [formData, setFormData] = useState({
+    // Step 1: Contact Info
     name: "",
     email: "",
     phone: "",
+    
+    // Step 2: Project Details
     location: "",
-    date: "",
-    time: "",
     propertySize: "",
+    rooms: "",
+    region: "",
+    
+    // Step 3: Package & Add-ons
     packageType: "",
+    addOns: {
+      threeDScan: false,
+      inspectionVideo: false,
+      negativePressure: false,
+      consultations: false,
+      moldTest: false,
+    },
   });
 
   const [calculatedPrice, setCalculatedPrice] = useState<number | null>(null);
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+    if (showCalculation && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [showCalculation, timeLeft]);
 
   const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
+    const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${hours}h ${minutes}m ${secs}s`;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const calculatePrice = (size: number, packageType: string) => {
+  const calculatePrice = () => {
+    if (!formData.propertySize || !formData.packageType) return;
+
+    const size = parseInt(formData.propertySize);
+    if (isNaN(size) || size <= 0) return;
+
     let basePrice = 0;
     let discount = 0;
 
-    switch (packageType) {
+    // Base package pricing
+    switch (formData.packageType) {
       case "essential":
         basePrice = size * 2;
         if (size >= 600 && size <= 1000) discount = 0.1;
         else if (size > 1000 && size <= 2000) discount = 0.15;
         else if (size > 2000) discount = 0.2;
-        basePrice = Math.max(basePrice, 1200); // minimum
+        basePrice = Math.max(basePrice, 1200);
         break;
       case "comprehensive":
-        basePrice = size * 2.5 + 300 + size * 1.5;
+        basePrice = size * 2.5 + (formData.addOns.inspectionVideo ? 300 : 0) + (formData.addOns.threeDScan ? size * 1.5 : 0);
         if (size >= 600 && size <= 1000) discount = 0.1;
         else if (size > 1000 && size <= 2000) discount = 0.15;
         else if (size > 2000) discount = 0.2;
         break;
       case "vip":
-        basePrice = size * 3 + size * 1.5 + size * 2;
+        basePrice = size * 3 + (formData.addOns.negativePressure ? size * 1.5 : 0) + (formData.addOns.threeDScan ? size * 2 : 0);
         if (size >= 600 && size <= 1000) discount = 0.1;
         else if (size > 1000 && size <= 2000) discount = 0.15;
         else if (size > 2000) discount = 0.2;
@@ -67,7 +90,7 @@ export const BookingSection = () => {
         else if (size > 5000) discount = 0.25;
         break;
       case "air-quality":
-        basePrice = size * 1.5 + size * 0.5 + size * 2;
+        basePrice = size * 1.5 + (formData.addOns.moldTest ? size * 0.5 : 0) + size * 2;
         if (size >= 600 && size <= 1000) discount = 0.1;
         else if (size > 1000 && size <= 2000) discount = 0.15;
         else if (size > 2000) discount = 0.2;
@@ -79,19 +102,17 @@ export const BookingSection = () => {
         break;
     }
 
+    // Apply add-on costs
+    if (formData.addOns.consultations) basePrice += 500;
+
     const discountedPrice = basePrice * (1 - discount);
-    const urgencyDiscount = discountedPrice * 0.05; // 5% for booking within 48h
-    return Math.round(discountedPrice - urgencyDiscount);
+    const finalDiscount = discountedPrice * discount;
+    
+    setDiscountAmount(Math.round(finalDiscount));
+    setCalculatedPrice(Math.round(discountedPrice));
+    setShowCalculation(true);
   };
 
-  useEffect(() => {
-    if (formData.propertySize && formData.packageType) {
-      const size = parseInt(formData.propertySize);
-      if (!isNaN(size) && size > 0) {
-        setCalculatedPrice(calculatePrice(size, formData.packageType));
-      }
-    }
-  }, [formData.propertySize, formData.packageType]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,6 +121,26 @@ export const BookingSection = () => {
       description: "We'll contact you within 2 hours to confirm your inspection.",
     });
   };
+
+  const canProceedToNextStep = () => {
+    switch (currentStep) {
+      case 1:
+        return formData.name && formData.email && formData.phone;
+      case 2:
+        return formData.location && formData.propertySize && formData.rooms && formData.region;
+      case 3:
+        return formData.packageType;
+      default:
+        return true;
+    }
+  };
+
+  const steps = [
+    { number: 1, title: "Contact Info" },
+    { number: 2, title: "Project Details" },
+    { number: 3, title: "Package & Add-ons" },
+    { number: 4, title: "Confirmation" },
+  ];
 
   return (
     <section id="booking" className="py-20 bg-gradient-to-b from-background to-secondary/30">
@@ -113,185 +154,394 @@ export const BookingSection = () => {
             <p className="text-xl text-muted-foreground">
               Same-day availability for urgent requests
             </p>
-            {timeLeft > 0 && (
-              <div className="mt-4 inline-block bg-accent/10 border border-accent/30 rounded-lg px-6 py-3">
-                <p className="text-sm font-medium text-accent">
-                  ⏰ Book within {formatTime(timeLeft)} and get an additional 5% discount!
-                </p>
-              </div>
-            )}
+          </div>
+
+          {/* Progress Indicator */}
+          <div className="mb-8">
+            <div className="flex justify-between items-center">
+              {steps.map((step, index) => (
+                <div key={step.number} className="flex items-center flex-1">
+                  <div className="flex flex-col items-center flex-1">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
+                        currentStep > step.number
+                          ? "bg-accent text-accent-foreground"
+                          : currentStep === step.number
+                          ? "bg-accent text-accent-foreground ring-4 ring-accent/20"
+                          : "bg-secondary text-muted-foreground"
+                      }`}
+                    >
+                      {currentStep > step.number ? (
+                        <CheckCircle2 className="w-5 h-5" />
+                      ) : (
+                        step.number
+                      )}
+                    </div>
+                    <span className="text-xs mt-2 font-medium text-muted-foreground hidden sm:block">
+                      {step.title}
+                    </span>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div
+                      className={`h-1 flex-1 mx-2 transition-all ${
+                        currentStep > step.number ? "bg-accent" : "bg-secondary"
+                      }`}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
 
           <Card className="p-8 md:p-12 shadow-[0_8px_30px_-4px_hsl(215_35%_20%/0.12)]">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Full Name</label>
-                  <Input
-                    placeholder="John Smith"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Email</label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <form onSubmit={handleSubmit}>
+              {/* Step 1: Contact Info */}
+              {currentStep === 1 && (
+                <div className="space-y-6 animate-fade-in">
+                  <h3 className="text-2xl font-bold text-foreground mb-6">Contact Information</h3>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Full Name *</label>
                     <Input
-                      type="email"
-                      placeholder="john@example.com"
-                      className="pl-10"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="John Smith"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
                     />
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Phone</label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      type="tel"
-                      placeholder="+971 50 123 4567"
-                      className="pl-10"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      required
-                    />
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Email *</label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        type="email"
+                        placeholder="john@example.com"
+                        className="pl-10"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        autoComplete="email"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Phone *</label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        type="tel"
+                        placeholder="+971 50 123 4567"
+                        className="pl-10"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        autoComplete="tel"
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
+              )}
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Property Location</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Dubai Marina, JBR..."
-                      className="pl-10"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      required
-                    />
+              {/* Step 2: Project Details */}
+              {currentStep === 2 && (
+                <div className="space-y-6 animate-fade-in">
+                  <h3 className="text-2xl font-bold text-foreground mb-6">Project Details</h3>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Property Location *</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Dubai Marina, JBR..."
+                        className="pl-10"
+                        value={formData.location}
+                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                        autoComplete="street-address"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Property Size (sqft)</label>
-                  <div className="relative">
-                    <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      type="number"
-                      placeholder="1000"
-                      className="pl-10"
-                      value={formData.propertySize}
-                      onChange={(e) => setFormData({ ...formData, propertySize: e.target.value })}
-                      required
-                    />
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Property Size (sqft) *</label>
+                      <div className="relative">
+                        <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          type="number"
+                          placeholder="1000"
+                          className="pl-10"
+                          value={formData.propertySize}
+                          onChange={(e) => setFormData({ ...formData, propertySize: e.target.value })}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Number of Rooms *</label>
+                      <Input
+                        type="number"
+                        placeholder="3"
+                        value={formData.rooms}
+                        onChange={(e) => setFormData({ ...formData, rooms: e.target.value })}
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Package Type</label>
-                  <div className="relative">
-                    <Package className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Region *</label>
                     <Select
-                      value={formData.packageType}
-                      onValueChange={(value) => setFormData({ ...formData, packageType: value })}
+                      value={formData.region}
+                      onValueChange={(value) => setFormData({ ...formData, region: value })}
                       required
                     >
-                      <SelectTrigger className="pl-10">
-                        <SelectValue placeholder="Select package" />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select region" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="essential">Essential</SelectItem>
-                        <SelectItem value="comprehensive">Comprehensive</SelectItem>
-                        <SelectItem value="vip">VIP</SelectItem>
-                        <SelectItem value="estate">Estate</SelectItem>
-                        <SelectItem value="air-quality">Air Quality Pack</SelectItem>
-                        <SelectItem value="investor">Investor Pack</SelectItem>
+                        <SelectItem value="dubai-marina">Dubai Marina</SelectItem>
+                        <SelectItem value="downtown">Downtown Dubai</SelectItem>
+                        <SelectItem value="jbr">JBR</SelectItem>
+                        <SelectItem value="palm-jumeirah">Palm Jumeirah</SelectItem>
+                        <SelectItem value="arabian-ranches">Arabian Ranches</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
+              )}
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Preferred Date</label>
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      type="date"
-                      className="pl-10"
-                      value={formData.date}
-                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      required
-                    />
+              {/* Step 3: Package & Add-ons */}
+              {currentStep === 3 && (
+                <div className="space-y-6 animate-fade-in">
+                  <h3 className="text-2xl font-bold text-foreground mb-6">Package & Add-ons</h3>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Package Type *</label>
+                    <div className="relative">
+                      <Package className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
+                      <Select
+                        value={formData.packageType}
+                        onValueChange={(value) => setFormData({ ...formData, packageType: value })}
+                        required
+                      >
+                        <SelectTrigger className="pl-10">
+                          <SelectValue placeholder="Select package" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="essential">Essential</SelectItem>
+                          <SelectItem value="comprehensive">Comprehensive</SelectItem>
+                          <SelectItem value="vip">VIP</SelectItem>
+                          <SelectItem value="estate">Estate</SelectItem>
+                          <SelectItem value="air-quality">Air Quality Pack</SelectItem>
+                          <SelectItem value="investor">Investor Pack</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Preferred Time</label>
-                  <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      type="time"
-                      className="pl-10"
-                      value={formData.time}
-                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                      required
-                    />
+                  <div className="space-y-4">
+                    <label className="text-sm font-medium text-foreground">Add-on Services</label>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="threeDScan"
+                          checked={formData.addOns.threeDScan}
+                          onCheckedChange={(checked) =>
+                            setFormData({
+                              ...formData,
+                              addOns: { ...formData.addOns, threeDScan: checked as boolean },
+                            })
+                          }
+                        />
+                        <label
+                          htmlFor="threeDScan"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          3D Home Scan
+                        </label>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="inspectionVideo"
+                          checked={formData.addOns.inspectionVideo}
+                          onCheckedChange={(checked) =>
+                            setFormData({
+                              ...formData,
+                              addOns: { ...formData.addOns, inspectionVideo: checked as boolean },
+                            })
+                          }
+                        />
+                        <label
+                          htmlFor="inspectionVideo"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          Full Inspection Video
+                        </label>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="negativePressure"
+                          checked={formData.addOns.negativePressure}
+                          onCheckedChange={(checked) =>
+                            setFormData({
+                              ...formData,
+                              addOns: { ...formData.addOns, negativePressure: checked as boolean },
+                            })
+                          }
+                        />
+                        <label
+                          htmlFor="negativePressure"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          Negative Pressure Test
+                        </label>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="consultations"
+                          checked={formData.addOns.consultations}
+                          onCheckedChange={(checked) =>
+                            setFormData({
+                              ...formData,
+                              addOns: { ...formData.addOns, consultations: checked as boolean },
+                            })
+                          }
+                        />
+                        <label
+                          htmlFor="consultations"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          Three Online Consultations
+                        </label>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="moldTest"
+                          checked={formData.addOns.moldTest}
+                          onCheckedChange={(checked) =>
+                            setFormData({
+                              ...formData,
+                              addOns: { ...formData.addOns, moldTest: checked as boolean },
+                            })
+                          }
+                        />
+                        <label
+                          htmlFor="moldTest"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          Mold Test
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              {calculatedPrice && (
-                <div className="bg-gradient-to-r from-accent/10 to-accent/5 border-2 border-accent/30 rounded-lg p-6 text-center animate-scale-in">
-                  <p className="text-sm text-muted-foreground mb-2">Your Total Price</p>
-                  <p className="text-4xl font-bold text-accent mb-2">{calculatedPrice} AED</p>
-                  <p className="text-xs text-muted-foreground">
-                    Including tiered discount + 5% urgency discount
-                  </p>
-                  <p className="text-xs text-accent font-medium mt-2">
-                    💎 Free extras included in your package!
-                  </p>
                 </div>
               )}
 
-              <div className="bg-secondary/50 p-6 rounded-lg space-y-3">
-                <h4 className="font-semibold text-foreground mb-3">What to expect:</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-accent font-bold">1.</span>
-                    Confirmation call within 2 hours
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-accent font-bold">2.</span>
-                    SMS reminder 24 hours before inspection
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-accent font-bold">3.</span>
-                    On-site inspection (2-4 hours depending on property size)
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-accent font-bold">4.</span>
-                    Detailed PDF report delivered within 24 hours
-                  </li>
-                </ul>
+              {/* Step 4: Confirmation */}
+              {currentStep === 4 && (
+                <div className="space-y-6 animate-fade-in">
+                  <h3 className="text-2xl font-bold text-foreground mb-6">Review & Confirm</h3>
+
+                  {!showCalculation ? (
+                    <div className="text-center py-12">
+                      <Button
+                        type="button"
+                        variant="premium"
+                        size="xl"
+                        onClick={calculatePrice}
+                        className="mx-auto"
+                      >
+                        Calculate Total Cost
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="bg-gradient-to-r from-accent/10 to-accent/5 border-2 border-accent/30 rounded-lg p-6">
+                        <div className="text-center mb-4">
+                          <p className="text-sm text-muted-foreground mb-2">Your Total Price</p>
+                          <p className="text-5xl font-bold text-accent mb-2">{calculatedPrice} AED</p>
+                          <p className="text-sm text-muted-foreground">
+                            Discount applied: {discountAmount} AED
+                          </p>
+                        </div>
+
+                        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 text-center">
+                          <p className="text-sm font-semibold text-destructive mb-2">
+                            ⏰ Discount valid for: {formatTime(timeLeft)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Discount valid only for this email. Restart or different email voids offer.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3 text-sm">
+                        <h4 className="font-semibold text-foreground">Order Summary:</h4>
+                        <div className="grid grid-cols-2 gap-2 text-muted-foreground">
+                          <span>Property Size:</span>
+                          <span className="text-foreground font-medium">{formData.propertySize} sqft</span>
+                          <span>Package:</span>
+                          <span className="text-foreground font-medium capitalize">{formData.packageType}</span>
+                          <span>Location:</span>
+                          <span className="text-foreground font-medium">{formData.location}</span>
+                        </div>
+                        {Object.entries(formData.addOns).some(([_, value]) => value) && (
+                          <>
+                            <h4 className="font-semibold text-foreground pt-2">Selected Add-ons:</h4>
+                            <ul className="list-disc list-inside text-muted-foreground">
+                              {formData.addOns.threeDScan && <li>3D Home Scan</li>}
+                              {formData.addOns.inspectionVideo && <li>Full Inspection Video</li>}
+                              {formData.addOns.negativePressure && <li>Negative Pressure Test</li>}
+                              {formData.addOns.consultations && <li>Three Online Consultations</li>}
+                              {formData.addOns.moldTest && <li>Mold Test</li>}
+                            </ul>
+                          </>
+                        )}
+                      </div>
+
+                      <Button type="submit" variant="premium" size="xl" className="w-full">
+                        Confirm Booking
+                      </Button>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Navigation Buttons */}
+              <div className="flex justify-between mt-8 pt-8 border-t">
+                {currentStep > 1 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setCurrentStep(currentStep - 1)}
+                  >
+                    <ArrowLeft className="mr-2 w-4 h-4" />
+                    Previous
+                  </Button>
+                )}
+                {currentStep < 4 && (
+                  <Button
+                    type="button"
+                    variant="premium"
+                    onClick={() => setCurrentStep(currentStep + 1)}
+                    disabled={!canProceedToNextStep()}
+                    className="ml-auto"
+                  >
+                    Next
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                )}
               </div>
-
-              <Button type="submit" variant="premium" size="xl" className="w-full">
-                Request Inspection
-              </Button>
-
-              <p className="text-center text-sm text-muted-foreground">
-                Urgent inspection needed?{" "}
-                <a href="tel:+97150123456" className="text-accent font-medium hover:underline">
-                  Call +971 50 123 4567
-                </a>
-              </p>
             </form>
           </Card>
         </div>

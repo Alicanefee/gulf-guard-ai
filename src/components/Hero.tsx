@@ -28,37 +28,32 @@ export const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-4 py-20">
         <div className="max-w-3xl animate-fade-in-up">
-          {/* Trust Badges */}
-          <div className="flex flex-wrap gap-4 mb-8">
-            <div className="flex items-center gap-2 bg-background/10 backdrop-blur-sm px-4 py-2 rounded-full border border-accent/30">
-              <Award className="w-4 h-4 text-accent" />
-              <span className="text-primary-foreground text-sm font-medium">ISO/IEC 17025:2017</span>
-            </div>
-            <div className="flex items-center gap-2 bg-background/10 backdrop-blur-sm px-4 py-2 rounded-full border border-accent/30">
-              <Shield className="w-4 h-4 text-accent" />
-              <span className="text-primary-foreground text-sm font-medium">InterNACHI Certified</span>
-            </div>
+          {/* Trust Bar */}
+          <div className="bg-background/10 backdrop-blur-sm px-6 py-3 rounded-lg border border-accent/30 mb-8">
+            <p className="text-primary-foreground text-sm font-medium text-center">
+              InterNACHI® certified – 10+ years engineering expertise – Global service network
+            </p>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            Protect Your
+            Your Investment. Your Health.
             <span className="block bg-gradient-to-r from-accent to-amber-300 bg-clip-text text-transparent">
-              Investment
+              verified.
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 leading-relaxed">
-            Dubai's premier property inspection service. AI-powered analysis meets international standards for complete peace of mind.
+            Engineer-led inspections with AI risk analysis, 3D scans & premium air quality testing.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
             <Button 
               size="xl" 
               variant="premium"
-              onClick={() => scrollToSection('pricing')}
+              onClick={() => scrollToSection('booking')}
               className="group"
             >
-              Calculate Price Now
+              Calculate Your AI Risk Score & Schedule Your Concierge Inspection
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
