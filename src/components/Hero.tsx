@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Award } from "lucide-react";
 import heroImage from "@/assets/dubai-skyline-hero.jpg";
+import heroVideo from "@/assets/videos/hero.mp4";
 
 export const Hero = () => {
   const scrollToSection = (id: string) => {
@@ -16,13 +17,12 @@ export const Hero = () => {
           loop
           muted
           playsInline
+          poster={heroImage}
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="https://cdn.pixabay.com/video/2022/11/07/138366-769531947_large.mp4" type="video/mp4" />
-          {/* Fallback image if video doesn't load */}
-          <img src={heroImage} alt="Dubai skyline" className="w-full h-full object-cover" />
+          <source src={heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/60 via-primary/40 to-transparent" />
       </div>
 
       {/* Content */}
