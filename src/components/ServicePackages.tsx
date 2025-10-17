@@ -2,9 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Check, Sparkles, Building2, Users, Home, Heart, TrendingUp } from "lucide-react";
-import { useState } from "react";
 import { useBooking } from "./booking/BookingProvider";
-import InlineBookingCard from "./booking/InlineBookingCard";
 
 export const ServicePackages = () => {
   const useCtaLabel = (pkg: any) => {
@@ -158,7 +156,6 @@ export const ServicePackages = () => {
 // PackageCard subcomponent (scoped to this file)
 const PackageCard: React.FC<any> = ({ pkg, useCtaLabel }) => {
   const { openBookingCard, bookingPackage } = useBooking();
-  const [inlineOpen, setInlineOpen] = useState(false);
 
   const onCardClick = () => openBookingCard(pkg.name);
 
@@ -199,17 +196,12 @@ const PackageCard: React.FC<any> = ({ pkg, useCtaLabel }) => {
           </div>
         </div>
 
-        <div className="flex gap-2 mt-auto">
-          <Button variant={pkg.popular ? "premium" : "outline"} className="w-full text-sm" size="lg" onClick={(e:any)=>{e.stopPropagation(); setInlineOpen((s)=>!s);}}>
-            Book This Service
-          </Button>
+        <div className="mt-auto">
           <Button variant={pkg.popular ? "premium" : "outline"} className="w-full text-sm" size="lg" onClick={(e:any)=>{e.stopPropagation(); openBookingCard(pkg.name);}}>
             {useCtaLabel(pkg)}
           </Button>
         </div>
       </Card>
-
-      {inlineOpen && <InlineBookingCard pkgId={pkg.name} onClose={()=>setInlineOpen(false)} />}
     </div>
   );
 };
