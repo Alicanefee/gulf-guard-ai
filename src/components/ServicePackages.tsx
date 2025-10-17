@@ -205,11 +205,8 @@ export const ServicePackages = () => {
         {/* Detailed Comparison Table removed per request */}
 
         <div className="text-center">
-          <p className="text-muted-foreground mb-4">
-            Book now and get complimentary test
-          </p>
-          <p className="text-sm text-accent font-medium mb-2">
-            ⏰ Book within 48 hours and get an additional 5% discount!
+          <p className="text-lg font-semibold text-foreground/90 mb-2">
+            Book directly on our website to unlock premium savings and perks—designed for discerning clients who value both quality and exclusivity.
           </p>
         </div>
       </div>
