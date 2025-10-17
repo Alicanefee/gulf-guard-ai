@@ -16,13 +16,14 @@ export const BookingSection = () => {
     // Step 1: Contact Info
     name: "",
     email: "",
-    phone: "",
+  phoneCountry: "+971",
+  phone: "",
     
-    // Step 2: Project Details
-    location: "",
-    propertySize: "",
-    rooms: "",
-    region: "",
+  // Step 2: Project Details
+  location: "",
+  propertyCountry: "+971",
+  propertySize: "",
+  rooms: "",
     
     // Step 3: Package & Add-ons
     packageType: "",
@@ -127,7 +128,12 @@ export const BookingSection = () => {
       case 1:
         return formData.name && formData.email && formData.phone;
       case 2:
-        return formData.location && formData.propertySize && formData.rooms && formData.region;
+        return (
+          formData.location &&
+          formData.propertyCountry &&
+          formData.propertySize &&
+          formData.rooms
+        );
       case 3:
         return formData.packageType;
       default:
@@ -228,17 +234,48 @@ export const BookingSection = () => {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Phone *</label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        type="tel"
-                        placeholder="+971 50 123 4567"
-                        className="pl-10"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        autoComplete="tel"
-                        required
-                      />
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-4 h-4 text-muted-foreground" />
+                      <div className="flex items-center w-full">
+                        <Select
+                          value={formData.phoneCountry}
+                          onValueChange={(value) => setFormData({ ...formData, phoneCountry: value })}
+                          required
+                        >
+                          <SelectTrigger className="w-28 mr-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="+971">🇦🇪 +971 (UAE)</SelectItem>
+                            <SelectItem value="+1">🇺🇸 +1 (US)</SelectItem>
+                            <SelectItem value="+44">🇬🇧 +44 (UK)</SelectItem>
+                            <SelectItem value="+966">🇸🇦 +966 (SA)</SelectItem>
+                            <SelectItem value="+91">🇮🇳 +91 (IN)</SelectItem>
+                            <SelectItem value="+61">🇦🇺 +61 (AU)</SelectItem>
+                            {/* European country codes */}
+                            <SelectItem value="+33">🇫🇷 +33 (France)</SelectItem>
+                            <SelectItem value="+49">🇩🇪 +49 (Germany)</SelectItem>
+                            <SelectItem value="+39">🇮🇹 +39 (Italy)</SelectItem>
+                            <SelectItem value="+34">🇪🇸 +34 (Spain)</SelectItem>
+                            <SelectItem value="+31">🇳🇱 +31 (Netherlands)</SelectItem>
+                            <SelectItem value="+46">🇸🇪 +46 (Sweden)</SelectItem>
+                            <SelectItem value="+41">🇨🇭 +41 (Switzerland)</SelectItem>
+                            <SelectItem value="+43">🇦🇹 +43 (Austria)</SelectItem>
+                            <SelectItem value="+32">🇧🇪 +32 (Belgium)</SelectItem>
+                            <SelectItem value="+420">🇨🇿 +420 (Czech Republic)</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        <Input
+                          type="tel"
+                          placeholder="50 123 4567"
+                          className="flex-1"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          autoComplete="tel"
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -251,16 +288,47 @@ export const BookingSection = () => {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Property Location *</label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Dubai Marina, JBR..."
-                        className="pl-10"
-                        value={formData.location}
-                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                        autoComplete="street-address"
-                        required
-                      />
+                    <div className="flex items-center gap-3">
+                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                      <div className="flex items-center w-full">
+                        <Select
+                          value={formData.propertyCountry}
+                          onValueChange={(value) => setFormData({ ...formData, propertyCountry: value })}
+                          required
+                        >
+                          <SelectTrigger className="w-28 mr-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="+971">🇦🇪 +971 (UAE)</SelectItem>
+                            <SelectItem value="+1">🇺🇸 +1 (US)</SelectItem>
+                            <SelectItem value="+44">🇬🇧 +44 (UK)</SelectItem>
+                            <SelectItem value="+966">🇸🇦 +966 (SA)</SelectItem>
+                            <SelectItem value="+91">🇮🇳 +91 (IN)</SelectItem>
+                            <SelectItem value="+61">🇦🇺 +61 (AU)</SelectItem>
+                            {/* European country codes */}
+                            <SelectItem value="+33">🇫🇷 +33 (France)</SelectItem>
+                            <SelectItem value="+49">🇩🇪 +49 (Germany)</SelectItem>
+                            <SelectItem value="+39">🇮🇹 +39 (Italy)</SelectItem>
+                            <SelectItem value="+34">🇪🇸 +34 (Spain)</SelectItem>
+                            <SelectItem value="+31">🇳🇱 +31 (Netherlands)</SelectItem>
+                            <SelectItem value="+46">🇸🇪 +46 (Sweden)</SelectItem>
+                            <SelectItem value="+41">🇨🇭 +41 (Switzerland)</SelectItem>
+                            <SelectItem value="+43">🇦🇹 +43 (Austria)</SelectItem>
+                            <SelectItem value="+32">🇧🇪 +32 (Belgium)</SelectItem>
+                            <SelectItem value="+420">🇨🇿 +420 (Czech Republic)</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        <Input
+                          placeholder="Dubai Marina, JBR..."
+                          className="flex-1"
+                          value={formData.location}
+                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                          autoComplete="street-address"
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -292,26 +360,7 @@ export const BookingSection = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Region *</label>
-                    <Select
-                      value={formData.region}
-                      onValueChange={(value) => setFormData({ ...formData, region: value })}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select region" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="dubai-marina">Dubai Marina</SelectItem>
-                        <SelectItem value="downtown">Downtown Dubai</SelectItem>
-                        <SelectItem value="jbr">JBR</SelectItem>
-                        <SelectItem value="palm-jumeirah">Palm Jumeirah</SelectItem>
-                        <SelectItem value="arabian-ranches">Arabian Ranches</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {/* Region removed per request */}
                 </div>
               )}
 
