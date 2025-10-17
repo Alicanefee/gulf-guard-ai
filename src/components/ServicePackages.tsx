@@ -4,6 +4,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Check, Sparkles, Building2, Users, Home, Heart, TrendingUp } from "lucide-react";
 
 export const ServicePackages = () => {
+  const useCtaLabel = (pkg: any) => {
+    // If CTA contains a price (digits or 'AED'), return a generic label without price.
+    const hasPrice = /\d|AED/i.test(pkg.cta || "");
+    if (!pkg.cta) return "Book Now";
+    if (!hasPrice) return pkg.cta;
+    // Try to infer action word from CTA, otherwise default to 'Book Now'
+    const lowered = pkg.cta.toLowerCase();
+    if (lowered.includes("upgrade")) return "Upgrade";
+    if (lowered.includes("vip")) return "Go VIP";
+    if (lowered.includes("start")) return "Start Now";
+    if (lowered.includes("protect")) return "Protect Now";
+    return "Book Now";
+  };
+
   const packages = [
     {
       name: "Essential",
@@ -141,13 +155,7 @@ export const ServicePackages = () => {
                   <pkg.icon className="w-7 h-7 text-accent" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">{pkg.name}</h3>
-                <div className="text-sm text-muted-foreground mb-1">{pkg.basePrice}</div>
-                {pkg.minPrice && (
-                  <div className="text-xs text-muted-foreground">min {pkg.minPrice}</div>
-                )}
-                {pkg.addOns && (
-                  <div className="text-xs text-muted-foreground mt-1">{pkg.addOns}</div>
-                )}
+                {/* Price info removed per request */}
               </div>
 
               <div className="space-y-4 mb-6">
@@ -184,77 +192,13 @@ export const ServicePackages = () => {
                 className="w-full text-sm"
                 size="lg"
               >
-                {pkg.cta}
+                {useCtaLabel(pkg)}
               </Button>
             </Card>
           ))}
         </div>
 
-        {/* Detailed Comparison Table */}
-        <div className="max-w-7xl mx-auto mb-12">
-          <Card className="p-6">
-            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">
-              Detailed Comparison Table
-            </h3>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="font-bold">Package</TableHead>
-                    <TableHead className="font-bold">Base Pricing</TableHead>
-                    <TableHead className="font-bold">Add-ons</TableHead>
-                    <TableHead className="font-bold">Free Extras</TableHead>
-                    <TableHead className="font-bold">Tiered Discounts</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="font-semibold">Essential</TableCell>
-                    <TableCell>2 AED/sqft<br />(min 1,200 AED for 600 sqft+)</TableCell>
-                    <TableCell>—</TableCell>
-                    <TableCell>Same-day report, 1x consult, Mold (1)</TableCell>
-                    <TableCell className="text-xs">600–1,000: 10%<br />1,000–2,000: 15%<br />&gt;2,000: 20%</TableCell>
-                  </TableRow>
-                  <TableRow className="bg-accent/5">
-                    <TableCell className="font-semibold">Comprehensive</TableCell>
-                    <TableCell>2.5 AED/sqft</TableCell>
-                    <TableCell>+300 AED (video)<br />+1.5 AED/sqft (3D scan)</TableCell>
-                    <TableCell>Free Negative Test</TableCell>
-                    <TableCell className="text-xs">600–1,000: 10%<br />1,000–2,000: 15%<br />&gt;2,000: 20%</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-semibold">VIP</TableCell>
-                    <TableCell>3 AED/sqft</TableCell>
-                    <TableCell>+1.5 AED/sqft (neg)<br />+2 AED/sqft (air)</TableCell>
-                    <TableCell>2nd inspection (1x)</TableCell>
-                    <TableCell className="text-xs">600–1,000: 10%<br />1,000–2,000: 15%<br />&gt;2,000: 20%</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-semibold">Estate</TableCell>
-                    <TableCell>3.5 AED/sqft</TableCell>
-                    <TableCell>+2 AED/sqft (air)<br />+1.5 AED/sqft (neg+3D)<br />+300 AED (video)</TableCell>
-                    <TableCell>Pre-report, 2nd check</TableCell>
-                    <TableCell className="text-xs">2,000–3,000: 15%<br />3,000–5,000: 20%<br />&gt;5,000: 25%</TableCell>
-                  </TableRow>
-                  <TableRow className="bg-accent/5">
-                    <TableCell className="font-semibold">Air Quality Pack</TableCell>
-                    <TableCell>1.5 AED/sqft</TableCell>
-                    <TableCell>+0.5 AED/sqft (mold)<br />+2 AED/sqft (air)</TableCell>
-                    <TableCell>Post-fix check (free)</TableCell>
-                    <TableCell className="text-xs">600–1,000: 10%<br />1,000–2,000: 15%<br />&gt;2,000: 20%</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-semibold">Investor Pack</TableCell>
-                    <TableCell>≤3,000: 6,500 AED<br />3,001–6,000: 9,500 AED<br />&gt;6,000: 12,500 AED</TableCell>
-                    <TableCell>—</TableCell>
-                    <TableCell>1 quick scan, 5 consults</TableCell>
-                    <TableCell>Fixed price, no discounts</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-          </Card>
-        </div>
+        {/* Detailed Comparison Table removed per request */}
 
         <div className="text-center">
           <p className="text-muted-foreground mb-4">
