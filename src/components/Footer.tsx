@@ -49,7 +49,6 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Certifications</h3>
             <ul className="space-y-2 text-sm text-primary-foreground/80">
-              <li>ISO/IEC 17025:2017</li>
               <li>InterNACHI Certified</li>
               <li>Dubai Municipality Approved</li>
               <li>RERA Registered</li>
