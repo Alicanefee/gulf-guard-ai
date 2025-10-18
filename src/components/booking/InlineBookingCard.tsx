@@ -1,3 +1,18 @@
+import React, { useState } from "react";
+import CountdownScarcity from "./CountdownScarcity";
+
+type Props = {
+pkgId: string;
+onClose?: () => void;
+};
+
+export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
+const [name, setName] = useState("");
+const [email, setEmail] = useState("");
+const [datetime, setDatetime] = useState("");
+const [propertySize, setPropertySize] = useState("");
+const [loading, setLoading] = useState(false);
+const [confirmed, setConfirmed] = useState(false);
 const [secondsLeft, setSecondsLeft] = useState<number>(3600);
 const [benefitActive, setBenefitActive] = useState(true);
 
@@ -13,7 +28,7 @@ const [benefitActive, setBenefitActive] = useState(true);
 const submit = async (e?: React.FormEvent) => {
 if (e) e.preventDefault();
 if (!propertySize) return alert('Please enter property size (sqft) to personalize your booking.');
-@@ -39,7 +48,7 @@ export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
+@@ -39,7 +48,7 @@
 {benefitActive && (
 <div>
 <div className="booking-banner">Offer activated – expires in {Math.floor(secondsLeft/60)}m {secondsLeft%60}s</div>
