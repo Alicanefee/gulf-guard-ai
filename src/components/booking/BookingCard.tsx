@@ -61,6 +61,15 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
   const [submitting, setSubmitting] = useState(false);
   const [soldOutSlots, setSoldOutSlots] = useState<string[]>([]);
 
+  const benefitTextMap: Record<string, string> = {
+    essential: "Mold Test included as part of your exclusive booking.",
+    comprehensive: "Negative Pressure Test included as part of your exclusive booking.",
+    vip: "Negative Pressure Test & Second Follow-Up included as part of your exclusive booking.",
+    estate: "Air Quality Test included as part of your exclusive booking.",
+    airquality: "Post-Improvement Verification included as part of your exclusive booking.",
+    investor: "Unique Investor Code 'NEW20' activated exclusively for your booking.",
+  };
+
   useEffect(() => {
     // if a package has benefit, mark active
     if (bookingPackage) setBenefitActive(true);
@@ -134,93 +143,104 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
         )}
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto max-h-[70vh]">
-            <FormField name="name" control={form.control} render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Full name" {...field} aria-label="Full name" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Per-package banner */}
+            <BenefitBanner packageType={selectedPackage ?? bookingPackage ?? 'essential'} />
 
-            <FormField name="email" control={form.control} render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="you@domain.com" type="email" {...field} aria-label="Email address" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-
-            {/* Date & Time (stacked to avoid overflow) */}
-            <div className="grid grid-cols-1 gap-4">
-              <FormField name="date" control={form.control} render={({ field }) => (
+            {/* Name & Email */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField name="name" control={form.control} render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <button
-                          type="button"
-                          className="w-full flex items-center justify-between gap-2 rounded-md border border-input px-3 py-2 text-sm hover:bg-accent"
-                          aria-label="Select date"
-                        >
-                          <span>{field.value ? format(field.value as Date, 'MMM d, yyyy') : 'Select date'}</span>
-                          <CalendarIcon className="h-4 w-4" />
-                        </button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <div className="p-2">
-                          <DayPickerCalendar
-                            mode="single"
-                            selected={field.value ?? undefined}
-                            onSelect={(d: Date | undefined) => field.onChange(d ?? null)}
-                          />
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                    <Input placeholder="Full name" {...field} aria-label="Full name" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
-              <FormField name="timeSlot" control={form.control} render={({ field }) => {
-                const ALL_SLOTS = [
-                  '08:00-10:00',
-                  '10:00-12:00',
-                  '12:00-14:00',
-                  '14:00-16:00',
-                  '16:00-18:00',
-                  '18:00-20:00',
-                  '20:00-22:00',
-                  '22:00-00:00',
-                  '00:00-02:00',
-                ];
-                const dateSelected = !!form.getValues('date');
 
-                return (
+              <FormField name="email" control={form.control} render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="you@domain.com" type="email" {...field} aria-label="Email address" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+            </div>
+
+            {/* Date & Time side-by-side on md, stacked on mobile */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <FormField name="date" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Time slot</FormLabel>
+                    <FormLabel>Select Date *</FormLabel>
                     <FormControl>
-                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v)}>
-                        <SelectTrigger className="w-full" aria-label="Select time slot" disabled={!dateSelected}>
-                          <SelectValue>{field.value ? field.value : (dateSelected ? 'Select time slot' : 'Select a date first')}</SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {ALL_SLOTS.map((slot) => (
-                            <SelectItem key={slot} value={slot} disabled={soldOutSlots.includes(slot)}>
-                              {slot}{soldOutSlots.includes(slot) ? ' — Sold Out' : ''}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className="w-full flex items-center justify-between gap-2 rounded-md border border-input px-3 py-2 text-sm hover:bg-accent"
+                            aria-label="Select date"
+                          >
+                            <span>{field.value ? format(field.value as Date, 'MMM d, yyyy') : 'Select date'}</span>
+                            <CalendarIcon className="h-4 w-4" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <div className="p-2">
+                            <DayPickerCalendar
+                              mode="single"
+                              selected={field.value ?? undefined}
+                              onSelect={(d: Date | undefined) => field.onChange(d ?? null)}
+                            />
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                );
-              }} />
+                )} />
+              </div>
+
+              <div>
+                <FormField name="timeSlot" control={form.control} render={({ field }) => {
+                  const ALL_SLOTS = [
+                    '08:00-10:00',
+                    '10:00-12:00',
+                    '12:00-14:00',
+                    '14:00-16:00',
+                    '16:00-18:00',
+                    '18:00-20:00',
+                    '20:00-22:00',
+                    '22:00-00:00',
+                    '00:00-02:00',
+                  ];
+                  const dateSelected = !!form.getValues('date');
+
+                  return (
+                    <FormItem>
+                      <FormLabel>Select Time Slot *</FormLabel>
+                      <FormControl>
+                        <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v)}>
+                          <SelectTrigger className="w-full" aria-label="Select time slot" disabled={!dateSelected}>
+                            <SelectValue>{field.value ? field.value : (dateSelected ? 'Select time slot' : 'Select a date first')}</SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ALL_SLOTS.map((slot) => (
+                              <SelectItem key={slot} value={slot} disabled={soldOutSlots.includes(slot)}>
+                                {slot}{soldOutSlots.includes(slot) ? ' — Sold Out' : ''}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }} />
+              </div>
             </div>
 
             <FormField name="sqft" control={form.control} render={({ field }) => (
