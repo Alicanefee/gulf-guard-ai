@@ -10,7 +10,86 @@ import type { TimeSlotPickerProps } from '@/types/booking';
  * - disabledSlots: optional list of slot strings that should be disabled
  */
 const ALL_SLOTS = [
+  '08:0import React, { useEffect, useMemo, useState } from 'react';
+import { cn } from '@/lib/utils';
+import type { TimeSlotPickerProps } from '@/types/booking';
+
+type Props = TimeSlotPickerProps & { disabledUntilDateSelected?: boolean };
+
+/**
+ * TimeSlotPicker
+ * Props:
+ * - selectedDate: selected date to render for context (not required for slots)
+ * - onSelect: callback when a slot is selected
+ * - disabledSlots: optional list of slot strings that should be disabled
+ */
+const ALL_SLOTS = [
   '08:00-10:00',
+  '10:00-12:00',
+  '12:00-14:00',
+  '14:00-16:00',
+  '16:00-18:00',
+  '18:00-20:00',
+  '20:00-22:00',
+  '22:00-00:00',
+  '00:00-02:00',
+];
+
+export default function TimeSlotPicker({ selectedDate, onSelect, disabledSlots = [], disabledUntilDateSelected = false }: Props) {
+  const [soldOut, setSoldOut] = useState<string[]>([]);
+  const [active, setActive] = useState<string | null>(null);
+
+  useEffect(() => {
+    // simulate 2-3 random sold out slots on mount
+    const picks = new Set<string>();
+    const count = Math.floor(Math.random() * 2) + 2; // 2-3
+    while (picks.size < count) {
+      const idx = Math.floor(Math.random() * ALL_SLOTS.length);
+      picks.add(ALL_SLOTS[idx]);
+    }
+    // merge with provided disabledSlots
+    setSoldOut(Array.from(new Set([...Array.from(picks), ...disabledSlots])));
+  }, []);
+
+  const isDisabled = (slot: string) => soldOut.includes(slot) || disabledSlots.includes(slot);
+
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      {ALL_SLOTS.map((slot) => {
+        const disabled = isDisabled(slot);
+        const isActive = active === slot;
+        const interactive = !(disabledUntilDateSelected && !selectedDate) && !disabled;
+
+        return (
+          <button
+            key={slot}
+            type="button"
+            role="radio"
+            aria-checked={isActive}
+            aria-label={`Time slot ${slot} ${disabled ? 'sold out' : ''}`}
+            onClick={() => {
+              if (!interactive) return;
+              setActive(slot);
+              onSelect(slot);
+            }}
+            disabled={!interactive}
+            className={cn(
+              'min-h-[44px] w-full rounded-md border px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
+              isActive ? 'bg-accent text-accent-foreground ring-2 ring-accent/60' : 'bg-background',
+              !interactive ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90',
+            )}
+          >
+            <div className="flex items-center justify-between">
+              <span className="truncate">{slot}</span>
+              {disabled && <span className="ml-2 text-xs font-semibold">Sold Out</span>}
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+0-10:00',
   '10:00-12:00',
   '12:00-14:00',
   '14:00-16:00',
