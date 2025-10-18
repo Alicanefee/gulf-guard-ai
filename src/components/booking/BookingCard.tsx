@@ -6,11 +6,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Calendar as DayPickerCalendar } from '@/components/ui/calendar';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import { Form, FormItem, FormLabel, FormControl, FormField, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import TimeSlotPicker from './TimeSlotPicker';
+// TimeSlotPicker removed in favor of compact dropdown select
 import BenefitBanner from './BenefitBanner';
 import { toast } from '@/components/ui/sonner';
 import { useBooking } from './BookingProvider';
@@ -58,11 +59,34 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
   });
 
   const [submitting, setSubmitting] = useState(false);
+  const [soldOutSlots, setSoldOutSlots] = useState<string[]>([]);
 
   useEffect(() => {
     // if a package has benefit, mark active
     if (bookingPackage) setBenefitActive(true);
   }, [bookingPackage, setBenefitActive]);
+
+  useEffect(() => {
+    // simulate 2-3 sold out slots
+    const ALL_SLOTS = [
+      '08:00-10:00',
+      '10:00-12:00',
+      '12:00-14:00',
+      '14:00-16:00',
+      '16:00-18:00',
+      '18:00-20:00',
+      '20:00-22:00',
+      '22:00-00:00',
+      '00:00-02:00',
+    ];
+    const picks = new Set<string>();
+    const count = Math.floor(Math.random() * 2) + 2;
+    while (picks.size < count) {
+      const idx = Math.floor(Math.random() * ALL_SLOTS.length);
+      picks.add(ALL_SLOTS[idx]);
+    }
+    setSoldOutSlots(Array.from(picks));
+  }, []);
 
   const onSubmit = async (values: z.infer<typeof bookingSchema>) => {
     setSubmitting(true);
@@ -131,8 +155,8 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
               </FormItem>
             )} />
 
-            {/* Date & Time side-by-side */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Date & Time (stacked to avoid overflow) */}
+            <div className="grid grid-cols-1 gap-4">
               <FormField name="date" control={form.control} render={({ field }) => (
                 <FormItem>
                   <FormLabel>Date</FormLabel>
@@ -162,20 +186,41 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
                   <FormMessage />
                 </FormItem>
               )} />
+              <FormField name="timeSlot" control={form.control} render={({ field }) => {
+                const ALL_SLOTS = [
+                  '08:00-10:00',
+                  '10:00-12:00',
+                  '12:00-14:00',
+                  '14:00-16:00',
+                  '16:00-18:00',
+                  '18:00-20:00',
+                  '20:00-22:00',
+                  '22:00-00:00',
+                  '00:00-02:00',
+                ];
+                const dateSelected = !!form.getValues('date');
 
-              <FormField name="timeSlot" control={form.control} render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Time slot</FormLabel>
-                  <FormControl>
-                    <TimeSlotPicker
-                      selectedDate={form.getValues('date') ?? null}
-                      onSelect={(slot) => field.onChange(slot)}
-                      disabledUntilDateSelected={true}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
+                return (
+                  <FormItem>
+                    <FormLabel>Time slot</FormLabel>
+                    <FormControl>
+                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v)}>
+                        <SelectTrigger className="w-full" aria-label="Select time slot" disabled={!dateSelected}>
+                          <SelectValue>{field.value ? field.value : (dateSelected ? 'Select time slot' : 'Select a date first')}</SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ALL_SLOTS.map((slot) => (
+                            <SelectItem key={slot} value={slot} disabled={soldOutSlots.includes(slot)}>
+                              {slot}{soldOutSlots.includes(slot) ? ' — Sold Out' : ''}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }} />
             </div>
 
             <FormField name="sqft" control={form.control} render={({ field }) => (
