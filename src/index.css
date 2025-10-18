@@ -274,4 +274,36 @@ All colors MUST be HSL.
     border-color: var(--color-highlight);
     box-shadow: var(--elevation-shadow);
   }
+
+  /* Compact popover for slot picker */
+  .booking-popover {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    left: 0;
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-medium);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    z-index: 10001;
+    width: 320px; /* compact width */
+  }
+
+  .booking-popover__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    align-items: start;
+  }
+
+  .booking-popover__calendar {
+    max-height: 220px;
+    overflow: auto;
+  }
+
+  .booking-popover__slots {
+    max-height: 220px;
+    overflow: auto;
+  }
 }
