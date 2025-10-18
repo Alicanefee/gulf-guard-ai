@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CountdownScarcity from "./CountdownScarcity";
+import { getSlots } from "./slotUtils";
 
 type Props = {
   pkgId: string;
@@ -9,7 +10,8 @@ type Props = {
 export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [datetime, setDatetime] = useState("");
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [confirmedSlot, setConfirmedSlot] = useState<string | null>(null);
   const [propertySize, setPropertySize] = useState("");
   const [loading, setLoading] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -28,14 +30,16 @@ export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
   const submit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!propertySize) return alert('Please enter property size (sqft) to personalize your booking.');
+    if (!selectedSlot) return alert('Please select an appointment time slot.');
     setLoading(true);
     await new Promise((r) => setTimeout(r, 800));
     setLoading(false);
     setConfirmed(true);
+    setConfirmedSlot(selectedSlot);
     if (onClose) setTimeout(onClose, 1200);
   };
 
-  if (confirmed) return <div className="booking-toast">Appointment Confirmed — your private booking is reserved</div>;
+  if (confirmed) return <div className="booking-toast">Appointment Confirmed — your private booking is reserved{confirmedSlot?` for ${confirmedSlot}`:''}</div>;
 
   return (
     <div className="booking-modal p-4 my-4">
@@ -43,7 +47,28 @@ export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
       <form onSubmit={submit} className="space-y-3">
         <input className="booking-input" placeholder="Full name" autoComplete="name" value={name} onChange={(e)=>setName(e.target.value)} required />
         <input className="booking-input" placeholder="Email" autoComplete="email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
-        <input className="booking-input" type="datetime-local" value={datetime} onChange={(e)=>setDatetime(e.target.value)} required />
+        <div>
+          <label className="text-sm font-medium text-foreground">Select Appointment Slot *</label>
+          <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {getSlots().map((s) => (
+              <button
+                type="button"
+                key={s.value}
+                className={`booking-slot-chip ${selectedSlot===s.value? 'booking-slot-chip--selected':''}`}
+                onClick={() => setSelectedSlot(s.value)}
+                aria-pressed={selectedSlot===s.value}
+                disabled={s.disabled}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          {/* Hidden select for accessibility */}
+          <select className="hidden" value={selectedSlot ?? ''} onChange={(e)=>setSelectedSlot(e.target.value)} required>
+            <option value="">Select slot</option>
+            {getSlots().map(s=> <option key={s.value} value={s.value} disabled={s.disabled}>{s.label}</option>)}
+          </select>
+        </div>
         <input className="booking-input" placeholder="Property Size (sqft)" value={propertySize} onChange={(e)=>setPropertySize(e.target.value)} required />
         {benefitActive && (
           <div>
