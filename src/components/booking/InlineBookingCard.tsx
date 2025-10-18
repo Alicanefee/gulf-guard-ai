@@ -1,22 +1,5 @@
-import React, { useState } from "react";
-import CountdownScarcity from "./CountdownScarcity";
-import SlotPicker from "./SlotPicker";
-
-type Props = {
-  pkgId: string;
-  onClose?: () => void;
-};
-
-export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  const [confirmedSlot, setConfirmedSlot] = useState<string | null>(null);
-  const [propertySize, setPropertySize] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState<number>(3600);
-  const [benefitActive, setBenefitActive] = useState(true);
+const [secondsLeft, setSecondsLeft] = useState<number>(3600);
+const [benefitActive, setBenefitActive] = useState(true);
 
   const benefitMap: Record<string, string> = {
     'Essential': "Exclusive offer activated: Mold Test included for your booking.",
@@ -27,45 +10,15 @@ export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
     'Investor Pack': "Exclusive offer activated: Unique Investor Code 'NEW20' reserved for your booking.",
   };
 
-  const submit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!propertySize) return alert('Please enter property size (sqft) to personalize your booking.');
-    if (!selectedSlot) return alert('Please select an appointment time slot.');
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    setConfirmed(true);
-    setConfirmedSlot(selectedSlot);
-    if (onClose) setTimeout(onClose, 1200);
-  };
-
-  if (confirmed) return <div className="booking-toast">Appointment Confirmed — your private booking is reserved{confirmedSlot?` for ${confirmedSlot}`:''}</div>;
-
-  return (
-    <div className="booking-modal p-4 my-4">
-      <div className="mb-2 font-semibold">Booking — {pkgId}</div>
-      <form onSubmit={submit} className="space-y-3">
-        <input className="booking-input" placeholder="Full name" autoComplete="name" value={name} onChange={(e)=>setName(e.target.value)} required />
-        <input className="booking-input" placeholder="Email" autoComplete="email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
-        <div>
-          <label className="text-sm font-medium text-foreground">Appointment *</label>
-          <div className="mt-2">
-            <SlotPicker value={selectedSlot ? selectedSlot : null} onChange={(v) => setSelectedSlot(v)} />
-          </div>
-        </div>
-        <input className="booking-input" placeholder="Property Size (sqft)" value={propertySize} onChange={(e)=>setPropertySize(e.target.value)} required />
-        {benefitActive && (
-          <div>
-            <div className="booking-banner">Offer activated – expires in {Math.floor(secondsLeft/60)}m {secondsLeft%60}s</div>
+const submit = async (e?: React.FormEvent) => {
+if (e) e.preventDefault();
+if (!propertySize) return alert('Please enter property size (sqft) to personalize your booking.');
+@@ -39,7 +48,7 @@ export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
+{benefitActive && (
+<div>
+<div className="booking-banner">Offer activated – expires in {Math.floor(secondsLeft/60)}m {secondsLeft%60}s</div>
+            <div className="mb-2 text-sm font-semibold text-accent">Private benefit activated for you.</div>
             <div className="mb-2 text-sm font-semibold text-accent">{benefitMap[pkgId] || 'Private benefit activated for you.'}</div>
-          </div>
-        )}
-        <CountdownScarcity timeLeftOverride={secondsLeft} />
-        <div className="booking-trustbar">InterNACHI® certified – 10+ years experience</div>
-        <button className="booking-btn mt-2" type="submit">{loading ? 'Processing...' : 'Confirm & Redeem'}</button>
-      </form>
-    </div>
-  );
-};
-
-export default InlineBookingCard;
+</div>
+)}
+<CountdownScarcity timeLeftOverride={secondsLeft} />
