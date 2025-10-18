@@ -1,101 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+--secondary: 215 25% 20%;
+--secondary-foreground: 0 0% 98%;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+--muted: 215 25% 20%;
+--muted-foreground: 210 15% 65%;
 
-@layer base {
-  :root {
-    /* Premium Dubai palette */
-    --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
+--destructive: 0 62% 50%;
+--destructive-foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
-
-    /* Deep navy primary - professional trust */
-    --primary: 215 35% 20%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Gold accent - luxury touch */
-    --accent: 43 74% 66%;
-    --accent-foreground: 215 35% 20%;
-
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 215 35% 20%;
-
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 15% 45%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 215 15% 90%;
-    --input: 215 15% 90%;
-    --ring: 43 74% 66%;
-
-    --radius: 0.75rem;
-
-    /* Premium gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(43 74% 66%), hsl(38 92% 50%));
-    --gradient-navy: linear-gradient(135deg, hsl(215 35% 20%), hsl(215 45% 30%));
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 20% 98%));
-
-    /* Premium shadows */
-    --shadow-soft: 0 2px 20px -2px hsl(215 35% 20% / 0.08);
-    --shadow-medium: 0 8px 30px -4px hsl(215 35% 20% / 0.12);
-    --shadow-strong: 0 20px 60px -10px hsl(215 35% 20% / 0.2);
-    --shadow-gold: 0 4px 24px -2px hsl(43 74% 66% / 0.3);
-
-    /* Smooth transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  .dark {
-    --background: 215 35% 12%;
-    --foreground: 0 0% 98%;
-
-    --card: 215 35% 16%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 215 35% 16%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 43 74% 66%;
-    --primary-foreground: 215 35% 20%;
-
-    --accent: 43 74% 66%;
-    --accent-foreground: 215 35% 20%;
-
-    --secondary: 215 25% 20%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 215 25% 20%;
-    --muted-foreground: 210 15% 65%;
-
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 215 25% 25%;
-    --input: 215 25% 25%;
-    --ring: 43 74% 66%;
-  }
+--border: 215 25% 25%;
+--input: 215 25% 25%;
+--ring: 43 74% 66%;
+}
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+* {
+@apply border-border;
+}
 
-  body {
-    @apply bg-background text-foreground;
-  }
+body {
+@apply bg-background text-foreground;
+}
 }
 
 /* Booking namespace styles and design tokens (mobile-first) */
@@ -256,54 +181,5 @@ All colors MUST be HSL.
   .booking-package--inactive:hover {
     filter: none;
     opacity: 1;
-  }
-
-  .booking-slot-chip {
-    padding: 0.6rem 0.75rem;
-    border-radius: 0.5rem;
-    background: hsl(var(--popover));
-    border: 1px solid hsl(var(--border));
-    font-size: 0.95rem;
-    text-align: center;
-    cursor: pointer;
-  }
-
-  .booking-slot-chip--selected {
-    background: var(--color-primary);
-    color: var(--color-primary-foreground);
-    border-color: var(--color-highlight);
-    box-shadow: var(--elevation-shadow);
-  }
-
-  /* Compact popover for slot picker */
-  .booking-popover {
-    position: absolute;
-    top: calc(100% + 0.4rem);
-    left: 0;
-    background: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-    border: 1px solid hsl(var(--border));
-    box-shadow: var(--shadow-medium);
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    z-index: 10001;
-    width: 320px; /* compact width */
-  }
-
-  .booking-popover__inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    align-items: start;
-  }
-
-  .booking-popover__calendar {
-    max-height: 220px;
-    overflow: auto;
-  }
-
-  .booking-popover__slots {
-    max-height: 220px;
-    overflow: auto;
   }
 }
