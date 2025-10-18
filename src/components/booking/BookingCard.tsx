@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CountdownScarcity from "./CountdownScarcity";
+import { getSlots } from "./slotUtils";
 import { useBooking } from "./BookingProvider";
 
 type Props = {
@@ -16,6 +17,8 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage, slotsRemaining =
   const [propertySize, setPropertySize] = useState("");
   const [loading, setLoading] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [confirmedSlot, setConfirmedSlot] = useState<string | null>(null);
   const [visitedBanner, setVisitedBanner] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState<number>(3600); // 1 hour by default
   const [benefitActive, setBenefitActive] = useState<boolean>(false);
@@ -56,12 +59,14 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage, slotsRemaining =
   const submit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!propertySize) return alert('Please enter property size (sqft) to personalize your booking.');
+    if (!selectedSlot) return alert('Please select an appointment time slot.');
     setLoading(true);
     // simulate network delay
     await new Promise((r) => setTimeout(r, 1200));
     localStorage.setItem("visited", "1");
     setLoading(false);
     setConfirmed(true);
+    setConfirmedSlot(selectedSlot);
     // investor package: set code
     if (selectedPackage === 'Investor Pack') {
       setInvestorCode('NEW20');
@@ -75,7 +80,7 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage, slotsRemaining =
   if (confirmed) {
     return (
       <div>
-        <div className="booking-toast">Appointment Confirmed — your private booking is reserved</div>
+        <div className="booking-toast">Appointment Confirmed — your private booking is reserved{confirmedSlot?` for ${confirmedSlot}`:''}</div>
         {investorCode && (
           <div className="booking-toast" style={{ top: '4rem' }}>
             Your unique Investor code: {investorCode} is activated and reserved for you. Use it during payment.
@@ -120,13 +125,29 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage, slotsRemaining =
             required
           />
 
-          <input
-            className="booking-input"
-            type="datetime-local"
-            value={datetime}
-            onChange={(e) => setDatetime(e.target.value)}
-            required
-          />
+          {/* Predefined 2-hour slots selection (mobile-first) */}
+          <div>
+            <label className="text-sm font-medium text-foreground">Select Appointment Slot *</label>
+            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {getSlots().map((s) => (
+                <button
+                  type="button"
+                  key={s.value}
+                  className={`booking-slot-chip ${selectedSlot===s.value? 'booking-slot-chip--selected':''}`}
+                  onClick={() => setSelectedSlot(s.value)}
+                  aria-pressed={selectedSlot===s.value}
+                  disabled={s.disabled}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+            {/* Hidden select for accessibility */}
+            <select className="hidden" value={selectedSlot ?? ''} onChange={(e)=>setSelectedSlot(e.target.value)} required>
+              <option value="">Select slot</option>
+              {getSlots().map(s=> <option key={s.value} value={s.value} disabled={s.disabled}>{s.label}</option>)}
+            </select>
+          </div>
 
           <input
             className="booking-input"
