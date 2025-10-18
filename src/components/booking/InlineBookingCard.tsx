@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CountdownScarcity from "./CountdownScarcity";
-import { getSlots } from "./slotUtils";
+import SlotPicker from "./SlotPicker";
 
 type Props = {
   pkgId: string;
@@ -48,26 +48,10 @@ export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
         <input className="booking-input" placeholder="Full name" autoComplete="name" value={name} onChange={(e)=>setName(e.target.value)} required />
         <input className="booking-input" placeholder="Email" autoComplete="email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
         <div>
-          <label className="text-sm font-medium text-foreground">Select Appointment Slot *</label>
-          <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {getSlots().map((s) => (
-              <button
-                type="button"
-                key={s.value}
-                className={`booking-slot-chip ${selectedSlot===s.value? 'booking-slot-chip--selected':''}`}
-                onClick={() => setSelectedSlot(s.value)}
-                aria-pressed={selectedSlot===s.value}
-                disabled={s.disabled}
-              >
-                {s.label}
-              </button>
-            ))}
+          <label className="text-sm font-medium text-foreground">Appointment *</label>
+          <div className="mt-2">
+            <SlotPicker value={selectedSlot ? selectedSlot : null} onChange={(v) => setSelectedSlot(v)} />
           </div>
-          {/* Hidden select for accessibility */}
-          <select className="hidden" value={selectedSlot ?? ''} onChange={(e)=>setSelectedSlot(e.target.value)} required>
-            <option value="">Select slot</option>
-            {getSlots().map(s=> <option key={s.value} value={s.value} disabled={s.disabled}>{s.label}</option>)}
-          </select>
         </div>
         <input className="booking-input" placeholder="Property Size (sqft)" value={propertySize} onChange={(e)=>setPropertySize(e.target.value)} required />
         {benefitActive && (
