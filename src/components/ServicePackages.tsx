@@ -131,6 +131,27 @@ export const ServicePackages = () => {
 const PackageCard: React.FC<any> = ({ pkg, useCtaLabel }) => {
   const { openBookingCard, bookingPackage } = useBooking();
 
+  const ctaMap: Record<string, string> = {
+    "Essential": "Book Essential Package",
+    "Comprehensive": "Book Comprehensive Package",
+    "VIP": "Book VIP Package",
+    "Estate": "Book Estate Package",
+    "Air Quality Pack": "Book Air Quality Package",
+    "Investor Pack": "Book Investor Package",
+  };
+
+  const hookMap: Record<string, string> = {
+    "Essential": "Detect hidden leaks instantly — AI-powered inspection included",
+    "Comprehensive": "Unlock full-home peace of mind — 3D Scan & Mold Test with every booking",
+    "VIP": "Elevate your protection — VIP reinspection service for first 3 months",
+    "Estate": "Experience ultra-premium — Private engineer team & rapid results",
+    "Air Quality Pack": "Breathe with confidence — Detailed air quality & mold analysis",
+    "Investor Pack": "Safeguard multiple investments — Exclusive VIP & fast check combo",
+  };
+
+  const ctaLabel = ctaMap[pkg.name] ?? useCtaLabel(pkg);
+  const hookText = hookMap[pkg.name];
+
   const onCardClick = () => openBookingCard(pkg.name);
 
   return (
@@ -171,8 +192,12 @@ const PackageCard: React.FC<any> = ({ pkg, useCtaLabel }) => {
         </div>
 
         <div className="mt-auto">
+          <p className="text-xs text-muted-foreground mb-2">Hidden Defects &amp; Health Risks — Increase Future Costs</p>
+          {hookText && (
+            <div className="text-sm font-semibold text-accent mb-3">{hookText}</div>
+          )}
           <Button variant={pkg.popular ? "premium" : "outline"} className="w-full text-sm" size="lg" onClick={(e:any)=>{e.stopPropagation(); openBookingCard(pkg.name);}}>
-            {useCtaLabel(pkg)}
+            {ctaLabel}
           </Button>
         </div>
       </Card>
