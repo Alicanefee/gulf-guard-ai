@@ -3,6 +3,9 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Calendar as DayPickerCalendar } from '@/components/ui/calendar';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { Form, FormItem, FormLabel, FormControl, FormField, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -95,7 +98,8 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
 
   return (
     <Dialog open={open} onOpenChange={(val) => { if (!val) closeBookingCard(); }}>
-      <DialogContent className="w-[90%] max-w-2xl sm:w-[600px]">
+        <DialogContent className="w-[90%] max-w-2xl sm:w-[600px] max-h-[90vh]">
+        <div className="p-6 sm:p-8">
         <DialogHeader>
           <DialogTitle>Book an Inspection</DialogTitle>
           <DialogDescription className="mb-2">Secure your preferred time — limited slots available.</DialogDescription>
@@ -106,7 +110,7 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
         )}
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto max-h-[70vh]">
             <FormField name="name" control={form.control} render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -127,33 +131,52 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
               </FormItem>
             )} />
 
-            <FormField name="date" control={form.control} render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <Calendar
-                    mode="single"
-                    selected={field.value ?? undefined}
-                    onSelect={(d: Date | undefined) => field.onChange(d ?? null)}
-                    aria-label="Select booking date"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
+            {/* Date & Time side-by-side */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField name="date" control={form.control} render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          className="w-full flex items-center justify-between gap-2 rounded-md border border-input px-3 py-2 text-sm hover:bg-accent"
+                          aria-label="Select date"
+                        >
+                          <span>{field.value ? format(field.value as Date, 'MMM d, yyyy') : 'Select date'}</span>
+                          <CalendarIcon className="h-4 w-4" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <div className="p-2">
+                          <DayPickerCalendar
+                            mode="single"
+                            selected={field.value ?? undefined}
+                            onSelect={(d: Date | undefined) => field.onChange(d ?? null)}
+                          />
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
 
-            <FormField name="timeSlot" control={form.control} render={({ field }) => (
-              <FormItem>
-                <FormLabel>Time slot</FormLabel>
-                <FormControl>
-                  <TimeSlotPicker
-                    selectedDate={form.getValues('date') ?? null}
-                    onSelect={(slot) => field.onChange(slot)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
+              <FormField name="timeSlot" control={form.control} render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Time slot</FormLabel>
+                  <FormControl>
+                    <TimeSlotPicker
+                      selectedDate={form.getValues('date') ?? null}
+                      onSelect={(slot) => field.onChange(slot)}
+                      disabledUntilDateSelected={true}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+            </div>
 
             <FormField name="sqft" control={form.control} render={({ field }) => (
               <FormItem>
@@ -180,6 +203,7 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
             </div>
           </form>
         </Form>
+        </div>
       </DialogContent>
     </Dialog>
   );
