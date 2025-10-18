@@ -2,38 +2,41 @@ import React, { useState } from "react";
 import CountdownScarcity from "./CountdownScarcity";
 
 type Props = {
-pkgId: string;
-onClose?: () => void;
+  pkgId: string;
+  onClose?: () => void;
 };
 
 export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
-const [name, setName] = useState("");
-const [email, setEmail] = useState("");
-const [datetime, setDatetime] = useState("");
-const [propertySize, setPropertySize] = useState("");
-const [loading, setLoading] = useState(false);
-const [confirmed, setConfirmed] = useState(false);
-const [secondsLeft, setSecondsLeft] = useState<number>(3600);
-const [benefitActive, setBenefitActive] = useState(true);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [datetime, setDatetime] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
-  const benefitMap: Record<string, string> = {
-    'Essential': "Exclusive offer activated: Mold Test included for your booking.",
-    'Comprehensive': "Exclusive offer activated: Negative Pressure Test included for your booking.",
-    'VIP': "Exclusive offer activated: Negative Pressure Test & Second Follow-Up included for your booking.",
-    'Estate': "Exclusive offer activated: Air Quality Test included for your booking.",
-    'Air Quality Pack': "Exclusive offer activated: Post-Improvement Verification included for your booking.",
-    'Investor Pack': "Exclusive offer activated: Unique Investor Code 'NEW20' reserved for your booking.",
+  const submit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 800));
+    setLoading(false);
+    setConfirmed(true);
+    if (onClose) setTimeout(onClose, 1200);
   };
 
-const submit = async (e?: React.FormEvent) => {
-if (e) e.preventDefault();
-if (!propertySize) return alert('Please enter property size (sqft) to personalize your booking.');
-@@ -39,7 +48,7 @@
-{benefitActive && (
-<div>
-<div className="booking-banner">Offer activated – expires in {Math.floor(secondsLeft/60)}m {secondsLeft%60}s</div>
-            <div className="mb-2 text-sm font-semibold text-accent">Private benefit activated for you.</div>
-            <div className="mb-2 text-sm font-semibold text-accent">{benefitMap[pkgId] || 'Private benefit activated for you.'}</div>
-</div>
-)}
-<CountdownScarcity timeLeftOverride={secondsLeft} />
+  if (confirmed) return <div className="booking-toast">Appointment Confirmed</div>;
+
+  return (
+    <div className="booking-modal p-4 my-4">
+      <div className="mb-2 font-semibold">Booking — {pkgId}</div>
+      <form onSubmit={submit} className="space-y-3">
+        <input className="booking-input" placeholder="Full name" autoComplete="name" value={name} onChange={(e)=>setName(e.target.value)} required />
+        <input className="booking-input" placeholder="Email" autoComplete="email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
+        <input className="booking-input" type="datetime-local" value={datetime} onChange={(e)=>setDatetime(e.target.value)} required />
+        <CountdownScarcity />
+        <div className="booking-trustbar">InterNACHI® certified – 10+ years experience</div>
+        <button className="booking-btn mt-2" type="submit">{loading ? 'Processing...' : 'Confirm & Redeem'}</button>
+      </form>
+    </div>
+  );
+};
+
+export default InlineBookingCard;

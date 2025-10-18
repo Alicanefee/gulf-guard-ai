@@ -4,31 +4,23 @@ type Props = {
   slotsInitial?: number;
   offerExpiry?: string; // ISO timestamp
   packageId?: string;
-  timeLeftOverride?: number; // seconds
-  onExpire?: () => void;
 };
 
-export const CountdownScarcity: React.FC<Props> = ({ slotsInitial = 5, packageId, timeLeftOverride, onExpire }) => {
+export const CountdownScarcity: React.FC<Props> = ({ slotsInitial = 5, offerExpiry, packageId }) => {
   const [slots, setSlots] = useState<number>(slotsInitial);
-  const [internalTime, setInternalTime] = useState<number>(timeLeftOverride ?? 3600);
+  const [timeLeft, setTimeLeft] = useState<number>(() => {
+    if (!offerExpiry) return 3600;
+    const diff = Math.max(0, Math.floor((new Date(offerExpiry).getTime() - Date.now()) / 1000));
+    return diff || 3600;
+  });
 
   useEffect(() => {
-    if (typeof timeLeftOverride === 'number') {
-      setInternalTime(timeLeftOverride);
-      if (timeLeftOverride <= 0 && onExpire) onExpire();
-      return;
-    }
-
     const s = setInterval(() => {
-      setInternalTime((t) => {
-        const next = Math.max(0, t - 1);
-        if (next === 0 && onExpire) onExpire();
-        return next;
-      });
+      setTimeLeft((t) => Math.max(0, t - 1));
     }, 1000);
 
     return () => clearInterval(s);
-  }, [timeLeftOverride, onExpire]);
+  }, []);
 
   useEffect(() => {
     let aborted = false;
@@ -67,7 +59,7 @@ export const CountdownScarcity: React.FC<Props> = ({ slotsInitial = 5, packageId
     <div className="booking-countdown flex items-center gap-4 text-sm" style={{ color: "var(--color-accent)" }}>
       <div className="font-semibold">Only {slots} slots left</div>
       <div>•</div>
-      <div>Offer expires in {format(internalTime)}</div>
+      <div>Offer expires in {format(timeLeft)}</div>
     </div>
   );
 };
