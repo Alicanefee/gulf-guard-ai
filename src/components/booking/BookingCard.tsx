@@ -144,8 +144,6 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Per-package banner */}
-            <BenefitBanner packageType={selectedPackage ?? bookingPackage ?? 'essential'} />
 
             {/* Name & Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -258,6 +256,11 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
                 <FormMessage />
               </FormItem>
             )} />
+            {/* Social proof bar */}
+            <div className="rounded-md border bg-background/50 p-3 flex items-center justify-between text-sm">
+              <div className="font-medium">Trusted by 2,400+ clients across Dubai</div>
+              <div className="text-muted-foreground">InterNACHI® certified · 10+ years experience</div>
+            </div>
 
             <div className="flex items-center justify-end gap-2">
               <Button variant="outline" onClick={() => closeBookingCard()} aria-label="Cancel booking">Cancel</Button>
