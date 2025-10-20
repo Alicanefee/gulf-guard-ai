@@ -23,23 +23,23 @@ export const Footer = () => {
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#why" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a href="/#why" className="text-primary-foreground/80 hover:text-accent transition-colors">
                   Why Inspect?
                 </a>
               </li>
               <li>
-                <a href="#pricing" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a href="/#pricing" className="text-primary-foreground/80 hover:text-accent transition-colors">
                   Pricing
                 </a>
               </li>
               <li>
-                <a href="#booking" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                <a href="/#booking" className="text-primary-foreground/80 hover:text-accent transition-colors">
                   Book Inspection
                 </a>
               </li>
               <li>
-                <a href="#" className="text-primary-foreground/80 hover:text-accent transition-colors">
-                  Sample Reports
+                <a href="/about-us" className="text-primary-foreground/80 hover:text-accent transition-colors">
+                  About Us
                 </a>
               </li>
             </ul>
