@@ -36,17 +36,11 @@ export const Hero = () => {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            Your Investment.
-            <span className="block">
-              Your Health.
-            </span>
-            <span className="block bg-gradient-to-r from-accent to-amber-300 bg-clip-text text-transparent">
-              Verified.
-            </span>
+            Protect Your Investment and Your Health
           </h1>
           
           <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 leading-relaxed">
-            Engineer-led inspections with AI risk analysis, 3D scans & premium air quality testing.
+            Same-Day 3D Home Scan, Advanced Air-Quality Testing & AI-Powered Risk Report
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
@@ -56,7 +50,7 @@ export const Hero = () => {
               onClick={() => scrollToSection('booking')}
               className="group"
             >
-              Calculate Your AI Risk Score
+              Get Your Free AI Risk Assessment
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
@@ -64,7 +58,7 @@ export const Hero = () => {
               variant="premium-outline"
               onClick={() => scrollToSection('booking')}
             >
-              Schedule Your Concierge Inspection
+              View Our Exclusive Packages
             </Button>
           </div>
 
