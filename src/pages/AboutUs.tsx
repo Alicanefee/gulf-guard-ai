@@ -1,4 +1,5 @@
 import { Building2, Award, Shield, Users } from "lucide-react";
+import heroImage from "@/assets/dubai-skyline-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -23,17 +24,22 @@ const AboutUs = () => {
       {/* Story Section */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-4xl">
-          <div className="prose prose-lg max-w-none">
-            <h2 className="text-3xl font-bold mb-6 text-foreground">Hikayemiz</h2>
-            <p className="text-muted-foreground mb-4 leading-relaxed">
-              Dubai'de ev sahibi olmak, hayallerinizi gerçekleştirmek demektir. Ancak bu büyük yatırımı yaparken, 
-              doğru rehberliğe ihtiyacınız var. İşte tam bu noktada devreye giriyoruz.
-            </p>
-            <p className="text-muted-foreground mb-4 leading-relaxed">
-              2015 yılından beri, binlerce ailenin ev alımı sürecinde yanlarında olduk. Her bir denetim, 
-              sadece bir rapor değil; ailelerin geleceğine yapılan bir yatırımdır. Çünkü biz, evinizin 
-              güvenliğinin ve değerinin önemini biliyoruz.
-            </p>
+          <div className="prose prose-lg max-w-none md:flex md:items-center md:gap-8">
+            <div className="md:flex-1">
+              <h2 className="text-3xl font-bold mb-6 text-foreground">Hikayemiz</h2>
+              <p className="text-muted-foreground mb-4 leading-relaxed">
+                Dubai'de ev sahibi olmak, hayallerinizi gerçekleştirmek demektir. Ancak bu büyük yatırımı yaparken, 
+                doğru rehberliğe ihtiyacınız var. İşte tam bu noktada devreye giriyoruz.
+              </p>
+              <p className="text-muted-foreground mb-4 leading-relaxed">
+                2015 yılından beri, binlerce ailenin ev alımı sürecinde yanlarında olduk. Her bir denetim, 
+                sadece bir rapor değil; ailelerin geleceğine yapılan bir yatırımdır. Çünkü biz, evinizin 
+                güvenliğinin ve değerinin önemini biliyoruz.
+              </p>
+            </div>
+            <div className="mt-6 md:mt-0 md:w-1/2 lg:w-1/3 md:flex-shrink-0">
+              <img src={heroImage} alt="Dubai skyline" className="w-full h-auto rounded-lg shadow-md" />
+            </div>
           </div>
         </div>
       </section>
@@ -45,7 +51,7 @@ const AboutUs = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center space-y-4">
               <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <Shield className="w-8 h-8 text-primary" />
+                <img src={heroImage} alt="office" className="w-10 h-10 rounded-full object-cover" />
               </div>
               <h3 className="font-semibold text-lg">Güvenilirlik</h3>
               <p className="text-sm text-muted-foreground">
@@ -55,7 +61,7 @@ const AboutUs = () => {
 
             <div className="text-center space-y-4">
               <div className="mx-auto w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
-                <Award className="w-8 h-8 text-accent" />
+                <img src={heroImage} alt="team" className="w-10 h-10 rounded-full object-cover" />
               </div>
               <h3 className="font-semibold text-lg">Uzmanlık</h3>
               <p className="text-sm text-muted-foreground">
@@ -65,7 +71,7 @@ const AboutUs = () => {
 
             <div className="text-center space-y-4">
               <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <Users className="w-8 h-8 text-primary" />
+                <img src={heroImage} alt="clients" className="w-10 h-10 rounded-full object-cover" />
               </div>
               <h3 className="font-semibold text-lg">Müşteri Odaklı</h3>
               <p className="text-sm text-muted-foreground">
