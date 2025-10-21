@@ -113,18 +113,48 @@ export default {
         '.perspective-2000': {
           perspective: '2000px',
         },
-        '.rotate-y-6': {
-          transform: 'rotateY(6deg)',
-        },
-        '.rotate-y-12': {
-          transform: 'rotateY(12deg)',
-        },
-        '.rotate-y-minus-6': {
-          transform: 'rotateY(-6deg)',
-        },
-        '.rotate-y-minus-12': {
-          transform: 'rotateY(-12deg)',
-        },
+      '.rotate-y-3': {
+        transform: 'rotateY(3deg)',
+      },
+      '.rotate-y-6': {
+        transform: 'rotateY(6deg)',
+      },
+      '.rotate-y-12': {
+        transform: 'rotateY(12deg)',
+      },
+      '.rotate-y-minus-6': {
+        transform: 'rotateY(-6deg)',
+      },
+      '.rotate-y-minus-12': {
+        transform: 'rotateY(-12deg)',
+      },
+      '.rotate-x-3': {
+        transform: 'rotateX(3deg)',
+      },
+      '.translate-z-2': {
+        transform: 'translateZ(2px)',
+      },
+      '.translate-z-4': {
+        transform: 'translateZ(4px)',
+      },
+      '.translate-z-6': {
+        transform: 'translateZ(6px)',
+      },
+      '.translate-z-8': {
+        transform: 'translateZ(8px)',
+      },
+      '.translate-z-10': {
+        transform: 'translateZ(10px)',
+      },
+      '.translate-z-20': {
+        transform: 'translateZ(20px)',
+      },
+      '.preserve-3d': {
+        transformStyle: 'preserve-3d',
+      },
+      '.transform-gpu': {
+        transform: 'translate3d(0, 0, 0)',
+      },
       }
       addUtilities(newUtilities)
     }
