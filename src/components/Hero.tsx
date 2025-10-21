@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Award } from "lucide-react";
 import heroImage from "@/assets/dubai-skyline-hero.jpg";
 import heroVideo from "@/assets/videos/hero.mp4";
+import QuickQuotation from '@/components/QuickQuotation';
 
 export const Hero = () => {
   const scrollToSection = (id: string) => {
@@ -60,6 +61,7 @@ export const Hero = () => {
             >
               View Our Exclusive Packages
             </Button>
+            <QuickQuotation />
           </div>
 
           {/* Stats removed as requested */}
