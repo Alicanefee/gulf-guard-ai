@@ -157,7 +157,7 @@ export const ServicePackages = () => {
               loop: true,
             }}
             plugins={[
-              Autoplay({
+              new Autoplay({
                 delay: 5000,
                 stopOnInteraction: true,
               }),
