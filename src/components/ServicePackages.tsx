@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles, Building2, Users, Home, Heart, TrendingUp } from "lucide-react";
-import { useBooking } from "./booking/BookingProvider";
+import { useBooking } from "@/components/booking/BookingProvider";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselApi } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
