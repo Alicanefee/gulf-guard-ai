@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
+import ctaImage from '@/assets/3d-scan.png';
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
@@ -229,16 +230,28 @@ export const WhySection = () => {
 
               {/* New CTA Card */}
               <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-primary via-accent/20 to-primary border-none animate-scale-in">
-                  <div className="text-center">
-                    <Shield className="w-16 h-16 text-accent mx-auto mb-6" />
-                    <h3 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-8">
-                      Ready to Protect Your Investment?
-                    </h3>
-                    <Button variant="premium" size="xl" onClick={() => scrollToSection('booking')} className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6 animate-pulse">
-                      <Shield className="mr-2 w-6 h-6" />
-                      Start Protect Now
-                    </Button>
+                <Card className="relative p-0 md:p-0 bg-gradient-to-br from-primary via-accent/20 to-primary border-none animate-scale-in overflow-hidden">
+                  {/* Background image */}
+                  <img src={ctaImage} alt="3D scan preview" className="absolute inset-0 w-full h-full object-cover" />
+                  {/* darken overlay to ensure contrast */}
+                  <div className="absolute inset-0 bg-black/30" />
+
+                  <div className="relative p-8 md:p-12 flex flex-col items-center min-h-[320px]">
+                    <Shield className="w-16 h-16 text-accent mx-auto mb-6 relative z-10" />
+
+                    <div className="relative z-10 inline-block px-4 py-2 rounded-md">
+                      <span className="absolute inset-0 -z-10 rounded-md bg-black/40 backdrop-blur-sm" />
+                      <h3 className="text-4xl md:text-5xl font-bold text-primary-foreground">
+                        Ready to Protect Your Investment?
+                      </h3>
+                    </div>
+
+                    <div className="mt-auto w-full flex justify-center relative z-10">
+                      <Button variant="premium" size="xl" onClick={() => scrollToSection('booking')} className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6 animate-pulse">
+                        <Shield className="mr-2 w-6 h-6" />
+                        Start Protect Now
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               </CarouselItem>
