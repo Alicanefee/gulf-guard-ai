@@ -149,7 +149,7 @@ export const ServicePackages = () => {
         </div>
 
         {/* Package Carousel */}
-        <div className="relative mb-16">
+        <div className="relative mb-16 px-4 md:px-12">
           <Carousel
             setApi={setApi}
             opts={{
@@ -164,21 +164,21 @@ export const ServicePackages = () => {
             ]}
             className="w-full max-w-7xl mx-auto"
           >
-            <CarouselContent className="-ml-4">
+            <CarouselContent className="-ml-2 md:-ml-4 py-8">
               {packages.map((pkg, index) => (
-                <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                  <div className={`transition-all duration-500 ease-in-out ${
-                    current === index 
-                      ? "scale-110 z-10" 
-                      : "scale-95 opacity-80"
+                <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+                  <div className={`transition-all duration-500 ease-in-out h-full ${
+                    current === index
+                      ? "scale-105 md:scale-110 z-10"
+                      : "scale-100 opacity-90 md:opacity-80"
                   }`}>
                     <PackageCard pkg={pkg} useCtaLabel={useCtaLabel} isActive={current === index} />
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-0" />
-            <CarouselNext className="right-0" />
+            <CarouselPrevious className="-left-4 md:left-0" />
+            <CarouselNext className="-right-4 md:right-0" />
           </Carousel>
         </div>
 
