@@ -1,14 +1,21 @@
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const FAQSection = () => {
-  const faqs = [
+  const [showAll, setShowAll] = useState(false);
+
+  const allFaqs = [
+    {
+      question: "Can foreigners buy property in Dubai?",
+      answer: "Yes, foreigners can buy full ownership property in many areas of Dubai, including villas, apartments, and offices.",
+    },
     {
       question: "Why is property inspection important in Dubai?",
       answer: "Dubai's extreme climate and rapid construction create hidden defects in many properties. Professional inspection reveals structural, electrical, and plumbing issues, helping you avoid unexpected repair costs and make informed purchase decisions.",
@@ -18,14 +25,28 @@ export const FAQSection = () => {
       answer: "The most frequent problems include HVAC failures, water leaks and damage, mold and humidity, electrical-mechanical faults, insulation and noise issues, plus complications with bills and maintenance fees.",
     },
     {
+      question: "What defects can property inspection reveal?",
+      answer: "Inspections can detect plumbing issues, structural cracks, moisture and humidity problems, window/door leaks, electrical-mechanical faults, construction quality deficiencies, and other hidden technical problems.",
+    },
+    {
+      question: "What benefits does property inspection provide for investors?",
+      answer: "It helps prevent unexpected repair costs, determine true property value, gain negotiation leverage, and ensure long-term investment security.",
+    },
+    {
       question: "How long does an inspection take and when do you get the report?",
       answer: "A typical inspection takes 2-4 hours using advanced equipment. Detailed reports with photos and video documentation are delivered within 24-48 hours.",
+    },
+    {
+      question: "What are the total costs when buying property in Dubai?",
+      answer: "Property purchases include transfer fees, registration costs, agency commissions, annual maintenance fees, and community maintenance expenses.",
     },
     {
       question: "What makes Gulf Guard AI's inspection service different?",
       answer: "We combine AI-powered risk assessment with certified inspector expertise, offering 3D scanning, air quality testing, and comprehensive reporting. Our service includes post-inspection support and is specifically designed for Dubai's unique property market.",
     },
   ];
+
+  const faqs = showAll ? allFaqs : allFaqs.slice(0, 4);
 
   return (
     <section className="py-20 bg-background">
@@ -58,11 +79,19 @@ export const FAQSection = () => {
             ))}
           </Accordion>
 
-          <div className="mt-8 text-center">
-            <Button variant="outline" size="lg">
-              View More Questions
-            </Button>
-          </div>
+          {!showAll && (
+            <div className="mt-8 text-center">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setShowAll(true)}
+                className="group"
+              >
+                View More Questions
+                <ChevronDown className="w-4 h-4 ml-2 group-hover:translate-y-1 transition-transform" />
+              </Button>
+            </div>
+          )}
 
           <div className="mt-12 text-center">
             <div className="bg-secondary/50 p-8 rounded-lg border-2 border-dashed border-border">
