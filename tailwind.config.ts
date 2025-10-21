@@ -97,7 +97,36 @@ export default {
         "scale-in": "scale-in 0.5s ease-out",
         "shimmer": "shimmer 2s infinite linear",
       },
+      perspective: {
+        '1000': '1000px',
+        '2000': '2000px',
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function({ addUtilities }: any) {
+      const newUtilities = {
+        '.perspective-1000': {
+          perspective: '1000px',
+        },
+        '.perspective-2000': {
+          perspective: '2000px',
+        },
+        '.rotate-y-6': {
+          transform: 'rotateY(6deg)',
+        },
+        '.rotate-y-12': {
+          transform: 'rotateY(12deg)',
+        },
+        '.rotate-y-minus-6': {
+          transform: 'rotateY(-6deg)',
+        },
+        '.rotate-y-minus-12': {
+          transform: 'rotateY(-12deg)',
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 } satisfies Config;

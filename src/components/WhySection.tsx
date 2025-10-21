@@ -3,9 +3,16 @@ import { Droplets, Zap, Wind, Shield, Skull, Droplet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
+import Autoplay from "embla-carousel-autoplay";
 
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
+  const [currentTitle, setCurrentTitle] = useState(0);
+
+  const titles = [
+    "Breathe health, not risk.",
+    "Invest in peace of mind, not unexpected costs."
+  ];
 
   const stories = [
     "Detecting hidden mold in my new flat avoided AED 18,000 in repairs—inspection pays off.",
@@ -73,10 +80,18 @@ export const WhySection = () => {
   ];
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const storyInterval = setInterval(() => {
       setCurrentStory((prev) => (prev + 1) % stories.length);
     }, 4000);
-    return () => clearInterval(interval);
+    
+    const titleInterval = setInterval(() => {
+      setCurrentTitle((prev) => (prev + 1) % titles.length);
+    }, 5000);
+    
+    return () => {
+      clearInterval(storyInterval);
+      clearInterval(titleInterval);
+    };
   }, []);
 
   const scrollToSection = (id: string) => {
@@ -92,10 +107,18 @@ export const WhySection = () => {
             <span className="text-[1.2rem] font-semibold text-foreground">Critical Insights</span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Hidden Defects & Health Risks
-            <span className="block text-accent">Increase Future Costs</span>
-          </h2>
+          <div className="relative h-32 mb-6">
+            {titles.map((title, index) => (
+              <h2
+                key={index}
+                className={`text-4xl md:text-5xl font-bold text-foreground absolute inset-0 flex items-center justify-center transition-all duration-1000 ${
+                  index === currentTitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+              >
+                <span className="block text-accent">{title}</span>
+              </h2>
+            ))}
+          </div>
           
           <p className="text-xl text-muted-foreground leading-relaxed">
             Dubai's extreme climate and rapid construction growth create unique risks. 
@@ -103,20 +126,28 @@ export const WhySection = () => {
           </p>
         </div>
 
-        {/* Risk Cards Carousel */}
+        {/* Risk Cards Carousel with 3D Effect */}
         <div className="relative mb-16">
           <Carousel
             opts={{
               align: "center",
               loop: true,
             }}
-            className="w-full max-w-6xl mx-auto"
+            plugins={[
+              Autoplay({
+                delay: 3000,
+              }),
+            ]}
+            className="w-full max-w-6xl mx-auto perspective-1000"
           >
             <CarouselContent className="-ml-4">
               {risks.map((risk, index) => (
                 <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <Card 
-                    className="p-8 border-2 hover:border-accent transition-all duration-500 h-full flex flex-col"
+                    className="p-8 border-2 hover:border-accent transition-all duration-500 h-full flex flex-col transform hover:scale-110 hover:rotate-y-6 hover:shadow-2xl"
+                    style={{
+                      transformStyle: "preserve-3d",
+                    }}
                   >
                     <div className="bg-accent/10 w-16 h-16 rounded-lg flex items-center justify-center mb-6">
                       <risk.icon className="w-8 h-8 text-accent" />
@@ -168,7 +199,7 @@ export const WhySection = () => {
           </div>
         </div>
 
-        {/* Case Studies Carousel */}
+        {/* Case Studies Carousel with Auto CTA Card */}
         <div className="mb-16">
           <h3 className="text-3xl font-bold text-center mb-8 text-foreground">Real Success Stories</h3>
           <Carousel
@@ -176,6 +207,11 @@ export const WhySection = () => {
               align: "center",
               loop: true,
             }}
+            plugins={[
+              Autoplay({
+                delay: 6000,
+              }),
+            ]}
             className="w-full max-w-5xl mx-auto"
           >
             <CarouselContent>
@@ -255,25 +291,31 @@ export const WhySection = () => {
                   </p>
                 </Card>
               </CarouselItem>
+
+              {/* New CTA Card */}
+              <CarouselItem>
+                <Card className="p-8 md:p-12 bg-gradient-to-br from-primary via-accent/20 to-primary border-none animate-scale-in">
+                  <div className="text-center">
+                    <Shield className="w-16 h-16 text-accent mx-auto mb-6" />
+                    <h3 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-8">
+                      Ready to Protect Your Investment?
+                    </h3>
+                    <Button 
+                      variant="premium" 
+                      size="xl"
+                      onClick={() => scrollToSection('booking')}
+                      className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6 animate-pulse"
+                    >
+                      <Shield className="mr-2 w-6 h-6" />
+                      Start Protect Now
+                    </Button>
+                  </div>
+                </Card>
+              </CarouselItem>
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
           </Carousel>
-        </div>
-
-        {/* Final CTA */}
-        <div className="text-center py-12">
-          <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-            Ready to Protect Your Investment?
-          </h3>
-          <Button 
-            variant="premium" 
-            size="xl"
-            onClick={() => scrollToSection('booking')}
-            className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6"
-          >
-            Start Protect Now
-          </Button>
         </div>
 
         <p className="text-center text-sm text-muted-foreground mt-8">
