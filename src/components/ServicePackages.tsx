@@ -2,8 +2,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles, Building2, Users, Home, Heart, TrendingUp } from "lucide-react";
 import { useBooking } from "./booking/BookingProvider";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselApi } from "@/components/ui/carousel";
+import { useState, useEffect } from "react";
+import Autoplay from "embla-carousel-autoplay";
 
 export const ServicePackages = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
   const useCtaLabel = (pkg: any) => {
     // If CTA contains a price (digits or 'AED'), return a generic label without price.
     const hasPrice = /\d|AED/i.test(pkg.cta || "");
@@ -95,10 +101,24 @@ export const ServicePackages = () => {
     },
   ];
 
+  useEffect(() => {
+    if (!api) return;
+
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  const scrollToPackage = (index: number) => {
+    api?.scrollTo(index);
+  };
+
   return (
     <section id="pricing" className="py-20 bg-secondary/50">
       <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
+        <div className="max-w-3xl mx-auto text-center mb-12 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Choose Your
             <span className="block text-accent">Protection Level</span>
@@ -108,14 +128,59 @@ export const ServicePackages = () => {
           </p>
         </div>
 
-        {/* Package Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-16">
+        {/* Package Selector */}
+        <div className="flex justify-center gap-2 mb-8 flex-wrap max-w-4xl mx-auto">
           {packages.map((pkg, index) => (
-            <PackageCard key={index} pkg={pkg} useCtaLabel={useCtaLabel} />
+            <Button
+              key={index}
+              variant={current === index ? "premium" : "outline"}
+              size="sm"
+              onClick={() => scrollToPackage(index)}
+              className={`transition-all duration-300 ${
+                current === index 
+                  ? "scale-105 shadow-lg" 
+                  : "opacity-70 hover:opacity-100"
+              }`}
+            >
+              <pkg.icon className="w-4 h-4 mr-2" />
+              {pkg.name}
+            </Button>
           ))}
         </div>
 
-        {/* Detailed Comparison Table removed per request */}
+        {/* Package Carousel */}
+        <div className="relative mb-16">
+          <Carousel
+            setApi={setApi}
+            opts={{
+              align: "center",
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 5000,
+                stopOnInteraction: true,
+              }),
+            ]}
+            className="w-full max-w-7xl mx-auto"
+          >
+            <CarouselContent className="-ml-4">
+              {packages.map((pkg, index) => (
+                <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                  <div className={`transition-all duration-500 ease-in-out ${
+                    current === index 
+                      ? "scale-110 z-10" 
+                      : "scale-95 opacity-80"
+                  }`}>
+                    <PackageCard pkg={pkg} useCtaLabel={useCtaLabel} isActive={current === index} />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-0" />
+            <CarouselNext className="right-0" />
+          </Carousel>
+        </div>
 
         <div className="text-center">
           <p className="text-lg font-semibold text-foreground/90 mb-2">
@@ -128,7 +193,7 @@ export const ServicePackages = () => {
 };
 
 // PackageCard subcomponent (scoped to this file)
-const PackageCard: React.FC<any> = ({ pkg, useCtaLabel }) => {
+const PackageCard: React.FC<any> = ({ pkg, useCtaLabel, isActive }) => {
   const { openBookingCard, bookingPackage } = useBooking();
 
   const ctaMap: Record<string, string> = {
@@ -158,10 +223,14 @@ const PackageCard: React.FC<any> = ({ pkg, useCtaLabel }) => {
     <div>
       <Card
         onClick={onCardClick}
-        className={`relative p-6 transition-all duration-300 hover:scale-105 flex flex-col h-full cursor-pointer ${
+        className={`relative p-6 transition-all duration-500 ease-in-out hover:scale-105 flex flex-col h-full cursor-pointer ${
           pkg.popular
             ? "border-2 border-accent shadow-[0_8px_30px_-4px_hsl(43_74%_66%/0.3)]"
             : "border hover:border-accent/50"
+        } ${
+          isActive 
+            ? "border-2 border-accent shadow-[0_12px_40px_-8px_hsl(43_74%_66%/0.5)] bg-accent/5" 
+            : ""
         } ${bookingPackage && bookingPackage !== pkg.name ? 'booking-package--inactive' : ''} ${bookingPackage===pkg.name? 'booking-package--selected':''}`}
       >
         {pkg.popular && (
