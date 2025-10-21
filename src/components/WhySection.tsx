@@ -1,8 +1,20 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Droplets, Zap, Wind, TrendingUp, Shield, Skull, Droplet } from "lucide-react";
+import { Droplets, Zap, Wind, Shield, Skull, Droplet } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useState, useEffect } from "react";
 
 export const WhySection = () => {
+  const [currentStory, setCurrentStory] = useState(0);
+
+  const stories = [
+    "Detecting hidden mold in my new flat avoided AED 18,000 in repairs—inspection pays off.",
+    "Early air quality test stopped my daughter's asthma attacks. Peace of mind earned.",
+    "Minor sand infiltration saved my HVAC 35% efficiency—don't skip inspection.",
+    "Initial wiring check caught code violations, saved AED 12,500 instantly.",
+    "Mold inspection meant I could rent out my flat 4x faster and at premium."
+  ];
+
   const risks = [
     {
       icon: Droplets,
@@ -41,6 +53,36 @@ export const WhySection = () => {
     },
   ];
 
+  const caseStudies = [
+    {
+      title: "Dubai Marina Villa",
+      description: "Pre-purchase inspection revealed hidden water damage in AC ducts and electrical safety violations. Client negotiated AED 85,000 price reduction, recovering 12× the inspection cost.",
+      saved: "AED 85K",
+      roi: "12×",
+      issues: 23,
+      critical: 7
+    },
+    {
+      title: "Developer Success Story",
+      description: "Stand out in a crowded market—by showcasing a 3D virtual tour and lab-grade air-quality report upfront, this developer generated 87% more qualified leads and slashed time on market from 45 to 18 days. The result: a 3% premium, netting AED 30,000 above the AED 1 M listing price.",
+      stat1: "87%",
+      stat1Label: "More Leads",
+      stat2: "18 Days",
+      stat2Label: "Time to Sell"
+    }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStory((prev) => (prev + 1) % stories.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section id="why" className="py-20 bg-gradient-to-b from-background to-secondary/30">
       <div className="container mx-auto px-4">
@@ -61,95 +103,177 @@ export const WhySection = () => {
           </p>
         </div>
 
-        {/* Risk Cards */}
-        <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
-          {risks.map((risk, index) => (
-            <Card 
-              key={index}
-              className="p-6 border-2 hover:border-accent transition-all duration-300 hover:shadow-[0_8px_30px_-4px_hsl(215_35%_20%/0.15)] animate-scale-in group"
-              style={{ animationDelay: `${index * 100}ms` }}
+        {/* Risk Cards Carousel */}
+        <div className="relative mb-16">
+          <Carousel
+            opts={{
+              align: "center",
+              loop: true,
+            }}
+            className="w-full max-w-6xl mx-auto"
+          >
+            <CarouselContent className="-ml-4">
+              {risks.map((risk, index) => (
+                <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                  <Card 
+                    className="p-8 border-2 hover:border-accent transition-all duration-500 h-full flex flex-col"
+                  >
+                    <div className="bg-accent/10 w-16 h-16 rounded-lg flex items-center justify-center mb-6">
+                      <risk.icon className="w-8 h-8 text-accent" />
+                    </div>
+                    
+                    <div className="text-5xl font-bold text-accent mb-3">{risk.stat}</div>
+                    <h3 className="text-2xl font-semibold text-foreground mb-3">{risk.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed mb-3 flex-grow">{risk.description}</p>
+                    <p className="text-xs text-muted-foreground/70 mt-auto">{risk.source}</p>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-0" />
+            <CarouselNext className="right-0" />
+          </Carousel>
+
+          {/* Single CTA Below Banner */}
+          <div className="text-center mt-12">
+            <Button 
+              variant="premium" 
+              size="xl"
+              onClick={() => scrollToSection('booking')}
+              className="group shadow-lg hover:shadow-xl transition-all"
             >
-              <div className="bg-accent/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <risk.icon className="w-7 h-7 text-accent" />
-              </div>
-              
-              <div className="text-4xl font-bold text-accent mb-2">{risk.stat}</div>
-              <h3 className="text-xl font-semibold text-foreground mb-2">{risk.title}</h3>
-              <p className="text-muted-foreground leading-relaxed mb-2">{risk.description}</p>
-              <p className="text-xs text-muted-foreground/70">{risk.source}</p>
-            </Card>
-          ))}
+              <Shield className="mr-2 w-6 h-6" />
+              Calculate AI Risk Now
+            </Button>
+          </div>
         </div>
 
-        {/* Case Studies */}
-        <div className="space-y-6">
-          <Card className="p-8 md:p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield className="w-6 h-6 text-accent" />
-                  <span className="text-accent font-semibold">Real Case Study #1</span>
-                </div>
-                <h3 className="text-3xl font-bold mb-4">Dubai Marina Villa</h3>
-                <p className="text-primary-foreground/90 mb-6 leading-relaxed">
-                  Pre-purchase inspection revealed hidden water damage in AC ducts and electrical safety violations. 
-                  Client negotiated AED 85,000 price reduction, recovering 12× the inspection cost.
-                </p>
-                <div className="flex items-center gap-4">
-                  <div>
-                    <div className="text-2xl font-bold text-accent">AED 85K</div>
-                    <div className="text-sm text-primary-foreground/80">Saved</div>
-                  </div>
-                  <div className="h-12 w-px bg-primary-foreground/20" />
-                  <div>
-                    <div className="text-2xl font-bold text-accent">12×</div>
-                    <div className="text-sm text-primary-foreground/80">ROI</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="bg-background/10 backdrop-blur-sm p-4 rounded-lg border border-accent/30">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Issues Found</span>
-                    <span className="text-accent font-bold">23</span>
-                  </div>
-                  <div className="h-2 bg-background/20 rounded-full overflow-hidden">
-                    <div className="h-full bg-accent w-[85%]" />
-                  </div>
-                </div>
-                
-                <div className="bg-background/10 backdrop-blur-sm p-4 rounded-lg border border-accent/30">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Critical Risks</span>
-                    <span className="text-accent font-bold">7</span>
-                  </div>
-                  <div className="h-2 bg-background/20 rounded-full overflow-hidden">
-                    <div className="h-full bg-accent w-[60%]" />
-                  </div>
-                </div>
-
-                <Button variant="premium" className="w-full mt-4">
-                  <TrendingUp className="mr-2 w-5 h-5" />
-                  Start Risk Analysis
-                </Button>
-              </div>
+        {/* Animated Story Section */}
+        <div className="mb-16 py-8 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5" />
+          <div className="relative max-w-4xl mx-auto text-center px-4">
+            {stories.map((story, index) => (
+              <p
+                key={index}
+                className={`text-xl md:text-2xl font-medium text-foreground/90 italic transition-all duration-1000 absolute inset-0 flex items-center justify-center px-6 ${
+                  index === currentStory ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+              >
+                "{story}"
+              </p>
+            ))}
+            <div className="opacity-0 text-xl md:text-2xl font-medium px-6 py-4">
+              "{stories[0]}"
             </div>
-          </Card>
+          </div>
+        </div>
 
-          <Card className="p-8 md:p-12 bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/30">
-            <div className="flex items-center gap-2 mb-4">
-              <Shield className="w-6 h-6 text-accent" />
-              <span className="text-accent font-semibold">Real Case Study #2</span>
-            </div>
-            <h3 className="text-3xl font-bold text-foreground mb-4">Developer Success Story</h3>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              Stand out in a crowded market—by showcasing a 3D virtual tour and lab-grade air-quality report upfront, this developer generated 87% more qualified leads and slashed time on market from 45 to 18 days. The result: a 3% premium, netting AED 30,000 above the AED 1 M listing price.
-            </p>
-            <p className="text-sm text-muted-foreground/70 italic">
-              Source: PropTech Dubai "3D Tour Impact Study" 2024
-            </p>
-          </Card>
+        {/* Case Studies Carousel */}
+        <div className="mb-16">
+          <h3 className="text-3xl font-bold text-center mb-8 text-foreground">Real Success Stories</h3>
+          <Carousel
+            opts={{
+              align: "center",
+              loop: true,
+            }}
+            className="w-full max-w-5xl mx-auto"
+          >
+            <CarouselContent>
+              <CarouselItem>
+                <Card className="p-8 md:p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none">
+                  <div className="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <Shield className="w-6 h-6 text-accent" />
+                        <span className="text-accent font-semibold">Real Case Study #1</span>
+                      </div>
+                      <h3 className="text-3xl font-bold mb-4">{caseStudies[0].title}</h3>
+                      <p className="text-primary-foreground/90 mb-6 leading-relaxed">
+                        {caseStudies[0].description}
+                      </p>
+                      <div className="flex items-center gap-4">
+                        <div>
+                          <div className="text-2xl font-bold text-accent">{caseStudies[0].saved}</div>
+                          <div className="text-sm text-primary-foreground/80">Saved</div>
+                        </div>
+                        <div className="h-12 w-px bg-primary-foreground/20" />
+                        <div>
+                          <div className="text-2xl font-bold text-accent">{caseStudies[0].roi}</div>
+                          <div className="text-sm text-primary-foreground/80">ROI</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="bg-background/10 backdrop-blur-sm p-4 rounded-lg border border-accent/30">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Issues Found</span>
+                          <span className="text-accent font-bold">{caseStudies[0].issues}</span>
+                        </div>
+                        <div className="h-2 bg-background/20 rounded-full overflow-hidden">
+                          <div className="h-full bg-accent w-[85%]" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-background/10 backdrop-blur-sm p-4 rounded-lg border border-accent/30">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Critical Risks</span>
+                          <span className="text-accent font-bold">{caseStudies[0].critical}</span>
+                        </div>
+                        <div className="h-2 bg-background/20 rounded-full overflow-hidden">
+                          <div className="h-full bg-accent w-[60%]" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </CarouselItem>
+
+              <CarouselItem>
+                <Card className="p-8 md:p-12 bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/30">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Shield className="w-6 h-6 text-accent" />
+                    <span className="text-accent font-semibold">Real Case Study #2</span>
+                  </div>
+                  <h3 className="text-3xl font-bold text-foreground mb-4">{caseStudies[1].title}</h3>
+                  <p className="text-muted-foreground leading-relaxed mb-6">
+                    {caseStudies[1].description}
+                  </p>
+                  <div className="flex items-center gap-6 mb-4">
+                    <div>
+                      <div className="text-3xl font-bold text-accent">{caseStudies[1].stat1}</div>
+                      <div className="text-sm text-muted-foreground">{caseStudies[1].stat1Label}</div>
+                    </div>
+                    <div className="h-12 w-px bg-border" />
+                    <div>
+                      <div className="text-3xl font-bold text-accent">{caseStudies[1].stat2}</div>
+                      <div className="text-sm text-muted-foreground">{caseStudies[1].stat2Label}</div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground/70 italic">
+                    Source: PropTech Dubai "3D Tour Impact Study" 2024
+                  </p>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </div>
+
+        {/* Final CTA */}
+        <div className="text-center py-12">
+          <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Ready to Protect Your Investment?
+          </h3>
+          <Button 
+            variant="premium" 
+            size="xl"
+            onClick={() => scrollToSection('booking')}
+            className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6"
+          >
+            Start Protect Now
+          </Button>
         </div>
 
         <p className="text-center text-sm text-muted-foreground mt-8">
