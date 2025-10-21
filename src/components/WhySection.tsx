@@ -106,11 +106,11 @@ export const WhySection = () => {
                 transformStyle: "preserve-3d",
                 transition: "all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)"
               }}>
-                    <div className="bg-accent/10 w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-all duration-700 group-hover:scale-110 group-hover:translate-z-10" style={{transformStyle: "preserve-3d"}}>
-                      <risk.icon className="w-8 h-8 text-accent group-hover:scale-125 transition-transform duration-700" />
+                    <div className="bg-accent/10 w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-all duration-700 group-hover:scale-110 group-hover:translate-z-10 tilt-right" style={{transformStyle: "preserve-3d"}}>
+                      <risk.icon className="w-8 h-8 text-accent group-hover:scale-125 transition-transform duration-700 tilted-icon" />
                     </div>
-                    
-                    <div className="text-5xl font-bold text-accent mb-3 group-hover:translate-z-8 transition-all duration-700" style={{transformStyle: "preserve-3d"}}>{risk.stat}</div>
+
+                    <div className="stat-display text-5xl font-bold text-accent mb-3 group-hover:translate-z-8 transition-all duration-700" style={{transformStyle: "preserve-3d"}}>{risk.stat}</div>
                     <h3 className="text-2xl font-semibold text-foreground mb-3 group-hover:translate-z-6 transition-all duration-700" style={{transformStyle: "preserve-3d"}}>{risk.title}</h3>
                     <p className="text-muted-foreground leading-relaxed mb-3 flex-grow group-hover:translate-z-4 transition-all duration-700" style={{transformStyle: "preserve-3d"}}>{risk.description}</p>
                     <p className="text-xs text-muted-foreground/70 mt-auto group-hover:translate-z-2 transition-all duration-700" style={{transformStyle: "preserve-3d"}}>{risk.source}</p>
