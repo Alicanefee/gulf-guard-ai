@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import ctaImage from '@/assets/3d-scan.png';
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
@@ -98,7 +97,7 @@ export const WhySection = () => {
           <Carousel opts={{
           align: "center",
           loop: true
-        }} plugins={[Autoplay({
+        }} plugins={[new Autoplay({
           delay: 3000
         })]} className="w-full max-w-6xl mx-auto perspective-1000">
             <CarouselContent className="-ml-4">
@@ -147,7 +146,7 @@ export const WhySection = () => {
           <Carousel opts={{
           align: "center",
           loop: true
-        }} plugins={[Autoplay({
+        }} plugins={[new Autoplay({
           delay: 6000
         })]} className="w-full max-w-5xl mx-auto">
             <CarouselContent>
@@ -231,10 +230,10 @@ export const WhySection = () => {
               {/* New CTA Card */}
               <CarouselItem>
                 <Card className="relative p-0 md:p-0 bg-gradient-to-br from-primary via-accent/20 to-primary border-none animate-scale-in overflow-hidden">
-                  {/* Background image */}
-                  <img src={ctaImage} alt="3D scan preview" className="absolute inset-0 w-full h-full object-cover" />
+                  {/* Background gradient instead of image */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-accent/40 to-primary" />
                   {/* darken overlay to ensure contrast */}
-                  <div className="absolute inset-0 bg-black/30" />
+                  <div className="absolute inset-0 bg-black/20" />
 
                   <div className="relative p-8 md:p-12 flex flex-col items-center min-h-[320px]">
                     <Shield className="w-16 h-16 text-accent mx-auto mb-6 relative z-10" />
