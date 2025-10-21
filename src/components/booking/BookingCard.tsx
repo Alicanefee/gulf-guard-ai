@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,8 +49,21 @@ const defaultValues: Partial<BookingFormData> = {
 export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
   const { closeBookingCard, bookingPackage, setBenefitActive } = useBooking();
   const [open, setOpen] = useState<boolean>(!!bookingPackage);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => setOpen(!!bookingPackage), [bookingPackage]);
+
+  // When dialog opens on small screens, ensure it scrolls into view and focus the first input
+  useEffect(() => {
+    if (open && dialogRef.current) {
+      // small delay to wait for dialog animation
+      setTimeout(() => {
+        dialogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const firstInput = dialogRef.current?.querySelector<HTMLInputElement>('input, button, [tabindex]');
+        firstInput?.focus();
+      }, 120);
+    }
+  }, [open]);
 
   const form = useForm<z.infer<typeof bookingSchema>>({
     resolver: zodResolver(bookingSchema),
@@ -130,8 +143,8 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(val) => { if (!val) closeBookingCard(); }}>
-        <DialogContent className="w-[90%] max-w-2xl sm:w-[600px] max-h-[90vh]">
+  <Dialog open={open} onOpenChange={(val) => { if (!val) closeBookingCard(); }}>
+    <DialogContent ref={(el:any)=>dialogRef.current = el} className="w-[90%] max-w-2xl sm:w-[600px] max-h-[90vh]">
         <div className="p-6 sm:p-8">
         <DialogHeader>
           <DialogTitle>Book an Inspection</DialogTitle>
