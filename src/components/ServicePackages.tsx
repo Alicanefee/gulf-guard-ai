@@ -137,8 +137,8 @@ export const ServicePackages = () => {
               size="sm"
               onClick={() => scrollToPackage(index)}
               className={`transition-all duration-300 ${
-                current === index 
-                  ? "scale-105 shadow-lg" 
+                current === index
+                  ? "scale-105 shadow-lg"
                   : "opacity-70 hover:opacity-100"
               }`}
             >
@@ -149,7 +149,7 @@ export const ServicePackages = () => {
         </div>
 
         {/* Package Carousel */}
-        <div className="relative mb-16 px-4 md:px-12">
+        <div className="relative mb-16 px-4 md:px-12 perspective-1000">
           <Carousel
             setApi={setApi}
             opts={{
@@ -164,21 +164,38 @@ export const ServicePackages = () => {
             ]}
             className="w-full max-w-7xl mx-auto"
           >
-            <CarouselContent className="-ml-2 md:-ml-4 py-8">
-              {packages.map((pkg, index) => (
-                <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                  <div className={`transition-all duration-500 ease-in-out h-full ${
-                    current === index
-                      ? "scale-105 md:scale-110 z-10"
-                      : "scale-100 opacity-90 md:opacity-80"
-                  }`}>
-                    <PackageCard pkg={pkg} useCtaLabel={useCtaLabel} isActive={current === index} />
-                  </div>
-                </CarouselItem>
-              ))}
+            <CarouselContent className="-ml-2 md:-ml-4 py-12">
+              {packages.map((pkg, index) => {
+                const distance = Math.abs(current - index);
+                const isPrev = index < current;
+                const isNext = index > current;
+
+                return (
+                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+                    <div
+                      className={`transition-all duration-700 ease-out h-full transform-gpu ${
+                        current === index
+                          ? "scale-110 md:scale-125 z-20 translate-z-20"
+                          : distance === 1
+                            ? "scale-95 md:scale-105 z-10 translate-z-0 opacity-85"
+                            : distance === 2
+                              ? "scale-90 md:scale-95 z-5 translate-z-0 opacity-60"
+                              : "scale-85 md:scale-90 z-0 translate-z-0 opacity-40"
+                      }`}
+                      style={{
+                        transformStyle: "preserve-3d",
+                        transformOrigin: current === index ? "center center" :
+                                       isPrev ? "right center" : "left center"
+                      }}
+                    >
+                      <PackageCard pkg={pkg} useCtaLabel={useCtaLabel} isActive={current === index} />
+                    </div>
+                  </CarouselItem>
+                );
+              })}
             </CarouselContent>
-            <CarouselPrevious className="-left-4 md:left-0" />
-            <CarouselNext className="-right-4 md:right-0" />
+            <CarouselPrevious className="-left-4 md:left-0 z-30" />
+            <CarouselNext className="-right-4 md:right-0 z-30" />
           </Carousel>
         </div>
 
@@ -228,8 +245,8 @@ const PackageCard: React.FC<any> = ({ pkg, useCtaLabel, isActive }) => {
             ? "border-2 border-accent shadow-[0_8px_30px_-4px_hsl(43_74%_66%/0.3)]"
             : "border hover:border-accent/50"
         } ${
-          isActive 
-            ? "border-2 border-accent shadow-[0_12px_40px_-8px_hsl(43_74%_66%/0.5)] bg-accent/5" 
+          isActive
+            ? "border-2 border-accent shadow-[0_12px_40px_-8px_hsl(43_74%_66%/0.5)] bg-accent/5"
             : ""
         } ${bookingPackage && bookingPackage !== pkg.name ? 'booking-package--inactive' : ''} ${bookingPackage===pkg.name? 'booking-package--selected':''}`}
       >
@@ -261,7 +278,7 @@ const PackageCard: React.FC<any> = ({ pkg, useCtaLabel, isActive }) => {
         </div>
 
         <div className="mt-auto">
-          <p className="text-xs text-muted-foreground mb-2">Hidden Defects &amp; Health Risks — Increase Future Costs</p>
+          <p className="text-xs text-muted-foreground mb-2">Hidden Defects & Health Risks — Increase Future Costs</p>
           {hookText && (
             <div className="text-sm font-semibold text-accent mb-3">{hookText}</div>
           )}
