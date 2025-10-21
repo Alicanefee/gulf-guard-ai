@@ -10,44 +10,20 @@ import { Button } from "@/components/ui/button";
 export const FAQSection = () => {
   const faqs = [
     {
-      question: "Yabancılar Dubai'de ev alabilir mi?",
-      answer: "Evet, yabancılar birçok bölgede tam mülkiyetle konut, villa veya ofis satın alabilir.",
+      question: "Why is property inspection important in Dubai?",
+      answer: "Dubai's extreme climate and rapid construction create hidden defects in many properties. Professional inspection reveals structural, electrical, and plumbing issues, helping you avoid unexpected repair costs and make informed purchase decisions.",
     },
     {
-      question: "Dubai'de ev alırken neden ekspertiz/inspection yaptırmak gerekir?",
-      answer: "Dubai iklimi ve inşaat süreçleri sebebiyle birçok evde gizli kusurlar olabilir. Inspection işlemiyle, alım öncesi yapısal, teknik ve tesisatla ilgili tüm sorunlar tespit edilir, beklenmedik masraflar ve riskler önlenir.",
+      question: "What are the most common property issues in Dubai?",
+      answer: "The most frequent problems include HVAC failures, water leaks and damage, mold and humidity, electrical-mechanical faults, insulation and noise issues, plus complications with bills and maintenance fees.",
     },
     {
-      question: "Dubai'de evlerde en çok hangi sorunlarla karşılaşılır?",
-      answer: "En yaygın problemler arasında klima arızaları, su baskınları ve sızıntılar, rutubet ve küf, elektrik-mekanik arızalar, haşere sorunları, yalıtım ve gürültü problemleri, fatura ve aidat karmaşası öne çıkmaktadır.",
+      question: "How long does an inspection take and when do you get the report?",
+      answer: "A typical inspection takes 2-4 hours using advanced equipment. Detailed reports with photos and video documentation are delivered within 24-48 hours.",
     },
     {
-      question: "Ev inspectionu hangi kusurları ortaya çıkarır?",
-      answer: "Tesisat sorunları, temel yapı çatlakları, nem ve rutubet, pencere/kapı sızdırmazlığı, mekanik-elektrik hataları, inşaat kalitesindeki eksiklikler ve görünmeyen teknik problemleri tespit eder.",
-    },
-    {
-      question: "Ev inspectionu almak yatırımcıya ne sağlar?",
-      answer: "Yüksek, beklenmedik onarım giderlerinin önüne geçmeyi, gerçek değeri belirlemeyi, müzakere gücü kazanmayı ve uzun vadeli yatırım güvenliği sağlamayı sağlar.",
-    },
-    {
-      question: "Inspection sırasında eve zarar gelir mi, rapor ne zaman alınır?",
-      answer: "Modern cihazlarla yapılan inspectionlarda eve zarar gelmez. Detaylı rapor genellikle 1-2 gün içinde görsellerle birlikte sunulur.",
-    },
-    {
-      question: "Dubai'de ev alırken toplam hangi masraflar çıkar?",
-      answer: "Satın alımda transfer ücreti, kayıt ücreti, ajans komisyonu, yıllık aidat ve topluluk bakım giderleri gibi masraflar çıkar.",
-    },
-    {
-      question: "Yatırıma zarar verebilecek başlıca riskler nelerdir?",
-      answer: "Yüksek bakım ve onarım maliyetleri, tasarım ve inşaat kusurları, yapısal arızaların hızlı çözülmemesi, piyasa dalgalanmalarında değer kaybı ve işgal oranı düşüklüğü gibi riskler yatırımcı için önemlidir.",
-    },
-    {
-      question: "Inspection sonrası sorun bulunursa satıcıyla nasıl bir süreç olur?",
-      answer: "Soruna göre fiyat indirimi, onarım talebi, masraf paylaşımı veya alım iptali gibi opsiyonlar ortaya çıkar. Alıcı sözleşmeye inspection şartı ekleyebilir.",
-    },
-    {
-      question: "Dubai'de yatırımcılar için en doğru önlemler hangileridir?",
-      answer: "Profesyonel inspection yaptırmak, güvenilir müteahhit/firma seçmek, bakım ve aidat kontratlarını dikkatlice incelemek ve resmi kurumlarla işlem yapmak yatırımcı için en önemli adımlardır.",
+      question: "What makes Gulf Guard AI's inspection service different?",
+      answer: "We combine AI-powered risk assessment with certified inspector expertise, offering 3D scanning, air quality testing, and comprehensive reporting. Our service includes post-inspection support and is specifically designed for Dubai's unique property market.",
     },
   ];
 
@@ -57,8 +33,8 @@ export const FAQSection = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Sık Sorulan
-              <span className="block text-accent">Sorular</span>
+              Frequently Asked
+              <span className="block text-accent">Questions</span>
             </h2>
             <p className="text-xl text-muted-foreground">
               Quick answers to common queries about our inspection service
@@ -81,6 +57,12 @@ export const FAQSection = () => {
               </AccordionItem>
             ))}
           </Accordion>
+
+          <div className="mt-8 text-center">
+            <Button variant="outline" size="lg">
+              View More Questions
+            </Button>
+          </div>
 
           <div className="mt-12 text-center">
             <div className="bg-secondary/50 p-8 rounded-lg border-2 border-dashed border-border">
