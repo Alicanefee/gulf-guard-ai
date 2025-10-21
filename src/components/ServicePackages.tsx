@@ -223,7 +223,7 @@ const PackageCard: React.FC<any> = ({ pkg, useCtaLabel, isActive }) => {
     <div>
       <Card
         onClick={onCardClick}
-        className={`relative p-6 transition-all duration-500 ease-in-out hover:scale-105 flex flex-col h-full cursor-pointer ${
+        className={`relative p-6 pt-8 transition-all duration-500 ease-in-out hover:scale-105 flex flex-col h-full cursor-pointer overflow-visible ${
           pkg.popular
             ? "border-2 border-accent shadow-[0_8px_30px_-4px_hsl(43_74%_66%/0.3)]"
             : "border hover:border-accent/50"
