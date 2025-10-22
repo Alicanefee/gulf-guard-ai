@@ -115,7 +115,7 @@ export const WhySection = () => {
             <CarouselContent className="-ml-4">
               {risks.map((risk, index) => <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <Card className="p-8 border-2 hover:border-accent transition-all duration-500 h-full flex flex-col hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] hover:scale-[1.02] sm:hover:scale-105 lg:hover:scale-110 group cursor-pointer">
-                    <div className="bg-accent/10 w-16 h-16 rounded-lg flex items-center justify-center mb-6">
+                    <div className="bg-accent/10 w-16 h-16 rounded-lg mx-auto flex items-center justify-center mb-6">
                       <risk.icon className="w-8 h-8 text-accent" />
                     </div>
 
