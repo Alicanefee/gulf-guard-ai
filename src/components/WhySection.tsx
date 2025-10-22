@@ -35,33 +35,33 @@ export const WhySection = () => {
   const stories = ["Detecting hidden mold in my new flat avoided AED 18,000 in repairs—inspection pays off.", "Early air quality test stopped my daughter's asthma attacks. Peace of mind earned.", "Minor sand infiltration saved my HVAC 35% efficiency—don't skip inspection.", "Initial wiring check caught code violations, saved AED 12,500 instantly.", "Mold inspection meant I could rent out my flat 4x faster and at premium."];
   const risks = [{
     icon: Droplets,
-    title: "Water Damage",
+    title: "💧 High Humidity Risks",
     stat: "67%",
-    description: "of Dubai properties show signs of water intrusion due to high humidity",
+    description: "of local properties struggle with water issues caused by extreme humidity",
     source: "(Dubai Municipality 2025 Climate Report)"
   }, {
     icon: Wind,
-    title: "Sand & Dust",
+    title: "🌬️ Efficiency Loss from Dust",
     stat: "45%",
-    description: "HVAC efficiency loss from desert climate impact",
+    description: "Desert dust severely impacts your AC, causing up to 45% in cooling efficiency loss",
     source: "(Emirates Environmental Agency, HVAC Impact Study 2024)"
   }, {
     icon: Zap,
-    title: "Electrical Issues",
+    title: "⚡ Hidden Electrical Risks",
     stat: "38%",
-    description: "of inspected properties have code violations",
+    description: "Nearly 4 out of 10 properties have electrical wiring issues that don't meet safety standards",
     source: "(Dubai Electricity & Water Authority Annual Inspection Data 2025)"
   }, {
     icon: Skull,
-    title: "Air Quality Risks",
+    title: "😮‍💨 Unhealthy Indoor Air",
     stat: "52%",
-    description: "of homes exceed safe VOC and PM2.5 levels affecting respiratory health",
+    description: "of homes have unsafe levels of pollutants (VOCs/PM2.5) that affect breathing and health",
     source: "(WHO Indoor Air Quality Guidelines; UAE Ministry of Health VOC Monitoring 2024)"
   }, {
     icon: Droplet,
-    title: "Mold & Allergens",
+    title: "🍄 Hidden Mold & Health",
     stat: "41%",
-    description: "of properties have hidden mold growth causing allergies and asthma",
+    description: "of properties harbor hidden mold that triggers allergies and respiratory problems",
     source: "(InterNACHI® Global Inspection Statistics 2025)"
 
   }];
