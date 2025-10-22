@@ -149,7 +149,7 @@ export const ServicePackages = () => {
         </div>
 
         {/* Package Carousel */}
-        <div className="relative mb-16 px-4 md:px-12 perspective-1000">
+        <div className="relative mb-16 px-4 md:px-12">
           <Carousel
             setApi={setApi}
             opts={{
@@ -158,41 +158,23 @@ export const ServicePackages = () => {
             }}
             plugins={[
               new Autoplay({
-                delay: 5000,
+                delay: 3000,
                 stopOnInteraction: true,
               }),
             ]}
             className="w-full max-w-7xl mx-auto"
           >
-            <CarouselContent className="-ml-2 md:-ml-4 py-12">
-              {packages.map((pkg, index) => {
-                const distance = Math.abs(current - index);
-                const isPrev = index < current;
-                const isNext = index > current;
-
-                return (
-                  <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                    <div
-                      className={`transition-all duration-700 ease-out h-full transform-gpu ${
-                        current === index
-                          ? "scale-110 md:scale-125 z-20 translate-z-20"
-                          : distance === 1
-                            ? "scale-95 md:scale-105 z-10 translate-z-0 opacity-85"
-                            : distance === 2
-                              ? "scale-90 md:scale-95 z-5 translate-z-0 opacity-60"
-                              : "scale-85 md:scale-90 z-0 translate-z-0 opacity-40"
-                      }`}
-                      style={{
-                        transformStyle: "preserve-3d",
-                        transformOrigin: current === index ? "center center" :
-                                       isPrev ? "right center" : "left center"
-                      }}
-                    >
-                      <PackageCard pkg={pkg} useCtaLabel={useCtaLabel} isActive={current === index} />
-                    </div>
-                  </CarouselItem>
-                );
-              })}
+            <CarouselContent className="-ml-4 py-12">
+              {packages.map((pkg, index) => (
+                <CarouselItem key={index} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+                  <PackageCard
+                    pkg={pkg}
+                    useCtaLabel={useCtaLabel}
+                    isActive={current === index}
+                    isCenter={true}
+                  />
+                </CarouselItem>
+              ))}
             </CarouselContent>
             <CarouselPrevious className="-left-4 md:left-0 z-30" />
             <CarouselNext className="-right-4 md:right-0 z-30" />
@@ -237,40 +219,46 @@ const PackageCard: React.FC<any> = ({ pkg, useCtaLabel, isActive }) => {
   const onCardClick = () => openBookingCard(pkg.name);
 
   return (
-    <div>
+    <div className={`h-full ${isActive ? "" : "opacity-70"}`}>
       <Card
         onClick={onCardClick}
-        className={`relative p-6 pt-8 transition-all duration-500 ease-in-out hover:scale-105 flex flex-col h-full cursor-pointer overflow-visible ${
+        className={`relative p-6 pt-8 transition-all duration-500 ease-in-out flex flex-col h-full cursor-pointer overflow-visible ${
           pkg.popular
             ? "border-2 border-accent shadow-[0_8px_30px_-4px_hsl(43_74%_66%/0.3)]"
             : "border hover:border-accent/50"
         } ${
           isActive
             ? "border-2 border-accent shadow-[0_12px_40px_-8px_hsl(43_74%_66%/0.5)] bg-accent/5"
-            : ""
+            : "bg-muted/50"
         } ${bookingPackage && bookingPackage !== pkg.name ? 'booking-package--inactive' : ''} ${bookingPackage===pkg.name? 'booking-package--selected':''}`}
       >
         {pkg.popular && (
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
+          <div className={`${isActive ? "absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold" : "hidden"}`}>
             Most Popular
           </div>
         )}
 
         <div className="text-center mb-6">
-          <div className="bg-accent/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
-            <pkg.icon className="w-7 h-7 text-accent" />
+          <div className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 ${isActive ? "bg-accent/10" : "bg-muted/50"}`}>
+            <pkg.icon className={`w-7 h-7 ${isActive ? "text-accent" : "text-muted-foreground"}`} />
           </div>
-          <h3 className="text-xl font-bold text-foreground mb-2">{pkg.name}</h3>
+          <h3 className={`text-xl font-bold mb-2 ${isActive ? "text-foreground" : "text-muted-foreground font-medium"}`}>
+            {pkg.name}
+          </h3>
         </div>
 
         <div className="space-y-4 mb-6">
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-2">Core Features</h4>
+            <h4 className={`text-sm font-semibold mb-2 ${isActive ? "text-foreground" : "text-muted-foreground"}`}>
+              Core Features
+            </h4>
             <ul className="space-y-2">
               {pkg.features.map((feature: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                  <span className="text-xs text-muted-foreground">{feature}</span>
+                  <Check className={`w-4 h-4 shrink-0 mt-0.5 ${isActive ? "text-accent" : "text-muted-foreground"}`} />
+                  <span className={`text-xs ${isActive ? "text-muted-foreground" : "text-muted/60"}`}>
+                    {feature}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -278,11 +266,20 @@ const PackageCard: React.FC<any> = ({ pkg, useCtaLabel, isActive }) => {
         </div>
 
         <div className="mt-auto">
-          <p className="text-xs text-muted-foreground mb-2">Hidden Defects & Health Risks — Increase Future Costs</p>
+          <p className={`text-xs mb-2 ${isActive ? "text-muted-foreground" : "text-muted/60"}`}>
+            Hidden Defects & Health Risks — Increase Future Costs
+          </p>
           {hookText && (
-            <div className="text-sm font-semibold text-accent mb-3">{hookText}</div>
+            <div className={`text-sm font-semibold mb-3 ${isActive ? "text-accent" : "text-muted-foreground"}`}>
+              {hookText}
+            </div>
           )}
-          <Button variant={pkg.popular ? "premium" : "outline"} className="w-full text-sm" size="lg" onClick={(e:any)=>{e.stopPropagation(); openBookingCard(pkg.name);}}>
+          <Button
+            variant={pkg.popular ? "premium" : "outline"}
+            className={`w-full text-sm ${isActive ? "" : "opacity-70"}`}
+            size="lg"
+            onClick={(e:any)=>{e.stopPropagation(); openBookingCard(pkg.name);}}
+          >
             {ctaLabel}
           </Button>
         </div>
