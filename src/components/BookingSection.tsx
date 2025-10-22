@@ -176,7 +176,7 @@ export const BookingSection = () => {
               {currentStep === 1 && (
                 <div className="space-y-6 animate-fade-in">
                   <h3 className="text-2xl font-bold text-foreground mb-6">Contact Information</h3>
-                  
+
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Full Name *</label>
                     <Input
@@ -487,19 +487,7 @@ export const BookingSection = () => {
                 <div className="space-y-6 animate-fade-in">
                   <h3 className="text-2xl font-bold text-foreground mb-6">Review & Confirm</h3>
 
-                  {!showCalculation ? (
-                    <div className="text-center py-12">
-                      <Button
-                        type="button"
-                        variant="premium"
-                        size="xl"
-                        onClick={calculatePrice}
-                        className="mx-auto"
-                      >
-                        Calculate Total Cost
-                      </Button>
-                    </div>
-                  ) : (
+                  {calculatedPrice !== null ? (
                     <>
                       <div className="bg-gradient-to-r from-accent/10 to-accent/5 border-2 border-accent/30 rounded-lg p-6">
                         <div className="text-center mb-4">
@@ -525,29 +513,23 @@ export const BookingSection = () => {
                         <div className="grid grid-cols-2 gap-2 text-muted-foreground">
                           <span>Property Size:</span>
                           <span className="text-foreground font-medium">{formData.propertySize} sqft</span>
+                          <span>User Type:</span>
+                          <span className="text-foreground font-medium capitalize">{formData.userType}</span>
                           <span>Package:</span>
                           <span className="text-foreground font-medium capitalize">{formData.packageType}</span>
                           <span>Location:</span>
                           <span className="text-foreground font-medium">{formData.location}</span>
                         </div>
-                        {Object.entries(formData.addOns).some(([_, value]) => value) && (
-                          <>
-                            <h4 className="font-semibold text-foreground pt-2">Selected Add-ons:</h4>
-                            <ul className="list-disc list-inside text-muted-foreground">
-                              {formData.addOns.threeDScan && <li>3D Home Scan</li>}
-                              {formData.addOns.inspectionVideo && <li>Full Inspection Video</li>}
-                              {formData.addOns.negativePressure && <li>Negative Pressure Test</li>}
-                              {formData.addOns.consultations && <li>Three Online Consultations</li>}
-                              {formData.addOns.moldTest && <li>Mold Test</li>}
-                            </ul>
-                          </>
-                        )}
                       </div>
 
                       <Button type="submit" variant="premium" size="xl" className="w-full">
                         Confirm Booking
                       </Button>
                     </>
+                  ) : (
+                    <div className="text-center py-12">
+                      <p className="text-lg text-muted-foreground">Calculating price...</p>
+                    </div>
                   )}
                 </div>
               )}
@@ -615,231 +597,6 @@ export const BookingSection = () => {
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 )}
-              </div>
-            </form>
-          </Card>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-</final_file_content>
-
-IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
-
-
-
-New problems detected after saving the file:
-src/components/BookingSection.tsx
-- [ts Error] Line 490: Cannot find name 'showCalculation'.
-- [ts Error] Line 533: Property 'addOns' does not exist on type '{ name: string; email: string; phoneCountry: string; phone: string; selectedCity: string; location: string; customLocation: string; propertySize: string; userType: string; packageType: string; }'.
-- [ts Error] Line 537: Property 'addOns' does not exist on type '{ name: string; email: string; phoneCountry: string; phone: string; selectedCity: string; location: string; customLocation: string; propertySize: string; userType: string; packageType: string; }'.
-- [ts Error] Line 538: Property 'addOns' does not exist on type '{ name: string; email: string; phoneCountry: string; phone: string; selectedCity: string; location: string; customLocation: string; propertySize: string; userType: string; packageType: string; }'.
-- [ts Error] Line 539: Property 'addOns' does not exist on type '{ name: string; email: string; phoneCountry: string; phone: string; location: string; customLocation: string; propertySize: string; userType: string; packageType: string; }'.
-- [ts Error] Line 540: Property 'addOns' does not exist on type '{ name: string; email: string; phoneCountry: string; phone: string; selectedCity: string; location: string; customLocation: string; propertySize: string; userType: string; packageType: string; }'.
-- [ts Error] Line 541: Property 'addOns' does not exist on type '{ name: string; email: string; phoneCountry: string; phone: string; selectedCity: string; location: string; customLocation: string; propertySize: string; userType: string; packageType: string; }'.
-
-# TODO LIST 
-
-You've made 40 API requests without a todo list. Consider creating one to track remaining work.
-
-
-
-
-
-1. To create or update a todo list, include the current task:
-
-   - [ ] Fix Step 4 Confirmation section to remove showCalculation and addOns references
-
-2. Create a complete task list for the Booking Section overhaul:
-
-   - [x] Update Project Details step with UAE city dropdown (defaults to Dubai)
-
-   - [x] Implement custom location input for "Other City" selection
-
-   - [x] Remove rooms field, keep only property size
-
-   - [x] Change Step 3 title to "Choose Protection Level"
-
-   - [x] Add buyer/investor/agency selection buttons
-
-   - [x] Implement package selection based on user type:
-     - Buyer: Essential, Comprehensive, VIP, Air Quality
-     - Investor: Investment Pack
-     - Agency: Contact information only
-
-   - [ ] Remove addOns from formData structure and calculation
-
-   - [ ] Update Step 4 Confirmation to show direct calculation
-
-   - [ ] Update navigation logic for agency skipping
-
-   - [ ] Update order summary to remove addOns and show userType
-
-3. Modify the list to reflect the exact requirements again:
-
-   - Location defaults to Dubai ✓
-
-   - UAE cities dropdown plus "Other City" ✓
-
-   - Custom location input when "Other" selected ✓
-
-   - Only ask for property size ✓
-
-   - Protection Level with buyer/investor/agency ✓
-
-   - Packages shown in same row based on user type ✓
-
-   - No add-on section ✓
-
-   - Direct calculation ✓
-
-   - Order summary updated
-
-4. Technical tasks completed:
-
-   - Fixed formData structure ✓
-
-   - Updated calculatePrice function ✓
-
-   - Fixed canProceedToNextStep logic ✓
-
-   - Updated steps titles ✓
-
-   - Created handleNext function ✓
-
-   - Fixed navigation button onClick ✓
-
-5. Remaining issues to fix:
-
-   - Step 4 still shows showCalculation variable which was removed ✓ (needs fixing)
-
-   - addOns references in Step 4 need to be removed ✓ (needs fixing)
-
-   - Order summary needs to show userType instead of package ✓ (needs fixing)<replace_in_file>
-<path>src/components/BookingSection.tsx</path>
-<diff>------- SEARCH
-              {/* Step 4: Confirmation */}
-              {currentStep === 4 && (
-                <div className="space-y-6 animate-fade-in">
-                  <h3 className="text-2xl font-bold text-foreground mb-6">Review & Confirm</h3>
-
-                  {!showCalculation ? (
-                    <div className="text-center py-12">
-                      <Button
-                        type="button"
-                        variant="premium"
-                        size="xl"
-                        onClick={calculatePrice}
-                        className="mx-auto"
-                      >
-                        Calculate Total Cost
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="bg-gradient-to-r from-accent/10 to-accent/5 border-2 border-accent/30 rounded-lg p-6">
-                        <div className="text-center mb-4">
-                          <p className="text-sm text-muted-foreground mb-2">Your Total Price</p>
-                          <p className="text-5xl font-bold text-accent mb-2">{calculatedPrice} AED</p>
-                          <p className="text-sm text-muted-foreground">
-                            Discount applied: {discountAmount} AED
-                          </p>
-                        </div>
-
-                        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 text-center">
-                          <p className="text-sm font-semibold text-destructive mb-2">
-                            ⏰ Discount valid for: {formatTime(timeLeft)}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Discount valid only for this email. Restart or different email voids offer.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-3 text-sm">
-                        <h4 className="font-semibold text-foreground">Order Summary:</h4>
-                        <div className="grid grid-cols-2 gap-2 text-muted-foreground">
-                          <span>Property Size:</span>
-                          <span className="text-foreground font-medium">{formData.propertySize} sqft</span>
-                          <span>Package:</span>
-                          <span className="text-foreground font-medium capitalize">{formData.packageType}</span>
-                          <span>Location:</span>
-                          <span className="text-foreground font-medium">{formData.location}</span>
-                        </div>
-                        {Object.entries(formData.addOns).some(([_, value]) => value) && (
-                          <>
-                            <h4 className="font-semibold text-foreground pt-2">Selected Add-ons:</h4>
-                            <ul className="list-disc list-inside text-muted-foreground">
-                              {formData.addOns.threeDScan && <li>3D Home Scan</li>}
-                              {formData.addOns.inspectionVideo && <li>Full Inspection Video</li>}
-                              {formData.addOns.negativePressure && <li>Negative Pressure Test</li>}
-                              {formData.addOns.consultations && <li>Three Online Consultations</li>}
-                              {formData.addOns.moldTest && <li>Mold Test</li>}
-                            </ul>
-                          </>
-                        )}
-                      </div>
-
-                      <Button type="submit" variant="premium" size="xl" className="w-full">
-                        Confirm Booking
-                      </Button>
-                    </>
-                  )}
-                </div>
-              )}
-              {/* Step 4: Confirmation */}
-              {currentStep === 4 && (
-                <div className="space-y-6 animate-fade-in">
-                  <h3 className="text-2xl font-bold text-foreground mb-6">Review & Confirm</h3>
-
-                  {calculatedPrice !== null ? (
-                    <>
-                      <div className="bg-gradient-to-r from-accent/10 to-accent/5 border-2 border-accent/30 rounded-lg p-6">
-                        <div className="text-center mb-4">
-                          <p className="text-sm text-muted-foreground mb-2">Your Total Price</p>
-                          <p className="text-5xl font-bold text-accent mb-2">{calculatedPrice} AED</p>
-                          <p className="text-sm text-muted-foreground">
-                            Discount applied: {discountAmount} AED
-                          </p>
-                        </div>
-
-                        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 text-center">
-                          <p className="text-sm font-semibold text-destructive mb-2">
-                            ⏰ Discount valid for: {formatTime(timeLeft)}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Discount valid only for this email. Restart or different email voids offer.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-3 text-sm">
-                        <h4 className="font-semibold text-foreground">Order Summary:</h4>
-                        <div className="grid grid-cols-2 gap-2 text-muted-foreground">
-                          <span>Property Size:</span>
-                          <span className="text-foreground font-medium">{formData.propertySize} sqft</span>
-                          <span>User Type:</span>
-                          <span className="text-foreground font-medium capitalize">{formData.userType}</span>
-                          <span>Package:</span>
-                          <span className="text-foreground font-medium capitalize">{formData.packageType}</span>
-                          <span>Location:</span>
-                          <span className="text-foreground font-medium">{formData.location}</span>
-                        </div>
-                      </div>
-
-                      <Button type="submit" variant="premium" size="xl" className="w-full">
-                        Confirm Booking
-                      </Button>
-                    </>
-                  ) : (
-                    <div className="text-center py-12">
-                      <p className="text-lg text-muted-foreground">Calculating price...</p>
-                    </div>
-                  )}
-                </div>
-              )}
               </div>
             </form>
           </Card>
