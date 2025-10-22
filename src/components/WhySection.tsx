@@ -4,26 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
+// only store filenames here; we'll build full URL with Vite's base at runtime
 const certificateImages = [
-  "/certificate/basic.png",
-  "/certificate/advanced.png",
-  "/certificate/insulation.png",
-  "/certificate/deck.png",
-  "/certificate/maintenance.png",
-  "/certificate/new-construction.png",
-  "/certificate/warranty.png",
-  "/certificate/roof.png",
-  "/certificate/exterior.png",
-  "/certificate/repair.png",
-  "/certificate/workplace.png",
-  "/certificate/plumbing.png",
-  "/certificate/mold.png",
-  "/certificate/thermal.png",
-  "/certificate/energy.png",
-  "/certificate/foundation.png",
-  "/certificate/code.png",
-  "/certificate/electrical.png",
-  "/certificate/standard.png",
+  "basic.png",
+  "advanced.png",
+  "insulation.png",
+  "deck.png",
+  "maintenance.png",
+  "new-construction.png",
+  "warranty.png",
+  "roof.png",
+  "exterior.png",
+  "repair.png",
+  "workplace.png",
+  "plumbing.png",
+  "mold.png",
+  "thermal.png",
+  "energy.png",
+  "foundation.png",
+  "code.png",
+  "electrical.png",
+  "standard.png",
 ];
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
@@ -133,7 +134,7 @@ export const WhySection = () => {
           loop: true
         }} plugins={[new Autoplay({
           delay: 3000
-        })]} className="w-full max-w-6xl mx-auto perspective-1000">
+        }) as any]} className="w-full max-w-6xl mx-auto perspective-1000">
             <CarouselContent className="-ml-4">
               {risks.map((risk, index) => <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <Card className="p-8 border-2 hover:border-accent transition-all duration-500 h-full flex flex-col hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] hover:scale-[1.02] sm:hover:scale-105 lg:hover:scale-110 group cursor-pointer">
@@ -180,17 +181,37 @@ export const WhySection = () => {
             }}
             plugins={[new Autoplay({
               delay: 2000
-            })]}
+            }) as any]}
             className="w-full max-w-4xl mx-auto"
           >
             <CarouselContent className="-ml-4">
-              {certificateImages.map((image, index) => (
-                <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-                  <div className="flex items-center justify-center h-24 bg-background border border-accent/20 rounded-lg p-4">
-                    <img src={image} alt={`Certificate ${index + 1}`} className="max-h-full max-w-full object-contain" />
-                  </div>
-                </CarouselItem>
-              ))}
+              {certificateImages.map((image, index) => {
+                // construct full URL using Vite base (works in dev and when app is deployed to a subpath)
+                const baseUrl = (import.meta as any).env?.BASE_URL ?? '/';
+                const imgSrc = `${baseUrl.replace(/\/$/, '')}/certificate/${image}`;
+                return (
+                  <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                    <div className="flex items-center justify-center h-24 bg-background border border-accent/20 rounded-lg p-4">
+                      <img
+                        src={imgSrc}
+                        alt={`Certificate ${index + 1}`}
+                        className="max-h-full max-w-full object-contain"
+                        onError={(e) => {
+                          // fallback to placeholder in public folder
+                          const target = e.currentTarget as HTMLImageElement;
+                          if (target.src && !target.dataset.fallback) {
+                            target.dataset.fallback = '1';
+                            target.src = `${baseUrl.replace(/\/$/, '')}/placeholder.svg`;
+                          }
+                          // also log for debugging
+                          // eslint-disable-next-line no-console
+                          console.warn(`Certificate image failed to load: ${imgSrc}`);
+                        }}
+                      />
+                    </div>
+                  </CarouselItem>
+                );
+              })}
             </CarouselContent>
             <CarouselPrevious className="-left-4" />
             <CarouselNext className="-right-4" />
@@ -205,7 +226,7 @@ export const WhySection = () => {
           loop: true
         }} plugins={[new Autoplay({
           delay: 10000
-        })]} className="w-full max-w-5xl mx-auto">
+        }) as any]} className="w-full max-w-5xl mx-auto">
             <CarouselContent>
               {caseStudies.map((study, index) => (
                 <CarouselItem key={index}>
