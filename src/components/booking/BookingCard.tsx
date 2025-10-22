@@ -116,18 +116,35 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
       // simulated network delay
       await new Promise((r) => setTimeout(r, 2000));
 
-      // Toast message
+      // Toast message with WhatsApp share option
       const benefitLabel = selectedPackage ?? bookingPackage ?? 'premium benefit';
       const benefitText = `${benefitLabel}`;
       const slot = values.timeSlot;
       const sqft = values.sqft;
+      const date = values.date ? format(values.date as Date, 'MMM d, yyyy') : '';
 
       let message = `Your booking is confirmed. ${benefitText} included as part of your premium inspection.`;
       if (benefitLabel === 'investor') {
         message += ` Unique Investor Code 'NEW20' activated. Use at payment.`;
       }
 
-      toast.success(message + ` Slot: ${slot}. Area: ${sqft} sq ft.`);
+      // Create WhatsApp share message
+      const whatsappMessage = `🏠 *Home Inspection Booking Confirmed*\n\n` +
+        `📅 Date: ${date}\n` +
+        `⏰ Time: ${slot}\n` +
+        `📏 Area: ${sqft} sq ft\n` +
+        `📦 Package: ${benefitLabel}\n\n` +
+        `✅ Booking confirmed with Gulf Guard AI`;
+
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
+
+      toast.success(message + ` Slot: ${slot}. Area: ${sqft} sq ft.`, {
+        action: {
+          label: 'Share on WhatsApp',
+          onClick: () => window.open(whatsappUrl, '_blank')
+        },
+        duration: 5000
+      });
 
       // close modal after short delay
       setTimeout(() => {

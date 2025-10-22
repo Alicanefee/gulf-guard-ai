@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import { BookingProvider } from "./components/booking/BookingProvider";
 import BookingCard from "./components/booking/BookingCard";
 import StickyBookingBar from "./components/booking/StickyBookingBar";
+import WhatsAppButton from "./components/WhatsAppButton";
 import { useBooking } from "./components/booking/BookingProvider";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
         <BookingRoot />
+        <WhatsAppButton />
       </BookingProvider>
     </TooltipProvider>
   </QueryClientProvider>
