@@ -253,15 +253,11 @@ export const WhySection = () => {
               {/* CTA Card - Middle */}
               <CarouselItem>
                 <Card className="relative p-0 border-none overflow-hidden h-[400px] md:h-[500px]" style={{
-                  backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%), url(/assets/3d-scan.png)',
-                  backgroundSize: 'cover, cover',
-                  backgroundPosition: 'center, center',
-                  backgroundBlendMode: 'multiply'
+                  backgroundImage: 'url(/assets/3d-scan.png)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
                 }}>
-                  {/* Additional gradient overlay for depth */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/30"></div>
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-accent/10 to-accent/20"></div>
-
                   {/* darken overlay to ensure contrast */}
                   <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
