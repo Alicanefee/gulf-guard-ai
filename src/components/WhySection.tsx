@@ -4,6 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
+import basic from "@/assets/certificate/basic.png";
+import advanced from "@/assets/certificate/advanced.png";
+import insulation from "@/assets/certificate/insulation.png";
+import deck from "@/assets/certificate/deck.png";
+import maintenance from "@/assets/certificate/maintenance.png";
+import newConstruction from "@/assets/certificate/new-construction.png";
+import warranty from "@/assets/certificate/warranty.png";
+import roof from "@/assets/certificate/roof.png";
+import exterior from "@/assets/certificate/exterior.png";
+import repair from "@/assets/certificate/repair.png";
+import workplace from "@/assets/certificate/workplace.png";
+import plumbing from "@/assets/certificate/plumbing.png";
+import mold from "@/assets/certificate/mold.png";
+import thermal from "@/assets/certificate/thermal.png";
+import energy from "@/assets/certificate/energy.png";
+import foundation from "@/assets/certificate/foundation.png";
+import code from "@/assets/certificate/code.png";
+import electrical from "@/assets/certificate/electrical.png";
+import standard from "@/assets/certificate/standard.png";
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
@@ -68,6 +87,11 @@ export const WhySection = () => {
       clearInterval(titleInterval);
     };
   }, []);
+  const certificateImages = [
+    basic, advanced, insulation, deck, maintenance, newConstruction, warranty, roof,
+    exterior, repair, workplace, plumbing, mold, thermal, energy, foundation, code, electrical, standard
+  ];
+
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: "smooth"
@@ -136,6 +160,32 @@ export const WhySection = () => {
               "{stories[0]}"
             </div>
           </div>
+        </div>
+
+        {/* Certificate Images Scroll Banner */}
+        <div className="mb-8">
+          <Carousel
+            opts={{
+              align: "center",
+              loop: true
+            }}
+            plugins={[new Autoplay({
+              delay: 2000
+            })]}
+            className="w-full max-w-4xl mx-auto"
+          >
+            <CarouselContent className="-ml-4">
+              {certificateImages.map((image, index) => (
+                <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                  <div className="flex items-center justify-center h-24 bg-background border border-accent/20 rounded-lg p-4">
+                    <img src={image} alt={`Certificate ${index + 1}`} className="max-h-full max-w-full object-contain" />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="-left-4" />
+            <CarouselNext className="-right-4" />
+          </Carousel>
         </div>
 
         {/* Case Studies Carousel with Auto CTA Card */}
