@@ -41,19 +41,20 @@ export const WhySection = () => {
     source: "(InterNACHI® Global Inspection Statistics 2025)"
   }];
   const caseStudies = [{
-    title: "Dubai Marina Villa",
-    description: "Pre-purchase inspection revealed hidden water damage in AC ducts and electrical safety violations. Client negotiated AED 85,000 price reduction, recovering 12× the inspection cost.",
-    saved: "AED 85K",
-    roi: "12×",
-    issues: 23,
-    critical: 7
+    title: "Health Issue: Not Mold, But Hidden Gases!",
+    description: "A family suffered from headaches and constant fatigue. Mold tests came back negative. Advanced air quality monitoring revealed formaldehyde levels between 1.4–1.7 ppm—about 18 times higher than the World Health Organization limit (0.08 ppm).",
+    source: "Investigation of Indoor Air Quality inside Houses From UAE - Bani Mfarrej, 2020",
+    cta: "Don't rely on mold testing alone—get detailed VOC and particulate measurements for truly healthy living!"
   }, {
-    title: "Developer Success Story",
-    description: "Stand out in a crowded market—by showcasing a 3D virtual tour and lab-grade air-quality report upfront, this developer generated 87% more qualified leads and slashed time on market from 45 to 18 days. The result: a 3% premium, netting AED 30,000 above the AED 1 M listing price.",
-    stat1: "87%",
-    stat1Label: "More Leads",
-    stat2: "18 Days",
-    stat2Label: "Time to Sell"
+    title: "Hidden Moisture Detected Before Rental",
+    description: "In 2025, a Dubai apartment was thermal-imaged just before leasing. Hidden wall moisture was detected, and the landlord resolved the issue before move-in. Real inspection reports show that 33% of properties in Dubai hide moisture or leakage problems.",
+    source: "Top 10 Property Defects Caught During Inspections in Dubai - SnagProperty, 2025",
+    cta: "Before renting or buying, request hidden moisture and leakage checks—avoid expensive surprises later!"
+  }, {
+    title: "Post-Renovation Electrical Problem Prevented Costly Losses",
+    description: "In 2024, a third-party electrical inspection after renovations found overloads in the main panel and electrical leakage risks in sockets. Early detection allowed repairs before the walls were closed—preventing around 1,800 AED in extra work and days of delays.",
+    source: "Third-Party Electrical Inspection Services in UAE and GCC, 2024",
+    cta: "Always get your electrical system inspected after renovations—hidden faults can cost you dearly!"
   }];
   useEffect(() => {
     const storyInterval = setInterval(() => {
@@ -144,93 +145,48 @@ export const WhySection = () => {
           align: "center",
           loop: true
         }} plugins={[new Autoplay({
-          delay: 6000
+          delay: 10000
         })]} className="w-full max-w-5xl mx-auto">
             <CarouselContent>
-              <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none">
-                  <div className="grid md:grid-cols-2 gap-8 items-center">
-                    <div>
-                      <div className="flex items-center gap-2 mb-4">
+              {caseStudies.map((study, index) => (
+                <CarouselItem key={index}>
+                  <Card className={`p-8 md:p-12 ${index === 0 ? 'bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none' : 'bg-accent/5 border-2 border-accent/30'} ${index === 2 ? 'bg-black/80 text-white' : ''}`}>
+                    <div className="max-w-4xl mx-auto">
+                      <div className="flex items-center gap-2 mb-6">
                         <Shield className="w-6 h-6 text-accent" />
-                        <span className="text-accent font-semibold">Real Case Study #1</span>
+                        <span className="text-accent font-semibold">Case Study #{index + 1}</span>
                       </div>
-                      <h3 className="text-3xl font-bold mb-4">{caseStudies[0].title}</h3>
-                      <p className="text-primary-foreground/90 mb-6 leading-relaxed">
-                        {caseStudies[0].description}
-                      </p>
-                      <div className="flex items-center gap-4">
-                        <div>
-                          <div className="text-2xl font-bold text-accent">{caseStudies[0].saved}</div>
-                          <div className="text-sm text-primary-foreground/80">Saved</div>
-                        </div>
-                        <div className="h-12 w-px bg-primary-foreground/20" />
-                        <div>
-                          <div className="text-2xl font-bold text-accent">{caseStudies[0].roi}</div>
-                          <div className="text-sm text-primary-foreground/80">ROI</div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <div className="bg-background/10 backdrop-blur-sm p-4 rounded-lg border border-accent/30">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium">Issues Found</span>
-                          <span className="text-accent font-bold">{caseStudies[0].issues}</span>
-                        </div>
-                        <div className="h-2 bg-background/20 rounded-full overflow-hidden">
-                          <div className="h-full bg-accent w-[85%]" />
-                        </div>
-                      </div>
-                      
-                      <div className="bg-background/10 backdrop-blur-sm p-4 rounded-lg border border-accent/30">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium">Critical Risks</span>
-                          <span className="text-accent font-bold">{caseStudies[0].critical}</span>
-                        </div>
-                        <div className="h-2 bg-background/20 rounded-full overflow-hidden">
-                          <div className="h-full bg-accent w-[60%]" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </CarouselItem>
 
-              <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent/30">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Shield className="w-6 h-6 text-accent" />
-                    <span className="text-accent font-semibold">Real Case Study #2</span>
-                  </div>
-                  <h3 className="text-3xl font-bold text-foreground mb-4">{caseStudies[1].title}</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-6">
-                    {caseStudies[1].description}
-                  </p>
-                  <div className="flex items-center gap-6 mb-4">
-                    <div>
-                      <div className="text-3xl font-bold text-accent">{caseStudies[1].stat1}</div>
-                      <div className="text-sm text-muted-foreground">{caseStudies[1].stat1Label}</div>
+                      <h3 className={`text-3xl font-bold mb-6 ${index === 2 ? 'text-white' : 'text-foreground'}`}>
+                        {study.title}
+                      </h3>
+
+                      <p className={`leading-relaxed mb-6 ${index === 0 ? 'text-primary-foreground/90' : index === 2 ? 'text-gray-200' : 'text-muted-foreground'}`}>
+                        {study.description}
+                      </p>
+
+                      <div className="bg-white/10 backdrop-blur-sm border border-accent/30 rounded-lg p-4 mb-6">
+                        <p className={`text-sm font-medium mb-2 ${index === 2 ? 'text-gray-300' : 'text-accent'}`}>
+                          {study.cta}
+                        </p>
+                        <p className={`text-xs ${index === 0 ? 'text-primary-foreground/70' : index === 2 ? 'text-gray-400' : 'text-muted-foreground/70'}`}>
+                          Source: {study.source}
+                        </p>
+                      </div>
                     </div>
-                    <div className="h-12 w-px bg-border" />
-                    <div>
-                      <div className="text-3xl font-bold text-accent">{caseStudies[1].stat2}</div>
-                      <div className="text-sm text-muted-foreground">{caseStudies[1].stat2Label}</div>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground/70 italic">
-                    Source: PropTech Dubai "3D Tour Impact Study" 2024
-                  </p>
-                </Card>
-              </CarouselItem>
+                  </Card>
+                </CarouselItem>
+              ))}
 
               {/* New CTA Card */}
               <CarouselItem>
-                <Card className="relative p-0 md:p-0 bg-gradient-to-br from-primary via-accent/20 to-primary border-none animate-scale-in overflow-hidden">
-                  {/* Background gradient instead of image */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-accent/40 to-primary" />
+                <Card className="relative p-0 md:p-0 bg-gradient-to-br from-primary via-accent/20 to-primary border-none animate-scale-in overflow-hidden" style={{
+                  backgroundImage: 'url(/3d-scan.png)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}>
                   {/* darken overlay to ensure contrast */}
-                  <div className="absolute inset-0 bg-black/20" />
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
                   <div className="relative p-8 md:p-12 flex flex-col items-center min-h-[320px]">
                     <Shield className="w-16 h-16 text-accent mx-auto mb-6 relative z-10" />
