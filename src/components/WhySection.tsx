@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect, useRef } from "react";
 import Autoplay from "embla-carousel-autoplay";
+import scan3dImage from "@/assets/3d-scan.png";
 
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
@@ -251,7 +252,7 @@ export const WhySection = () => {
               {/* CTA Card - Middle */}
               <CarouselItem>
                 <Card className="relative p-0 border-none overflow-hidden h-[400px] md:h-[500px]" style={{
-                  backgroundImage: 'url(/assets/3d-scan.png)',
+                  backgroundImage: `url(${scan3dImage})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat'
