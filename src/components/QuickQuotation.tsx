@@ -60,7 +60,7 @@ const QuickQuotation: React.FC = () => {
   return (
     <Dialog open={open} onOpenChange={(v)=>setOpen(v)}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="lg">Quick Quotation</Button>
+        <Button variant="premium-outline" size="xl">Quick Quotation</Button>
       </DialogTrigger>
 
       <DialogContent className="w-[95%] max-w-2xl" ref={(el:any)=>dialogRef.current = el}>
