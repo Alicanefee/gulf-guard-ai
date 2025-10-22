@@ -143,9 +143,9 @@ const QuickQuotation: React.FC = () => {
             <div className="font-semibold">Agency Contact</div>
             <div className="text-sm text-muted-foreground">Please leave your contact details so we can reach out with enterprise pricing.</div>
             <div className="grid grid-cols-1 gap-3">
-              <Input placeholder="Agency name" value={agencyContact.name} onChange={(e)=>setAgencyContact({...agencyContact, name: e.target.value})} />
-              <Input placeholder="Email" value={agencyContact.email} onChange={(e)=>setAgencyContact({...agencyContact, email: e.target.value})} />
-              <Input placeholder="Phone" value={agencyContact.phone} onChange={(e)=>setAgencyContact({...agencyContact, phone: e.target.value})} />
+              <Input placeholder="Agency name" autoComplete="organization" value={agencyContact.name} onChange={(e)=>setAgencyContact({...agencyContact, name: e.target.value})} />
+              <Input placeholder="Email" type="email" autoComplete="email" value={agencyContact.email} onChange={(e)=>setAgencyContact({...agencyContact, email: e.target.value})} />
+              <Input placeholder="Phone" type="tel" autoComplete="tel" value={agencyContact.phone} onChange={(e)=>setAgencyContact({...agencyContact, phone: e.target.value})} />
             </div>
             <div className="mt-4 flex gap-2">
               <Button variant="premium" onClick={proceed}>Submit Contact</Button>

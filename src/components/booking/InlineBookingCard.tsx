@@ -30,6 +30,7 @@ export const InlineBookingCard: React.FC<Props> = ({ pkgId, onClose }) => {
       <form onSubmit={submit} className="space-y-3">
         <input className="booking-input" placeholder="Full name" autoComplete="name" value={name} onChange={(e)=>setName(e.target.value)} required />
         <input className="booking-input" placeholder="Email" autoComplete="email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
+        <input className="booking-input" placeholder="Phone" autoComplete="tel" type="tel" />
         <input className="booking-input" type="datetime-local" value={datetime} onChange={(e)=>setDatetime(e.target.value)} required />
         <CountdownScarcity />
         <div className="booking-trustbar">InterNACHI® certified – 10+ years experience</div>

@@ -164,7 +164,7 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Full name" {...field} aria-label="Full name" />
+                    <Input placeholder="Full name" autoComplete="name" {...field} aria-label="Full name" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -174,7 +174,7 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="you@domain.com" type="email" {...field} aria-label="Email address" />
+                    <Input placeholder="you@domain.com" type="email" autoComplete="email" {...field} aria-label="Email address" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
