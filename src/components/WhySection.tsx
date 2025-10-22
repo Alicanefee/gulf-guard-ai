@@ -7,7 +7,7 @@ import Autoplay from "embla-carousel-autoplay";
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
-  const titles = ["Breathe health, not risk.", "Invest in peace of mind, not unexpected costs."];
+  const titles = ["Breathe easy - live healthy", "Inspect before invest"];
   const stories = ["Detecting hidden mold in my new flat avoided AED 18,000 in repairs—inspection pays off.", "Early air quality test stopped my daughter's asthma attacks. Peace of mind earned.", "Minor sand infiltration saved my HVAC 35% efficiency—don't skip inspection.", "Initial wiring check caught code violations, saved AED 12,500 instantly.", "Mold inspection meant I could rent out my flat 4x faster and at premium."];
   const risks = [{
     icon: Droplets,
@@ -80,14 +80,14 @@ export const WhySection = () => {
             <span className="text-[1.2rem] font-semibold text-foreground">Critical Insights</span>
           </div>
           
-          <div className="relative h-32 mb-6">
+          <div className="relative h-24 mb-4">
             {titles.map((title, index) => <h2 key={index} className={`text-4xl md:text-5xl font-bold text-foreground absolute inset-0 flex items-center justify-center transition-all duration-1000 ${index === currentTitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 <span className="block text-accent">{title}</span>
               </h2>)}
           </div>
-          
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            Dubai's extreme climate and rapid construction growth create unique risks. 
+
+          <p className={`text-xl text-muted-foreground leading-relaxed transition-opacity duration-1000 ${currentTitle === 0 ? 'opacity-0' : 'opacity-100'}`}>
+            Dubai's extreme climate and rapid construction growth create unique risks.
             Early detection saves an average of AED 47,000 in repair costs.
           </p>
         </div>
