@@ -4,25 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import basic from "@/assets/certificate/basic.png";
-import advanced from "@/assets/certificate/advanced.png";
-import insulation from "@/assets/certificate/insulation.png";
-import deck from "@/assets/certificate/deck.png";
-import maintenance from "@/assets/certificate/maintenance.png";
-import newConstruction from "@/assets/certificate/new-construction.png";
-import warranty from "@/assets/certificate/warranty.png";
-import roof from "@/assets/certificate/roof.png";
-import exterior from "@/assets/certificate/exterior.png";
-import repair from "@/assets/certificate/repair.png";
-import workplace from "@/assets/certificate/workplace.png";
-import plumbing from "@/assets/certificate/plumbing.png";
-import mold from "@/assets/certificate/mold.png";
-import thermal from "@/assets/certificate/thermal.png";
-import energy from "@/assets/certificate/energy.png";
-import foundation from "@/assets/certificate/foundation.png";
-import code from "@/assets/certificate/code.png";
-import electrical from "@/assets/certificate/electrical.png";
-import standard from "@/assets/certificate/standard.png";
+const certificateImages = [
+  "/assets/certificate/basic.png",
+  "/assets/certificate/advanced.png",
+  "/assets/certificate/insulation.png",
+  "/assets/certificate/deck.png",
+  "/assets/certificate/maintenance.png",
+  "/assets/certificate/new-construction.png",
+  "/assets/certificate/warranty.png",
+  "/assets/certificate/roof.png",
+  "/assets/certificate/exterior.png",
+  "/assets/certificate/repair.png",
+  "/assets/certificate/workplace.png",
+  "/assets/certificate/plumbing.png",
+  "/assets/certificate/mold.png",
+  "/assets/certificate/thermal.png",
+  "/assets/certificate/energy.png",
+  "/assets/certificate/foundation.png",
+  "/assets/certificate/code.png",
+  "/assets/certificate/electrical.png",
+  "/assets/certificate/standard.png",
+];
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
@@ -87,10 +89,7 @@ export const WhySection = () => {
       clearInterval(titleInterval);
     };
   }, []);
-  const certificateImages = [
-    basic, advanced, insulation, deck, maintenance, newConstruction, warranty, roof,
-    exterior, repair, workplace, plumbing, mold, thermal, energy, foundation, code, electrical, standard
-  ];
+
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
