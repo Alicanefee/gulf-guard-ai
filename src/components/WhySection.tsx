@@ -188,25 +188,14 @@ export const WhySection = () => {
               {certificateImages.map((image, index) => {
                 // construct full URL using Vite base (works in dev and when app is deployed to a subpath)
                 const baseUrl = (import.meta as any).env?.BASE_URL ?? '/';
-                const imgSrc = `${baseUrl.replace(/\/$/, '')}/certificate/${image}`;
+                const imgSrc = `${baseUrl.replace(/\/$/, '')}/placeholder.svg`;
                 return (
                   <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                     <div className="flex items-center justify-center h-24 bg-background border border-accent/20 rounded-lg p-4">
                       <img
                         src={imgSrc}
-                        alt={`Certificate ${index + 1}`}
+                        alt={`${image} Certificate`}
                         className="max-h-full max-w-full object-contain"
-                        onError={(e) => {
-                          // fallback to placeholder in public folder
-                          const target = e.currentTarget as HTMLImageElement;
-                          if (target.src && !target.dataset.fallback) {
-                            target.dataset.fallback = '1';
-                            target.src = `${baseUrl.replace(/\/$/, '')}/placeholder.svg`;
-                          }
-                          // also log for debugging
-                          // eslint-disable-next-line no-console
-                          console.warn(`Certificate image failed to load: ${imgSrc}`);
-                        }}
                       />
                     </div>
                   </CarouselItem>
