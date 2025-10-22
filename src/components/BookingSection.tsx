@@ -155,48 +155,11 @@ export const BookingSection = () => {
           <div className="text-center mb-12 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Schedule Your
-              <span className="block text-accent">Inspection</span>
+              <span className="block text-accent">Protection</span>
             </h2>
             <p className="text-xl text-muted-foreground">
               Same-day availability for urgent requests
             </p>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center">
-              {steps.map((step, index) => (
-                <div key={step.number} className="flex items-center flex-1">
-                  <div className="flex flex-col items-center flex-1">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
-                        currentStep > step.number
-                          ? "bg-accent text-accent-foreground"
-                          : currentStep === step.number
-                          ? "bg-accent text-accent-foreground ring-4 ring-accent/20"
-                          : "bg-secondary text-muted-foreground"
-                      }`}
-                    >
-                      {currentStep > step.number ? (
-                        <CheckCircle2 className="w-5 h-5" />
-                      ) : (
-                        step.number
-                      )}
-                    </div>
-                    <span className="text-xs mt-2 font-medium text-muted-foreground hidden sm:block">
-                      {step.title}
-                    </span>
-                  </div>
-                  {index < steps.length - 1 && (
-                    <div
-                      className={`h-1 flex-1 mx-2 transition-all ${
-                        currentStep > step.number ? "bg-accent" : "bg-secondary"
-                      }`}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
           </div>
 
           <Card className="p-8 md:p-12 shadow-[0_8px_30px_-4px_hsl(215_35%_20%/0.12)]">
@@ -283,85 +246,124 @@ export const BookingSection = () => {
 
               {/* Step 2: Project Details */}
               {currentStep === 2 && (
-                <div className="space-y-6 animate-fade-in">
-                  <h3 className="text-2xl font-bold text-foreground mb-6">Project Details</h3>
+                <>
+                  <div className="space-y-6 animate-fade-in">
+                    <h3 className="text-2xl font-bold text-foreground mb-6">Project Details</h3>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Property Location *</label>
-                    <div className="flex items-center gap-3">
-                      <MapPin className="w-4 h-4 text-muted-foreground" />
-                      <div className="flex items-center w-full">
-                        <Select
-                          value={formData.propertyCountry}
-                          onValueChange={(value) => setFormData({ ...formData, propertyCountry: value })}
-                          required
-                        >
-                          <SelectTrigger className="w-28 mr-2">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="+971">🇦🇪 +971 (UAE)</SelectItem>
-                            <SelectItem value="+1">🇺🇸 +1 (US)</SelectItem>
-                            <SelectItem value="+44">🇬🇧 +44 (UK)</SelectItem>
-                            <SelectItem value="+966">🇸🇦 +966 (SA)</SelectItem>
-                            <SelectItem value="+91">🇮🇳 +91 (IN)</SelectItem>
-                            <SelectItem value="+61">🇦🇺 +61 (AU)</SelectItem>
-                            {/* European country codes */}
-                            <SelectItem value="+33">🇫🇷 +33 (France)</SelectItem>
-                            <SelectItem value="+49">🇩🇪 +49 (Germany)</SelectItem>
-                            <SelectItem value="+39">🇮🇹 +39 (Italy)</SelectItem>
-                            <SelectItem value="+34">🇪🇸 +34 (Spain)</SelectItem>
-                            <SelectItem value="+31">🇳🇱 +31 (Netherlands)</SelectItem>
-                            <SelectItem value="+46">🇸🇪 +46 (Sweden)</SelectItem>
-                            <SelectItem value="+41">🇨🇭 +41 (Switzerland)</SelectItem>
-                            <SelectItem value="+43">🇦🇹 +43 (Austria)</SelectItem>
-                            <SelectItem value="+32">🇧🇪 +32 (Belgium)</SelectItem>
-                            <SelectItem value="+420">🇨🇿 +420 (Czech Republic)</SelectItem>
-                          </SelectContent>
-                        </Select>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Property Location *</label>
+                      <div className="flex items-center gap-3">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        <div className="flex items-center w-full">
+                          <Select
+                            value={formData.propertyCountry}
+                            onValueChange={(value) => setFormData({ ...formData, propertyCountry: value })}
+                            required
+                          >
+                            <SelectTrigger className="w-28 mr-2">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="+971">🇦🇪 +971 (UAE)</SelectItem>
+                              <SelectItem value="+1">🇺🇸 +1 (US)</SelectItem>
+                              <SelectItem value="+44">🇬🇧 +44 (UK)</SelectItem>
+                              <SelectItem value="+966">🇸🇦 +966 (SA)</SelectItem>
+                              <SelectItem value="+91">🇮🇳 +91 (IN)</SelectItem>
+                              <SelectItem value="+61">🇦🇺 +61 (AU)</SelectItem>
+                              {/* European country codes */}
+                              <SelectItem value="+33">🇫🇷 +33 (France)</SelectItem>
+                              <SelectItem value="+49">🇩🇪 +49 (Germany)</SelectItem>
+                              <SelectItem value="+39">🇮🇹 +39 (Italy)</SelectItem>
+                              <SelectItem value="+34">🇪🇸 +34 (Spain)</SelectItem>
+                              <SelectItem value="+31">🇳🇱 +31 (Netherlands)</SelectItem>
+                              <SelectItem value="+46">🇸🇪 +46 (Sweden)</SelectItem>
+                              <SelectItem value="+41">🇨🇭 +41 (Switzerland)</SelectItem>
+                              <SelectItem value="+43">🇦🇹 +43 (Austria)</SelectItem>
+                              <SelectItem value="+32">🇧🇪 +32 (Belgium)</SelectItem>
+                              <SelectItem value="+420">🇨🇿 +420 (Czech Republic)</SelectItem>
+                            </SelectContent>
+                          </Select>
 
-                        <Input
-                          placeholder="Dubai Marina, JBR..."
-                          className="flex-1"
-                          value={formData.location}
-                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                          autoComplete="street-address"
-                          required
-                        />
+                          <Input
+                            placeholder="Dubai Marina, JBR..."
+                            className="flex-1"
+                            value={formData.location}
+                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                            autoComplete="street-address"
+                            required
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-foreground">Property Size (sqft) *</label>
-                      <div className="relative">
-                        <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-foreground">Property Size (sqft) *</label>
+                        <div className="relative">
+                          <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            type="number"
+                            placeholder="1000"
+                            className="pl-10"
+                            value={formData.propertySize}
+                            onChange={(e) => setFormData({ ...formData, propertySize: e.target.value })}
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-foreground">Number of Rooms *</label>
                         <Input
                           type="number"
-                          placeholder="1000"
-                          className="pl-10"
-                          value={formData.propertySize}
-                          onChange={(e) => setFormData({ ...formData, propertySize: e.target.value })}
+                          placeholder="3"
+                          value={formData.rooms}
+                          onChange={(e) => setFormData({ ...formData, rooms: e.target.value })}
                           required
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-foreground">Number of Rooms *</label>
-                      <Input
-                        type="number"
-                        placeholder="3"
-                        value={formData.rooms}
-                        onChange={(e) => setFormData({ ...formData, rooms: e.target.value })}
-                        required
-                      />
-                    </div>
+                    {/* Region removed per request */}
                   </div>
 
-                  {/* Region removed per request */}
-                </div>
+                  {/* Progress Indicator integrated into card after Step 2 */}
+                  <div className="mt-8 mb-8">
+                    <div className="flex justify-between items-center">
+                      {steps.map((step, index) => (
+                        <div key={step.number} className="flex items-center flex-1">
+                          <div className="flex flex-col items-center flex-1">
+                            <div
+                              className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
+                                currentStep > step.number
+                                  ? "bg-accent text-accent-foreground"
+                                  : currentStep === step.number
+                                  ? "bg-accent text-accent-foreground ring-4 ring-accent/20"
+                                  : "bg-secondary text-muted-foreground"
+                              }`}
+                            >
+                              {currentStep > step.number ? (
+                                <CheckCircle2 className="w-5 h-5" />
+                              ) : (
+                                step.number
+                              )}
+                            </div>
+                            <span className="text-xs mt-2 font-medium text-muted-foreground hidden sm:block">
+                              {step.title}
+                            </span>
+                          </div>
+                          {index < steps.length - 1 && (
+                            <div
+                              className={`h-1 flex-1 mx-2 transition-all ${
+                                currentStep > step.number ? "bg-accent" : "bg-secondary"
+                              }`}
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
               )}
 
               {/* Step 3: Package & Add-ons */}
@@ -563,6 +565,45 @@ export const BookingSection = () => {
                       </Button>
                     </>
                   )}
+                </div>
+              )}
+
+              {/* Progress Indicator integrated into card after Step 2 */}
+              {currentStep > 2 && (
+                <div className="mb-8">
+                  <div className="flex justify-between items-center">
+                    {steps.map((step, index) => (
+                      <div key={step.number} className="flex items-center flex-1">
+                        <div className="flex flex-col items-center flex-1">
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
+                              currentStep > step.number
+                                ? "bg-accent text-accent-foreground"
+                                : currentStep === step.number
+                                ? "bg-accent text-accent-foreground ring-4 ring-accent/20"
+                                : "bg-secondary text-muted-foreground"
+                            }`}
+                          >
+                            {currentStep > step.number ? (
+                              <CheckCircle2 className="w-5 h-5" />
+                            ) : (
+                              step.number
+                            )}
+                          </div>
+                          <span className="text-xs mt-2 font-medium text-muted-foreground hidden sm:block">
+                            {step.title}
+                          </span>
+                        </div>
+                        {index < steps.length - 1 && (
+                          <div
+                            className={`h-1 flex-1 mx-2 transition-all ${
+                              currentStep > step.number ? "bg-accent" : "bg-secondary"
+                            }`}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
