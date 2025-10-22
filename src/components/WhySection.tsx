@@ -164,10 +164,8 @@ export const WhySection = () => {
             <CarouselContent className="-ml-4">
               {certificateImages.map((image, index) => {
                 // Construct full URL using the image name from the array.
-                // Assuming images are located in the 'public/assets/certificates/' folder
-                const baseUrl = (import.meta as any).env?.BASE_URL ?? '/';
-                const imagePath = `assets/certificates/${image}`; // Resimlerin bulunduğu klasör yolu
-                const imgSrc = `${baseUrl.replace(/\/$/, '')}/${imagePath}`; // DOĞRU URL
+                // Images are located in the 'public/certificate/' folder
+                const imgSrc = `/certificate/${image}`;
 
                 return (
                   <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
