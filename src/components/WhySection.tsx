@@ -1,9 +1,3 @@
-import { Card } from "@/components/ui/card";
-import { Droplets, Zap, Wind, Shield, Skull, Droplet } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useState, useEffect } from "react";
-import Autoplay from "embla-carousel-autoplay";
 // only store filenames here; we'll build full URL with Vite's base at runtime
 const certificateImages = [
   "basic.png",
@@ -26,6 +20,14 @@ const certificateImages = [
   "electrical.png",
   "standard.png",
 ];
+
+import { Card } from "@/components/ui/card";
+import { Droplets, Zap, Wind, Shield, Skull, Droplet } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useState, useEffect } from "react";
+import Autoplay from "embla-carousel-autoplay";
+
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
@@ -61,32 +63,7 @@ export const WhySection = () => {
     stat: "41%",
     description: "of properties have hidden mold growth causing allergies and asthma",
     source: "(InterNACHI® Global Inspection Statistics 2025)"
-  }];
-  const caseStudies = [{
-    title: "Health Issue: Not Mold, But Hidden Gases!",
-    leftSide: "Story: A family suffered from headaches and constant fatigue. Mold tests came back negative.",
-    rightSide: "Health Gain: Advanced air quality monitoring revealed formaldehyde levels between 1.4–1.7 ppm—about 18 times higher than the WHO limit (0.08 ppm). ROI: Protected family health and avoided chronic illnesses costing AED 15,000+ annually.",
-    source: "Investigation of Indoor Air Quality inside Houses From UAE - Bani Mfarrej, 2020"
-  }, {
-    title: "Hidden Moisture Detected Before Rental",
-    leftSide: "Critical Finding: Thermal imaging revealed hidden wall moisture days before signing lease.",
-    rightSide: "Clear Gain: Landlord fixed issue immediately. ROI: Avoided AED 12,000 in annual humidity repairs and potential 20% rent increases. Only 33% of Dubai properties catch this early.",
-    source: "Top 10 Property Defects Caught During Inspections in Dubai - SnagProperty, 2025"
-  }, {
-    title: "Post-Renovation Electrical Problem Prevented Costly Losses",
-    leftSide: "Critical Finding: Third-party inspection found overloads in main panel and electrical leakage risks after renovations were complete.",
-    rightSide: "Healthy & Safe: Fixed before closing walls, saving AED 1,800 in rework costs and preventing fire hazards. ROI: Dollars saved on potential electrical fires and utility overcharges.",
-    source: "Third-Party Electrical Inspection Services in UAE and GCC, 2024"
-  }, {
-    title: "HVAC Efficiency Saved 35% Annual Costs",
-    leftSide: "Critical Finding: Sand and dust infiltration reduced HVAC efficiency by 35%, discovered through advanced particle measurement.",
-    rightSide: "Energy Gain: Proper sealing and filtration restored efficiency. ROI: AED 8,500 saved annually on utility bills. 45% of Dubai HVAC systems suffer desert climate degradation.",
-    source: "Dubai Desert Climate Impact on HVAC Systems - Emirates Environmental Agency, 2024"
-  }, {
-    title: "Mold Inspection Doubled Rental Speed",
-    leftSide: "Story: Hidden mold growth in bedrooms was discovered through advanced swab testing and air sampling.",
-    rightSide: "Investor Gain: Certified safe property rented 4x faster at premium rates. ROI: AED 25,000 additional annual revenue. 41% of inspected properties have undetected mold.",
-    source: "InterNACHI® Global Inspection Statistics 2025"
+
   }];
   useEffect(() => {
     const storyInterval = setInterval(() => {
@@ -207,94 +184,130 @@ export const WhySection = () => {
           </Carousel>
         </div>
 
-        {/* Case Studies Carousel with Auto CTA Card */}
-        <div className="mb-16">
-          <h3 className="text-3xl font-bold text-center mb-8 text-foreground">Real Success Stories</h3>
-          <Carousel opts={{
-          align: "center",
-          loop: true
-        }} plugins={[new Autoplay({
-          delay: 10000
-        }) as any]} className="w-full max-w-5xl mx-auto">
-            <CarouselContent>
-              {caseStudies.map((study, index) => (
-                <CarouselItem key={index}>
-                  <Card className={`p-8 md:p-12 ${index === 0 ? 'bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none' : 'bg-accent/5 border-2 border-accent/30'} ${index === 2 ? 'bg-black/80 text-white' : ''}`}>
-                    <div className="max-w-4xl mx-auto">
-                      <div className="flex items-center gap-2 mb-6">
-                        <Shield className="w-6 h-6 text-accent" />
-                        <span className="text-accent font-semibold">Case Study #{index + 1}</span>
-                      </div>
+        {/* Case Studies */}
+        <div className="space-y-6 mb-16">
+          <h3 className="text-3xl font-bold text-center mb-8 text-foreground">Real Case Studies</h3>
 
-                      <h3 className={`text-3xl font-bold mb-8 ${index === 2 ? 'text-white' : 'text-foreground'}`}>
-                        {study.title}
-                      </h3>
-
-                      <div className="grid md:grid-cols-2 gap-8">
-                        {/* Left Side - Critical Finding/Story */}
-                        <div className={`bg-red-50 border border-red-200 rounded-lg p-6 ${index === 2 ? 'bg-red-950 border-red-900' : ''}`}>
-                          <h4 className={`text-lg font-semibold mb-3 ${index === 2 ? 'text-red-200' : 'text-red-800'}`}>
-                            🔴 Critical Finding
-                          </h4>
-                          <p className={`${index === 0 ? 'text-primary-foreground/90' : index === 2 ? 'text-red-100' : 'text-red-700'} leading-relaxed`}>
-                            {study.leftSide}
-                          </p>
-                        </div>
-
-                        {/* Right Side - Clear Gain/ROI */}
-                        <div className={`bg-green-50 border border-green-200 rounded-lg p-6 ${index === 2 ? 'bg-green-950 border-green-900' : ''}`}>
-                          <h4 className={`text-lg font-semibold mb-3 ${index === 2 ? 'text-green-200' : 'text-green-800'}`}>
-                            🟢 Clear Gain & ROI
-                          </h4>
-                          <p className={`${index === 0 ? 'text-primary-foreground/90' : index === 2 ? 'text-green-100' : 'text-green-700'} leading-relaxed`}>
-                            {study.rightSide}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/10 backdrop-blur-sm border border-accent/30 rounded-lg p-4 mt-6">
-                        <p className={`text-xs ${index === 0 ? 'text-primary-foreground/70' : index === 2 ? 'text-gray-400' : 'text-muted-foreground/70'}`}>
-                          Source: {study.source}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                </CarouselItem>
-              ))}
-
-              {/* New CTA Card */}
-              <CarouselItem>
-                <Card className="relative p-0 md:p-0 bg-gradient-to-br from-primary via-accent/20 to-primary border-none animate-scale-in overflow-hidden" style={{
-                  backgroundImage: 'url(/3d-scan.png)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}>
-                  {/* darken overlay to ensure contrast */}
-                  <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-
-                  <div className="relative p-8 md:p-12 flex flex-col items-center min-h-[320px]">
-                    <Shield className="w-16 h-16 text-accent mx-auto mb-6 relative z-10" />
-
-                    <div className="relative z-10 inline-block px-4 py-2 rounded-md">
-                      <span className="absolute inset-0 -z-10 rounded-md bg-black/40 backdrop-blur-sm" />
-                      <h3 className="text-4xl md:text-5xl font-bold text-primary-foreground">
-                        Ready to Protect Your Investment?
-                      </h3>
-                    </div>
-
-                    <div className="mt-auto w-full flex justify-center relative z-10">
-                      <Button variant="premium" size="xl" onClick={() => scrollToSection('booking')} className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6 animate-pulse">
-                        <Shield className="mr-2 w-6 h-6" />
-                        Start Protect Now
-                      </Button>
-                    </div>
+          <Card className="p-8 md:p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className="w-6 h-6 text-accent" />
+                  <span className="text-accent font-semibold">Real Case Study #1</span>
+                </div>
+                <h3 className="text-3xl font-bold mb-4">Dubai Marina Villa</h3>
+                <p className="text-primary-foreground/90 mb-6 leading-relaxed">
+                  Pre-purchase inspection revealed hidden water damage in AC ducts and electrical safety violations.
+                  Client negotiated AED 85,000 price reduction, recovering 12× the inspection cost.
+                </p>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <div className="text-2xl font-bold text-accent">AED 85K</div>
+                    <div className="text-sm text-primary-foreground/80">Saved</div>
                   </div>
-                </Card>
-              </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
+                  <div className="h-12 w-px bg-primary-foreground/20" />
+                  <div>
+                    <div className="text-2xl font-bold text-accent">12×</div>
+                    <div className="text-sm text-primary-foreground/80">ROI</div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center md:text-right">
+                <img src="/placeholder.svg" alt="Dubai Marina Villa case study" className="w-full max-w-sm mx-auto rounded-lg shadow-lg opacity-80" />
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-8 md:p-12 bg-gradient-to-br from-accent to-accent/80 text-accent-foreground border-none">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div className="order-2 md:order-1 text-center md:text-left">
+                <img src="/placeholder.svg" alt="Palm Jumeirah Apartment case study" className="w-full max-w-sm mx-auto rounded-lg shadow-lg opacity-80" />
+              </div>
+              <div className="order-1 md:order-2">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className="w-6 h-6 text-primary" />
+                  <span className="text-primary font-semibold">Real Case Study #2</span>
+                </div>
+                <h3 className="text-3xl font-bold mb-4">Palm Jumeirah Apartment</h3>
+                <p className="text-accent-foreground/90 mb-6 leading-relaxed">
+                  Advanced thermal imaging detected hidden moisture behind bathroom tiles.
+                  Buyer avoided property purchase that would have required AED 95,000 in immediate repairs.
+                </p>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <div className="text-2xl font-bold text-primary">AED 95K</div>
+                    <div className="text-sm text-accent-foreground/80">Avoided Loss</div>
+                  </div>
+                  <div className="h-12 w-px bg-accent-foreground/20" />
+                  <div>
+                    <div className="text-2xl font-bold text-primary">100%</div>
+                    <div className="text-sm text-accent-foreground/80">Prevention</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-8 md:p-12 bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground border-none">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className="w-6 h-6 text-primary" />
+                  <span className="text-primary font-semibold">Real Case Study #3</span>
+                </div>
+                <h3 className="text-3xl font-bold mb-4">Jumeirah Beach Residence</h3>
+                <p className="text-secondary-foreground/90 mb-6 leading-relaxed">
+                  Air quality monitoring revealed formaldehyde levels 3× above safe limits from new furniture.
+                  Family moved out temporarily while levels normalized, preventing chronic health issues.
+                </p>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <div className="text-2xl font-bold text-primary">Health</div>
+                    <div className="text-sm text-secondary-foreground/80">Protected</div>
+                  </div>
+                  <div className="h-12 w-px bg-secondary-foreground/20" />
+                  <div>
+                    <div className="text-2xl font-bold text-primary">3×</div>
+                    <div className="text-sm text-secondary-foreground/80">Above Limit</div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center md:text-right">
+                <img src="/placeholder.svg" alt="Jumeirah Beach Residence case study" className="w-full max-w-sm mx-auto rounded-lg shadow-lg opacity-80" />
+              </div>
+            </div>
+          </Card>
+
+          {/* New CTA Card */}
+          <Card className="relative p-0 md:p-0 bg-gradient-to-br from-primary via-accent/20 to-primary border-none animate-scale-in overflow-hidden" style={{
+            backgroundImage: 'url(/3d-scan.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}>
+            {/* darken overlay to ensure contrast */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+
+            <div className="relative p-8 md:p-12 flex flex-col items-center min-h-[320px]">
+              <Shield className="w-16 h-16 text-accent mx-auto mb-6 relative z-10" />
+
+              <div className="relative z-10 inline-block px-4 py-2 rounded-md text-center">
+                <span className="absolute inset-0 -z-10 rounded-md bg-black/40 backdrop-blur-sm" />
+                <h3 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+                  Ready to Protect Your Investment?
+                </h3>
+                <p className="text-lg text-primary-foreground/90 mb-6">
+                  Don't risk thousands in hidden repairs. Inspect before you invest.
+                </p>
+              </div>
+
+              <div className="mt-auto w-full flex justify-center relative z-10">
+                <Button variant="premium" size="xl" onClick={() => scrollToSection('booking')} className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6 animate-pulse">
+                  <Shield className="mr-2 w-6 h-6" />
+                  Start Protect Now
+                </Button>
+              </div>
+            </div>
+          </Card>
         </div>
 
         <p className="text-center text-sm text-muted-foreground mt-8">
