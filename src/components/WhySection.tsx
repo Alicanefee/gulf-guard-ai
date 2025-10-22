@@ -253,20 +253,25 @@ export const WhySection = () => {
               {/* CTA Card - Middle */}
               <CarouselItem>
                 <Card className="relative p-0 border-none overflow-hidden h-[400px] md:h-[500px]" style={{
-                  backgroundImage: 'url(/assets/3d-scan.png)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
+                  backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%), url(/assets/3d-scan.png)',
+                  backgroundSize: 'cover, cover',
+                  backgroundPosition: 'center, center',
+                  backgroundBlendMode: 'multiply'
                 }}>
+                  {/* Additional gradient overlay for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/30"></div>
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-accent/10 to-accent/20"></div>
+
                   {/* darken overlay to ensure contrast */}
-                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+                  <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
                   <div className="relative flex flex-col items-center justify-center h-full p-8">
-                    <Shield className="w-20 h-20 text-accent mx-auto mb-8" />
+                    <Shield className="w-20 h-20 text-accent mx-auto mb-8 animate-pulse" />
 
-                    <h3 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center">
+                    <h3 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center drop-shadow-lg">
                       Ready to Protect Your Investment?
                     </h3>
-                    <p className="text-lg text-gray-200 mb-8 text-center max-w-lg">
+                    <p className="text-lg text-gray-200 mb-8 text-center max-w-lg drop-shadow-md">
                       Don't risk thousands in hidden repairs. Inspect before you invest.
                     </p>
 
@@ -309,20 +314,25 @@ export const WhySection = () => {
               {/* CTA Card - End */}
               <CarouselItem>
                 <Card className="relative p-0 border-none overflow-hidden h-[400px] md:h-[500px]" style={{
-                  backgroundImage: 'url(/assets/3d-scan.png)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
+                  backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%), url(/assets/3d-scan.png)',
+                  backgroundSize: 'cover, cover',
+                  backgroundPosition: 'center, center',
+                  backgroundBlendMode: 'multiply'
                 }}>
+                  {/* Additional gradient overlay for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/30"></div>
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-accent/10 to-accent/20"></div>
+
                   {/* darken overlay to ensure contrast */}
-                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+                  <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
                   <div className="relative flex flex-col items-center justify-center h-full p-8">
-                    <Shield className="w-20 h-20 text-accent mx-auto mb-8" />
+                    <Shield className="w-20 h-20 text-accent mx-auto mb-8 animate-pulse" />
 
-                    <h3 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center">
+                    <h3 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center drop-shadow-lg">
                       Ready to Protect Your Investment?
                     </h3>
-                    <p className="text-lg text-gray-200 mb-8 text-center max-w-lg">
+                    <p className="text-lg text-gray-200 mb-8 text-center max-w-lg drop-shadow-md">
                       Don't risk thousands in hidden repairs. Inspect before you invest.
                     </p>
 
