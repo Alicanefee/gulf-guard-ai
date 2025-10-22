@@ -163,9 +163,12 @@ export const WhySection = () => {
           >
             <CarouselContent className="-ml-4">
               {certificateImages.map((image, index) => {
-                // construct full URL using Vite base (works in dev and when app is deployed to a subpath)
+                // Construct full URL using the image name from the array.
+                // Assuming images are located in the 'public/assets/certificates/' folder
                 const baseUrl = (import.meta as any).env?.BASE_URL ?? '/';
-                const imgSrc = `${baseUrl.replace(/\/$/, '')}/placeholder.svg`;
+                const imagePath = `assets/certificates/${image}`; // Resimlerin bulunduğu klasör yolu
+                const imgSrc = `${baseUrl.replace(/\/$/, '')}/${imagePath}`; // DOĞRU URL
+
                 return (
                   <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                     <div className="flex items-center justify-center h-24 bg-background border border-accent/20 rounded-lg p-4">
@@ -310,15 +313,11 @@ export const WhySection = () => {
               {/* CTA Card - End */}
               <CarouselItem>
                 <Card className="relative p-0 border-none overflow-hidden h-[400px] md:h-[500px]" style={{
-                  backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%), url(/assets/3d-scan.png)',
-                  backgroundSize: 'cover, cover',
-                  backgroundPosition: 'center, center',
-                  backgroundBlendMode: 'multiply'
+                  backgroundImage: 'url(/assets/3d-scan.png)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
                 }}>
-                  {/* Additional gradient overlay for depth */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/30"></div>
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-accent/10 to-accent/20"></div>
-
                   {/* darken overlay to ensure contrast */}
                   <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
