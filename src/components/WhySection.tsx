@@ -25,12 +25,15 @@ import { Card } from "@/components/ui/card";
 import { Droplets, Zap, Wind, Shield, Skull, Droplet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Autoplay from "embla-carousel-autoplay";
 
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
+  const autoplayRef1 = useRef(Autoplay({ delay: 3000 }));
+  const autoplayRef2 = useRef(Autoplay({ delay: 2000 }));
+  const autoplayRef3 = useRef(Autoplay({ delay: 8000 }));
   const titles = ["Breathe easy - live healthy", "Inspect before invest"];
   const stories = ["Detecting hidden mold in my new flat avoided AED 18,000 in repairs—inspection pays off.", "Early air quality test stopped my daughter's asthma attacks. Peace of mind earned.", "Minor sand infiltration saved my HVAC 35% efficiency—don't skip inspection.", "Initial wiring check caught code violations, saved AED 12,500 instantly.", "Mold inspection meant I could rent out my flat 4x faster and at premium."];
   const risks = [{
@@ -109,9 +112,7 @@ export const WhySection = () => {
           <Carousel opts={{
           align: "center",
           loop: true
-        }} plugins={[new Autoplay({
-          delay: 3000
-        }) as any]} className="w-full max-w-6xl mx-auto perspective-1000">
+        }} plugins={[autoplayRef1.current]} className="w-full max-w-6xl mx-auto perspective-1000">
             <CarouselContent className="-ml-4">
               {risks.map((risk, index) => <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <Card className="p-8 border-2 hover:border-accent transition-all duration-500 h-full flex flex-col hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] hover:scale-[1.02] sm:hover:scale-105 lg:hover:scale-110 group cursor-pointer">
@@ -156,9 +157,7 @@ export const WhySection = () => {
               align: "center",
               loop: true
             }}
-            plugins={[new Autoplay({
-              delay: 2000
-            }) as any]}
+            plugins={[autoplayRef2.current]}
             className="w-full max-w-4xl mx-auto"
           >
             <CarouselContent className="-ml-4">
@@ -191,9 +190,7 @@ export const WhySection = () => {
           <Carousel opts={{
             align: "center",
             loop: true
-          }} plugins={[new Autoplay({
-            delay: 8000
-          }) as any]} className="w-full max-w-4xl mx-auto">
+          }} plugins={[autoplayRef3.current]} className="w-full max-w-4xl mx-auto">
             <CarouselContent>
               {/* Case Study #1 */}
               <CarouselItem>

@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Check, Sparkles, Building2, Users, Home, Heart, TrendingUp } from "lucide-react";
 import { useBooking } from "@/components/booking/BookingProvider";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselApi } from "@/components/ui/carousel";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Autoplay from "embla-carousel-autoplay";
 
 export const ServicePackages = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const autoplayRef = useRef(Autoplay({ delay: 3000, stopOnInteraction: true }));
 
   const useCtaLabel = (pkg: any) => {
     // If CTA contains a price (digits or 'AED'), return a generic label without price.
@@ -156,12 +157,7 @@ export const ServicePackages = () => {
               align: "center",
               loop: true,
             }}
-            plugins={[
-              new Autoplay({
-                delay: 3000,
-                stopOnInteraction: true,
-              }),
-            ]}
+            plugins={[autoplayRef.current]}
             className="w-full max-w-7xl mx-auto"
           >
             <CarouselContent className="-ml-4 py-12">
