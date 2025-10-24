@@ -150,7 +150,8 @@ export const WhySection = () => {
         </div>
 
         {/* Certificate Images Scroll Banner */}
-        <div className="mb-8">
+        <div className="mb-16">
+          <h3 className="text-3xl font-bold text-center mb-8 text-foreground">Certified in Every Inspection Discipline</h3>
           <Carousel
             opts={{
               align: "center",
