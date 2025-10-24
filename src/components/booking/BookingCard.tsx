@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Calendar as DayPickerCalendar } from '@/components/ui/calendar';
 import { Calendar as CalendarIcon } from 'lucide-react';
@@ -116,35 +117,18 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
       // simulated network delay
       await new Promise((r) => setTimeout(r, 2000));
 
-      // Toast message with WhatsApp share option
+      // Toast message
       const benefitLabel = selectedPackage ?? bookingPackage ?? 'premium benefit';
       const benefitText = `${benefitLabel}`;
       const slot = values.timeSlot;
       const sqft = values.sqft;
-      const date = values.date ? format(values.date as Date, 'MMM d, yyyy') : '';
 
       let message = `Your booking is confirmed. ${benefitText} included as part of your premium inspection.`;
       if (benefitLabel === 'investor') {
         message += ` Unique Investor Code 'NEW20' activated. Use at payment.`;
       }
 
-      // Create WhatsApp share message
-      const whatsappMessage = `🏠 *Home Inspection Booking Confirmed*\n\n` +
-        `📅 Date: ${date}\n` +
-        `⏰ Time: ${slot}\n` +
-        `📏 Area: ${sqft} sq ft\n` +
-        `📦 Package: ${benefitLabel}\n\n` +
-        `✅ Booking confirmed with Gulf Guard AI`;
-
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
-
-      toast.success(message + ` Slot: ${slot}. Area: ${sqft} sq ft.`, {
-        action: {
-          label: 'Share on WhatsApp',
-          onClick: () => window.open(whatsappUrl, '_blank')
-        },
-        duration: 5000
-      });
+      toast.success(message + ` Slot: ${slot}. Area: ${sqft} sq ft.`);
 
       // close modal after short delay
       setTimeout(() => {
@@ -161,149 +145,151 @@ export const BookingCard: React.FC<Props> = ({ selectedPackage }) => {
 
   return (
   <Dialog open={open} onOpenChange={(val) => { if (!val) closeBookingCard(); }}>
-    <DialogContent ref={(el:any)=>dialogRef.current = el} className="w-[90%] max-w-2xl sm:w-[600px] max-h-[90vh]">
-        <div className="p-6 sm:p-8">
-        <DialogHeader>
-          <DialogTitle>Book an Inspection</DialogTitle>
-          <DialogDescription className="mb-2">Secure your preferred time — limited slots available.</DialogDescription>
-        </DialogHeader>
+    <DialogContent ref={(el:any)=>dialogRef.current = el} className="w-[90%] max-w-2xl sm:w-[600px] max-h-[90vh] p-0">
+      <Card>
+        <CardHeader>
+          <CardTitle>Book an Inspection</CardTitle>
+          <CardDescription>Secure your preferred time — limited slots available.</CardDescription>
+        </CardHeader>
 
-        {bookingPackage && (
-          <BenefitBanner packageType={bookingPackage} onExpiry={() => setBenefitActive(false)} />
-        )}
+        <CardContent>
+          {bookingPackage && (
+            <BenefitBanner packageType={bookingPackage} onExpiry={() => setBenefitActive(false)} />
+          )}
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
-            {/* Name & Email */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField name="name" control={form.control} render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Full name" autoComplete="name" {...field} aria-label="Full name" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-
-              <FormField name="email" control={form.control} render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="you@domain.com" type="email" autoComplete="email" {...field} aria-label="Email address" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-            </div>
-
-            {/* Date & Time side-by-side on md, stacked on mobile */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <FormField name="date" control={form.control} render={({ field }) => (
+              {/* Name & Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField name="name" control={form.control} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Select Date *</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <button
-                            type="button"
-                            className="w-full flex items-center justify-between gap-2 rounded-md border border-input px-3 py-2 text-sm hover:bg-accent"
-                            aria-label="Select date"
-                          >
-                            <span>{field.value ? format(field.value as Date, 'MMM d, yyyy') : 'Select date'}</span>
-                            <CalendarIcon className="h-4 w-4" />
-                          </button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <div className="p-2">
-                            <DayPickerCalendar
-                              mode="single"
-                              selected={field.value ?? undefined}
-                              onSelect={(d: Date | undefined) => field.onChange(d ?? null)}
-                            />
-                          </div>
-                        </PopoverContent>
-                      </Popover>
+                      <Input placeholder="Full name" {...field} aria-label="Full name" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+
+                <FormField name="email" control={form.control} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="you@domain.com" type="email" {...field} aria-label="Email address" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
               </div>
 
-              <div>
-                <FormField name="timeSlot" control={form.control} render={({ field }) => {
-                  const ALL_SLOTS = [
-                    '08:00-10:00',
-                    '10:00-12:00',
-                    '12:00-14:00',
-                    '14:00-16:00',
-                    '16:00-18:00',
-                    '18:00-20:00',
-                    '20:00-22:00',
-                    '22:00-00:00',
-                    '00:00-02:00',
-                  ];
-                  const dateSelected = !!form.getValues('date');
-
-                  return (
+              {/* Date & Time side-by-side on md, stacked on mobile */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <FormField name="date" control={form.control} render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Select Time Slot *</FormLabel>
+                      <FormLabel>Select Date *</FormLabel>
                       <FormControl>
-                        <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v)}>
-                          <SelectTrigger className="w-full" aria-label="Select time slot" disabled={!dateSelected}>
-                            <SelectValue>{field.value ? field.value : (dateSelected ? 'Select time slot' : 'Select a date first')}</SelectValue>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ALL_SLOTS.map((slot) => (
-                              <SelectItem key={slot} value={slot} disabled={soldOutSlots.includes(slot)}>
-                                {slot}{soldOutSlots.includes(slot) ? ' — Sold Out' : ''}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button
+                              type="button"
+                              className="w-full flex items-center justify-between gap-2 rounded-md border border-input px-3 py-2 text-sm hover:bg-accent"
+                              aria-label="Select date"
+                            >
+                              <span>{field.value ? format(field.value as Date, 'MMM d, yyyy') : 'Select date'}</span>
+                              <CalendarIcon className="h-4 w-4" />
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <div className="p-2">
+                              <DayPickerCalendar
+                                mode="single"
+                                selected={field.value ?? undefined}
+                                onSelect={(d: Date | undefined) => field.onChange(d ?? null)}
+                              />
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  );
-                }} />
+                  )} />
+                </div>
+
+                <div>
+                  <FormField name="timeSlot" control={form.control} render={({ field }) => {
+                    const ALL_SLOTS = [
+                      '08:00-10:00',
+                      '10:00-12:00',
+                      '12:00-14:00',
+                      '14:00-16:00',
+                      '16:00-18:00',
+                      '18:00-20:00',
+                      '20:00-22:00',
+                      '22:00-00:00',
+                      '00:00-02:00',
+                    ];
+                    const dateSelected = !!form.getValues('date');
+
+                    return (
+                      <FormItem>
+                        <FormLabel>Select Time Slot *</FormLabel>
+                        <FormControl>
+                          <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v)}>
+                            <SelectTrigger className="w-full" aria-label="Select time slot" disabled={!dateSelected}>
+                              <SelectValue>{field.value ? field.value : (dateSelected ? 'Select time slot' : 'Select a date first')}</SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                              {ALL_SLOTS.map((slot) => (
+                                <SelectItem key={slot} value={slot} disabled={soldOutSlots.includes(slot)}>
+                                  {slot}{soldOutSlots.includes(slot) ? ' — Sold Out' : ''}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }} />
+                </div>
               </div>
-            </div>
 
-            <FormField name="sqft" control={form.control} render={({ field }) => (
-              <FormItem>
-                <FormLabel>Property area (sq ft)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="e.g., 2500"
-                    type="number"
-                    value={field.value as any ?? ''}
-                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                    aria-label="Property area in square feet"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-            {/* Social proof bar */}
-            <div className="rounded-md border bg-background/50 p-3 flex items-center justify-between text-sm">
-              <div className="font-medium">Trusted by 2,400+ clients across Dubai</div>
-              <div className="text-muted-foreground">InterNACHI® certified · 10+ years experience</div>
-            </div>
+              <FormField name="sqft" control={form.control} render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Property area (sq ft)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g., 2500"
+                      type="number"
+                      value={field.value as any ?? ''}
+                      onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                      aria-label="Property area in square feet"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              {/* Social proof bar */}
+              <div className="rounded-md border bg-background/50 p-3 flex items-center justify-between text-sm">
+                <div className="font-medium">Trusted by 2,400+ clients across Dubai</div>
+                <div className="text-muted-foreground">InterNACHI® certified · 10+ years experience</div>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
 
-            <div className="flex items-center justify-end gap-2">
-              <Button variant="outline" onClick={() => closeBookingCard()} aria-label="Cancel booking">Cancel</Button>
-              <Button type="submit" variant="premium" disabled={submitting} aria-label="Confirm and redeem">
-                {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Confirm & Redeem
-              </Button>
-            </div>
-          </form>
-        </Form>
-        </div>
-      </DialogContent>
-    </Dialog>
+        <CardFooter>
+          <Button variant="outline" onClick={() => closeBookingCard()} aria-label="Cancel booking">Cancel</Button>
+          <Button type="submit" variant="premium" disabled={submitting} onClick={form.handleSubmit(onSubmit)} aria-label="Confirm and redeem">
+            {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            Confirm & Redeem
+          </Button>
+        </CardFooter>
+      </Card>
+    </DialogContent>
+  </Dialog>
   );
 };
 
