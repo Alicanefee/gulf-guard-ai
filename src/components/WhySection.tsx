@@ -109,7 +109,7 @@ export const WhySection = () => {
         {/* Risk Problems Static Buttons */}
         <div className="mb-16">
           <h4 className="text-2xl font-bold text-center mb-8 text-foreground">Common Property Risks in Dubai</h4>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-6">
             {risks.map((risk, index) => {
               const buttonNames = [
                 "Water Problems",
@@ -119,20 +119,21 @@ export const WhySection = () => {
                 "Mold Problems"
               ];
               return (
-                <Button
-                  key={index}
-                  variant="outline"
-                  onClick={() => setSelectedRisk(risk)}
-                  className="bg-background hover:bg-accent/5 border-accent/50 hover:border-accent transition-all duration-300 py-3 px-6"
-                >
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="font-bold text-accent text-lg">{risk.stat}</span>
+                <div key={index} className="flex flex-col items-center gap-2">
+                  <div className="text-6xl md:text-7xl font-bold text-accent">
+                    {risk.stat}
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedRisk(risk)}
+                    className="bg-background hover:bg-accent/5 border-accent/50 hover:border-accent transition-all duration-300 py-3 px-6"
+                  >
                     <div className="flex items-center gap-2">
                       <risk.icon className="w-4 h-4" />
-                      <span className="font-semibold text-sm">{buttonNames[index]}</span>
+                      <span className="font-semibold">{buttonNames[index]}</span>
                     </div>
-                  </div>
-                </Button>
+                  </Button>
+                </div>
               );
             })}
           </div>
