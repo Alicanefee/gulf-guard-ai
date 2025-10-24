@@ -9,14 +9,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg transition-shadow",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        outline: "border-2 border-input bg-background hover:bg-accent/10 hover:border-accent transition-colors",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent/10 hover:text-accent-foreground transition-colors",
         link: "text-primary underline-offset-4 hover:underline",
-        premium: "bg-accent text-accent-foreground hover:shadow-[0_4px_24px_-2px_hsl(43_74%_66%/0.4)] hover:scale-105 font-semibold",
-        "premium-outline": "border-2 border-accent text-accent bg-transparent hover:bg-accent hover:text-accent-foreground font-semibold",
+        premium: "bg-gradient-to-r from-accent to-accent/90 text-accent-foreground hover:shadow-[0_8px_30px_-4px_hsl(43_74%_66%/0.5)] hover:scale-105 font-semibold transition-all",
+        "premium-outline": "border-2 border-accent/80 text-primary-foreground bg-background/5 backdrop-blur-sm hover:bg-accent/10 hover:border-accent font-semibold transition-all",
       },
       size: {
         default: "h-10 px-4 py-2",

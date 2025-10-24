@@ -157,15 +157,20 @@ export const BookingSection = () => {
   };
 
   return (
-    <section id="booking" className="py-20 bg-gradient-to-b from-background to-secondary/30">
-      <div className="container mx-auto px-4">
+    <section id="booking" className="py-16 md:py-24 bg-gradient-to-b from-secondary/40 via-accent/5 to-background relative">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-10 left-20 w-80 h-80 bg-primary rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-20 w-64 h-64 bg-accent rounded-full blur-3xl" />
+      </div>
+      <div className="container relative z-10 mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <div className="text-center mb-8 md:mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-3 md:mb-4">
               Schedule Your
-              <span className="block text-accent">Protection</span>
+              <span className="block text-accent mt-2">Protection</span>
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg md:text-xl text-muted-foreground px-4">
               Same-day availability for urgent requests
             </p>
           </div>

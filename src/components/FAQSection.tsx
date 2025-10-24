@@ -125,15 +125,19 @@ export const FAQSection = () => {
   const faqs = showAll ? allFaqs : allFaqs.slice(0, 4);
 
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-background via-muted/20 to-secondary/30 relative">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-40 left-10 w-72 h-72 bg-primary rounded-full blur-3xl" />
+      </div>
+      <div className="container relative z-10 mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <div className="text-center mb-8 md:mb-12 animate-fade-in">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-3 md:mb-4">
               Frequently Asked
-              <span className="block text-accent">Questions</span>
+              <span className="block text-accent mt-2">Questions</span>
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg md:text-xl text-muted-foreground px-4">
               Quick answers to common queries about our inspection service
             </p>
           </div>

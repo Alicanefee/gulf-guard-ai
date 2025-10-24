@@ -28,6 +28,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
+import { caseStudyImages } from "./CaseStudyImages";
 
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
@@ -86,9 +87,14 @@ export const WhySection = () => {
       behavior: "smooth"
     });
   };
-  return <section id="why" className="py-20 bg-gradient-to-b from-background to-secondary/30">
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
+  return <section id="why" className="py-16 md:py-24 bg-gradient-to-b from-background via-secondary/20 to-muted/30 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-accent rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary rounded-full blur-3xl" />
+      </div>
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16 animate-fade-in">
           <div className="inline-flex items-center gap-3 bg-accent/10 px-4 py-2 rounded-full mb-6">
             <Shield className="w-5 h-5 text-accent" />
             <span className="text-[1.2rem] font-semibold text-foreground">Critical Insights</span>
@@ -106,10 +112,10 @@ export const WhySection = () => {
           </p>
         </div>
 
-        {/* Risk Problems Static Buttons */}
-        <div className="mb-16">
-          <h4 className="text-2xl font-bold text-center mb-8 text-foreground">Common Property Risks in Dubai</h4>
-          <div className="flex flex-wrap justify-center gap-6">
+          {/* Risk Problems Static Buttons */}
+        <div className="mb-12 md:mb-16">
+          <h4 className="text-2xl md:text-3xl font-bold text-center mb-8 text-foreground">Common Property Risks in Dubai</h4>
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6 px-2">
             {risks.map((risk, index) => {
               const buttonNames = [
                 "Water Problems",
@@ -119,18 +125,18 @@ export const WhySection = () => {
                 "Mold Problems"
               ];
               return (
-                <div key={index} className="flex flex-col items-center gap-2">
-                  <div className="text-6xl md:text-7xl font-bold text-accent">
+                <div key={index} className="flex flex-col items-center gap-2 min-w-[140px]">
+                  <div className="text-5xl md:text-7xl font-bold text-accent drop-shadow-lg">
                     {risk.stat}
                   </div>
                   <Button
                     variant="outline"
                     onClick={() => setSelectedRisk(risk)}
-                    className="bg-background hover:bg-accent/5 border-accent/50 hover:border-accent transition-all duration-300 py-3 px-6"
+                    className="bg-background/80 backdrop-blur-sm hover:bg-accent/10 border-accent/50 hover:border-accent transition-all duration-300 py-3 px-4 md:px-6 w-full"
                   >
                     <div className="flex items-center gap-2">
-                      <risk.icon className="w-4 h-4" />
-                      <span className="font-semibold">{buttonNames[index]}</span>
+                      <risk.icon className="w-4 h-4 flex-shrink-0" />
+                      <span className="font-semibold text-sm md:text-base">{buttonNames[index]}</span>
                     </div>
                   </Button>
                 </div>
@@ -140,27 +146,27 @@ export const WhySection = () => {
         </div>
 
         {/* Animated Story Section */}
-        <div className="mb-16 py-8 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5" />
-          <div className="relative max-w-4xl mx-auto text-center px-4">
-            {stories.map((story, index) => <p key={index} className={`text-xl md:text-2xl font-medium text-foreground/90 italic transition-all duration-1000 absolute inset-0 flex items-center justify-center px-6 ${index === currentStory ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                "{story}"
+        <div className="mb-12 md:mb-16 py-8 md:py-12 relative overflow-hidden rounded-2xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10" />
+          <div className="relative max-w-4xl mx-auto text-center px-4 md:px-8">
+            {stories.map((story, index) => <p key={index} className={`text-lg md:text-2xl font-medium text-foreground/90 italic transition-all duration-1000 absolute inset-0 flex items-center justify-center px-4 md:px-6 ${index === currentStory ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                "✨ {story}"
               </p>)}
-            <div className="opacity-0 text-xl md:text-2xl font-medium px-6 py-4">
-              "{stories[0]}"
+            <div className="opacity-0 text-lg md:text-2xl font-medium px-4 md:px-6 py-4">
+              "✨ {stories[0]}"
             </div>
           </div>
         </div>
 
         {/* Certificate Images Scroll Banner */}
-        <div className="mb-16">
-          <h3 className="text-3xl font-bold text-center mb-8 text-foreground">Certified in Every Inspection Discipline</h3>
+        <div className="mb-12 md:mb-16">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-foreground">Certified in Every Inspection Discipline</h3>
           <Carousel
             opts={{
               align: "center",
               loop: true
             }}
-            plugins={[new Autoplay({
+            plugins={[Autoplay({
               delay: 1500
             }) as any]}
             className="w-full max-w-7xl mx-auto"
@@ -172,8 +178,8 @@ export const WhySection = () => {
                 const imgSrc = `/certificate/${image}`;
 
                 return (
-                  <CarouselItem key={index} className="pl-2 basis-1/4 md:basis-1/4 lg:basis-1/6">
-                    <div className="flex items-center justify-center h-32 bg-background border border-accent/20 rounded-lg p-4">
+                  <CarouselItem key={index} className="pl-2 basis-1/3 md:basis-1/4 lg:basis-1/6">
+                    <div className="flex items-center justify-center h-28 md:h-32 bg-background/80 backdrop-blur-sm border border-accent/30 rounded-lg p-3 md:p-4 hover:border-accent/60 hover:shadow-lg transition-all duration-300">
                       <img
                         src={imgSrc}
                         alt={`${image} Certificate`}
@@ -190,19 +196,27 @@ export const WhySection = () => {
         </div>
 
         {/* Case Studies Carousel */}
-        <div className="mb-16">
-          <h3 className="text-3xl font-bold text-center mb-8 text-foreground">Real Case Studies</h3>
+        <div className="mb-12 md:mb-16">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-foreground">Real Case Studies</h3>
           <Carousel opts={{
             align: "center",
             loop: true
-          }} plugins={[new Autoplay({
+          }} plugins={[Autoplay({
             delay: 8000
           }) as any]} className="w-full max-w-4xl mx-auto">
             <CarouselContent>
-              {/* Case Study #1 */}
+              {/* Case Study #1 - Dubai Marina Villa */}
               <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none h-[400px] md:h-[500px] flex flex-col">
-                  <div className="text-center flex flex-col h-full justify-between">
+                <Card className="relative p-8 md:p-12 border-none h-[450px] md:h-[550px] flex flex-col overflow-hidden">
+                  {/* Background Image */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${caseStudyImages.marina})` }}
+                  />
+                  {/* Dark overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary/85 to-primary/75" />
+                  
+                  <div className="relative z-10 text-center flex flex-col h-full justify-between text-white">
                     <div>
                       <div className="flex items-center justify-center gap-2 mb-6">
                         <Shield className="w-8 h-8 text-accent" />
@@ -229,10 +243,18 @@ export const WhySection = () => {
                 </Card>
               </CarouselItem>
 
-              {/* Case Study #2 */}
+              {/* Case Study #2 - Palm Jumeirah */}
               <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-accent to-accent/80 text-accent-foreground border-none h-[400px] md:h-[500px] flex flex-col">
-                  <div className="text-center flex flex-col h-full justify-between">
+                <Card className="relative p-8 md:p-12 border-none h-[450px] md:h-[550px] flex flex-col overflow-hidden">
+                  {/* Background Image */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${caseStudyImages.palm})` }}
+                  />
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/95 via-accent/85 to-accent/75" />
+                  
+                  <div className="relative z-10 text-center flex flex-col h-full justify-between text-accent-foreground">
                     <div>
                       <div className="flex items-center justify-center gap-2 mb-6">
                         <Shield className="w-8 h-8 text-primary" />
@@ -288,10 +310,18 @@ export const WhySection = () => {
                 </Card>
               </CarouselItem>
 
-              {/* Case Study #3 */}
+              {/* Case Study #3 - JBR */}
               <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground border-none h-[400px] md:h-[500px] flex flex-col">
-                  <div className="text-center flex flex-col h-full justify-between">
+                <Card className="relative p-8 md:p-12 border-none h-[450px] md:h-[550px] flex flex-col overflow-hidden">
+                  {/* Background Image */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${caseStudyImages.jbr})` }}
+                  />
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/80 to-accent/70" />
+                  
+                  <div className="relative z-10 text-center flex flex-col h-full justify-between text-white">
                     <div>
                       <div className="flex items-center justify-center gap-2 mb-6">
                         <Shield className="w-8 h-8 text-primary" />
@@ -352,7 +382,7 @@ export const WhySection = () => {
           </Carousel>
         </div>
 
-        <p className="text-center text-sm text-muted-foreground mt-8">
+        <p className="text-center text-xs md:text-sm text-muted-foreground mt-8 px-4">
           Based on 10,000+ global inspections conducted by our certified network
         </p>
       </div>
