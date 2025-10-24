@@ -25,16 +25,12 @@ import { Card } from "@/components/ui/card";
 import { Droplets, Zap, Wind, Shield, Skull, Droplet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import scan3dImage from "@/assets/3d-scan.png";
 
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
-  const autoplayRef1 = useRef(Autoplay({ delay: 3000 }));
-  const autoplayRef2 = useRef(Autoplay({ delay: 2000 }));
-  const autoplayRef3 = useRef(Autoplay({ delay: 8000 }));
   const titles = ["Breathe easy - live healthy", "Inspect before invest"];
   const stories = ["Detecting hidden mold in my new flat avoided AED 18,000 in repairs—inspection pays off.", "Early air quality test stopped my daughter's asthma attacks. Peace of mind earned.", "Minor sand infiltration saved my HVAC 35% efficiency—don't skip inspection.", "Initial wiring check caught code violations, saved AED 12,500 instantly.", "Mold inspection meant I could rent out my flat 4x faster and at premium."];
   const risks = [{
@@ -113,7 +109,9 @@ export const WhySection = () => {
           <Carousel opts={{
           align: "center",
           loop: true
-        }} plugins={[autoplayRef1.current]} className="w-full max-w-6xl mx-auto perspective-1000">
+        }} plugins={[new Autoplay({
+          delay: 3000
+        }) as any]} className="w-full max-w-6xl mx-auto perspective-1000">
             <CarouselContent className="-ml-4">
               {risks.map((risk, index) => <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <Card className="p-8 border-2 hover:border-accent transition-all duration-500 h-full flex flex-col hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] hover:scale-[1.02] sm:hover:scale-105 lg:hover:scale-110 group cursor-pointer">
@@ -158,7 +156,9 @@ export const WhySection = () => {
               align: "center",
               loop: true
             }}
-            plugins={[autoplayRef2.current]}
+            plugins={[new Autoplay({
+              delay: 2000
+            }) as any]}
             className="w-full max-w-4xl mx-auto"
           >
             <CarouselContent className="-ml-4">
@@ -191,21 +191,25 @@ export const WhySection = () => {
           <Carousel opts={{
             align: "center",
             loop: true
-          }} plugins={[autoplayRef3.current]} className="w-full max-w-4xl mx-auto">
+          }} plugins={[new Autoplay({
+            delay: 8000
+          }) as any]} className="w-full max-w-4xl mx-auto">
             <CarouselContent>
               {/* Case Study #1 */}
               <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center gap-2 mb-6">
-                      <Shield className="w-8 h-8 text-accent" />
-                      <span className="text-accent font-semibold">Real Case Study #1</span>
+                <Card className="p-8 md:p-12 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-none h-[400px] md:h-[500px] flex flex-col">
+                  <div className="text-center flex flex-col h-full justify-between">
+                    <div>
+                      <div className="flex items-center justify-center gap-2 mb-6">
+                        <Shield className="w-8 h-8 text-accent" />
+                        <span className="text-accent font-semibold">Real Case Study #1</span>
+                      </div>
+                      <h3 className="text-4xl font-bold mb-6">Dubai Marina Villa</h3>
+                      <p className="text-primary-foreground/90 mb-8 leading-relaxed text-lg max-w-2xl mx-auto">
+                        Pre-purchase inspection revealed hidden water damage in AC ducts and electrical safety violations.
+                        Client negotiated AED 85,000 price reduction, recovering 12× the inspection cost.
+                      </p>
                     </div>
-                    <h3 className="text-4xl font-bold mb-6">Dubai Marina Villa</h3>
-                    <p className="text-primary-foreground/90 mb-8 leading-relaxed text-lg max-w-2xl mx-auto">
-                      Pre-purchase inspection revealed hidden water damage in AC ducts and electrical safety violations.
-                      Client negotiated AED 85,000 price reduction, recovering 12× the inspection cost.
-                    </p>
                     <div className="flex items-center justify-center gap-8">
                       <div className="text-center">
                         <div className="text-4xl font-bold text-accent">AED 85K</div>
@@ -223,17 +227,19 @@ export const WhySection = () => {
 
               {/* Case Study #2 */}
               <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-accent to-accent/80 text-accent-foreground border-none">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center gap-2 mb-6">
-                      <Shield className="w-8 h-8 text-primary" />
-                      <span className="text-primary font-semibold">Real Case Study #2</span>
+                <Card className="p-8 md:p-12 bg-gradient-to-br from-accent to-accent/80 text-accent-foreground border-none h-[400px] md:h-[500px] flex flex-col">
+                  <div className="text-center flex flex-col h-full justify-between">
+                    <div>
+                      <div className="flex items-center justify-center gap-2 mb-6">
+                        <Shield className="w-8 h-8 text-primary" />
+                        <span className="text-primary font-semibold">Real Case Study #2</span>
+                      </div>
+                      <h3 className="text-4xl font-bold mb-6">Palm Jumeirah Apartment</h3>
+                      <p className="text-accent-foreground/90 mb-8 leading-relaxed text-lg max-w-2xl mx-auto">
+                        Advanced thermal imaging detected hidden moisture behind bathroom tiles.
+                        Buyer avoided property purchase that would have required AED 95,000 in immediate repairs.
+                      </p>
                     </div>
-                    <h3 className="text-4xl font-bold mb-6">Palm Jumeirah Apartment</h3>
-                    <p className="text-accent-foreground/90 mb-8 leading-relaxed text-lg max-w-2xl mx-auto">
-                      Advanced thermal imaging detected hidden moisture behind bathroom tiles.
-                      Buyer avoided property purchase that would have required AED 95,000 in immediate repairs.
-                    </p>
                     <div className="flex items-center justify-center gap-8">
                       <div className="text-center">
                         <div className="text-4xl font-bold text-primary">AED 95K</div>
@@ -252,7 +258,7 @@ export const WhySection = () => {
               {/* CTA Card - Middle */}
               <CarouselItem>
                 <Card className="relative p-0 border-none overflow-hidden h-[400px] md:h-[500px]" style={{
-                  backgroundImage: `url(${scan3dImage})`,
+                  backgroundImage: 'url(/assets/3d-scan.png)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat'
@@ -270,7 +276,7 @@ export const WhySection = () => {
                       Don't risk thousands in hidden repairs. Inspect before you invest.
                     </p>
 
-                    <Button variant="premium" size="xl" onClick={() => scrollToSection('booking')} className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6 animate-pulse">
+                    <Button variant="premium" size="xl" onClick={() => scrollToSection('booking')} className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6">
                       <Shield className="mr-2 w-6 h-6" />
                       Start Protect Now
                     </Button>
@@ -280,17 +286,19 @@ export const WhySection = () => {
 
               {/* Case Study #3 */}
               <CarouselItem>
-                <Card className="p-8 md:p-12 bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground border-none">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center gap-2 mb-6">
-                      <Shield className="w-8 h-8 text-primary" />
-                      <span className="text-primary font-semibold">Real Case Study #3</span>
+                <Card className="p-8 md:p-12 bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground border-none h-[400px] md:h-[500px] flex flex-col">
+                  <div className="text-center flex flex-col h-full justify-between">
+                    <div>
+                      <div className="flex items-center justify-center gap-2 mb-6">
+                        <Shield className="w-8 h-8 text-primary" />
+                        <span className="text-primary font-semibold">Real Case Study #3</span>
+                      </div>
+                      <h3 className="text-4xl font-bold mb-6">Jumeirah Beach Residence</h3>
+                      <p className="text-secondary-foreground/90 mb-8 leading-relaxed text-lg max-w-2xl mx-auto">
+                        Air quality monitoring revealed formaldehyde levels 3× above safe limits from new furniture.
+                        Family moved out temporarily while levels normalized, preventing chronic health issues.
+                      </p>
                     </div>
-                    <h3 className="text-4xl font-bold mb-6">Jumeirah Beach Residence</h3>
-                    <p className="text-secondary-foreground/90 mb-8 leading-relaxed text-lg max-w-2xl mx-auto">
-                      Air quality monitoring revealed formaldehyde levels 3× above safe limits from new furniture.
-                      Family moved out temporarily while levels normalized, preventing chronic health issues.
-                    </p>
                     <div className="flex items-center justify-center gap-8">
                       <div className="text-center">
                         <div className="text-4xl font-bold text-primary">Health</div>
@@ -327,7 +335,7 @@ export const WhySection = () => {
                       Don't risk thousands in hidden repairs. Inspect before you invest.
                     </p>
 
-                    <Button variant="premium" size="xl" onClick={() => scrollToSection('booking')} className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6 animate-pulse">
+                    <Button variant="premium" size="xl" onClick={() => scrollToSection('booking')} className="group shadow-2xl hover:shadow-accent/20 transition-all text-lg px-12 py-6">
                       <Shield className="mr-2 w-6 h-6" />
                       Start Protect Now
                     </Button>
