@@ -49,7 +49,7 @@ export const Hero = () => {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            Protect Your Investment and Your Health
+            Protect Your Dubai Investment From Hidden Defects
           </h1>
           
           <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 leading-relaxed">
