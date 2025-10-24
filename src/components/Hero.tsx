@@ -30,10 +30,22 @@ export const Hero = () => {
       <div className="container relative z-10 mx-auto px-4 py-20">
         <div className="max-w-3xl animate-fade-in-up">
           {/* Trust Bar */}
-          <div className="bg-background/10 backdrop-blur-sm px-6 py-3 rounded-lg border border-accent/30 mb-8">
-            <p className="text-primary-foreground text-sm font-medium text-center">
-              InterNACHI® certified – 10+ years engineering expertise – Global service network
-            </p>
+          <div className="flex justify-center gap-4 mb-8">
+            <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
+              <p className="text-primary-foreground text-sm font-medium text-center">
+                InterNACHI® certified
+              </p>
+            </div>
+            <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
+              <p className="text-primary-foreground text-sm font-medium text-center">
+                10+ years engineering expertise
+              </p>
+            </div>
+            <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
+              <p className="text-primary-foreground text-sm font-medium text-center">
+                Global service network
+              </p>
+            </div>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
