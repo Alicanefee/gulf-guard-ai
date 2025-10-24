@@ -125,9 +125,12 @@ export const WhySection = () => {
                   onClick={() => setSelectedRisk(risk)}
                   className="bg-background hover:bg-accent/5 border-accent/50 hover:border-accent transition-all duration-300 py-3 px-6"
                 >
-                  <div className="flex items-center gap-2">
-                    <risk.icon className="w-5 h-5" />
-                    <span className="font-semibold">{buttonNames[index]}</span>
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="font-bold text-accent text-lg">{risk.stat}</span>
+                    <div className="flex items-center gap-2">
+                      <risk.icon className="w-4 h-4" />
+                      <span className="font-semibold text-sm">{buttonNames[index]}</span>
+                    </div>
                   </div>
                 </Button>
               );
@@ -157,19 +160,19 @@ export const WhySection = () => {
               loop: true
             }}
             plugins={[new Autoplay({
-              delay: 2000
+              delay: 1500
             }) as any]}
-            className="w-full max-w-4xl mx-auto"
+            className="w-full max-w-7xl mx-auto"
           >
-            <CarouselContent className="-ml-4">
+            <CarouselContent className="-ml-2">
               {certificateImages.map((image, index) => {
                 // Construct full URL using the image name from the array.
                 // Images are located in the 'public/certificate/' folder
                 const imgSrc = `/certificate/${image}`;
 
                 return (
-                  <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-                    <div className="flex items-center justify-center h-24 bg-background border border-accent/20 rounded-lg p-4">
+                  <CarouselItem key={index} className="pl-2 basis-1/4 md:basis-1/4 lg:basis-1/6">
+                    <div className="flex items-center justify-center h-32 bg-background border border-accent/20 rounded-lg p-4">
                       <img
                         src={imgSrc}
                         alt={`${image} Certificate`}
@@ -180,8 +183,8 @@ export const WhySection = () => {
                 );
               })}
             </CarouselContent>
-            <CarouselPrevious className="-left-4" />
-            <CarouselNext className="-right-4" />
+            <CarouselPrevious className="-left-2" />
+            <CarouselNext className="-right-2" />
           </Carousel>
         </div>
 
