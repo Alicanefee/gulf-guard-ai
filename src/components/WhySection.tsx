@@ -25,12 +25,14 @@ import { Card } from "@/components/ui/card";
 import { Droplets, Zap, Wind, Shield, Skull, Droplet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
 
 export const WhySection = () => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
+  const [selectedRisk, setSelectedRisk] = useState<typeof risks[0] | null>(null);
   const titles = ["Breathe easy - live healthy", "Inspect before invest"];
   const stories = ["Detecting hidden mold in my new flat avoided AED 18,000 in repairs—inspection pays off.", "Early air quality test stopped my daughter's asthma attacks. Peace of mind earned.", "Minor sand infiltration saved my HVAC 35% efficiency—don't skip inspection.", "Initial wiring check caught code violations, saved AED 12,500 instantly.", "Mold inspection meant I could rent out my flat 4x faster and at premium."];
   const risks = [{
@@ -104,35 +106,32 @@ export const WhySection = () => {
           </p>
         </div>
 
-        {/* Risk Cards Carousel with 3D Effect */}
-        <div className="relative mb-16">
-          <Carousel opts={{
-          align: "center",
-          loop: true
-        }} plugins={[new Autoplay({
-          delay: 3000
-        }) as any]} className="w-full max-w-6xl mx-auto perspective-1000">
-            <CarouselContent className="-ml-4">
-              {risks.map((risk, index) => <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                  <Card className="p-8 border-2 hover:border-accent transition-all duration-500 h-full flex flex-col hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] hover:scale-[1.02] sm:hover:scale-105 lg:hover:scale-110 group cursor-pointer">
-                    <div className="bg-accent/10 w-16 h-16 rounded-lg mx-auto flex items-center justify-center mb-6">
-                      <risk.icon className="w-8 h-8 text-accent" />
-                    </div>
-
-                    <div className="stat-display text-5xl font-bold text-accent mb-3">{risk.stat}</div>
-                    <h3 className="text-2xl font-semibold text-foreground mb-3">{risk.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed mb-3 flex-grow">{risk.description}</p>
-                    <p className="text-xs text-muted-foreground/70 mt-auto">{risk.source}</p>
-                  </Card>
-                </CarouselItem>)}
-            </CarouselContent>
-            <CarouselPrevious className="left-0" />
-            <CarouselNext className="right-0" />
-          </Carousel>
-
-          {/* Single CTA Below Banner */}
-          <div className="text-center mt-12">
-            
+        {/* Risk Problems Static Buttons */}
+        <div className="mb-16">
+          <h4 className="text-2xl font-bold text-center mb-8 text-foreground">Common Property Risks in Dubai</h4>
+          <div className="flex flex-wrap justify-center gap-4">
+            {risks.map((risk, index) => {
+              const buttonNames = [
+                "Water Problems",
+                "Efficiency Issues",
+                "Electrical Problems",
+                "Air Quality Problems",
+                "Mold Problems"
+              ];
+              return (
+                <Button
+                  key={index}
+                  variant="outline"
+                  onClick={() => setSelectedRisk(risk)}
+                  className="bg-background hover:bg-accent/5 border-accent/50 hover:border-accent transition-all duration-300 py-3 px-6"
+                >
+                  <div className="flex items-center gap-2">
+                    <risk.icon className="w-5 h-5" />
+                    <span className="font-semibold">{buttonNames[index]}</span>
+                  </div>
+                </Button>
+              );
+            })}
           </div>
         </div>
 
@@ -353,5 +352,26 @@ export const WhySection = () => {
           Based on 10,000+ global inspections conducted by our certified network
         </p>
       </div>
+
+      {/* Risk Detail Popup */}
+      <Dialog open={!!selectedRisk} onOpenChange={() => setSelectedRisk(null)}>
+        <DialogContent className="w-[90%] max-w-lg">
+          {selectedRisk && (
+            <Card className="border-none shadow-lg">
+              <div className="p-8">
+                <div className="bg-accent/10 w-16 h-16 rounded-lg mx-auto flex items-center justify-center mb-6">
+                  <selectedRisk.icon className="w-8 h-8 text-accent" />
+                </div>
+                <div className="text-center">
+                  <div className="text-5xl font-bold text-accent mb-3">{selectedRisk.stat}</div>
+                  <h3 className="text-2xl font-semibold text-foreground mb-3">{selectedRisk.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed mb-4">{selectedRisk.description}</p>
+                  <p className="text-xs text-muted-foreground/70">{selectedRisk.source}</p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>;
 };
