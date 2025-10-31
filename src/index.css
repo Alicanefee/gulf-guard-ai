@@ -8,93 +8,95 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Premium Dubai palette */
-    --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
-
+    /* Brand Colors - Dubai Property Inspection Brand Guidelines */
+    --authority-blue: 217 45% 21%;        /* #1D2C4D - Primary brand color */
+    --clinical-white: 210 17% 98%;        /* #F8F9FA - Main background */
+    --precision-blue: 195 100% 47%;       /* #00AEEF - CTAs and tech accents */
+    --premium-gold: 40 31% 59%;           /* #C0A06E - Limited luxury touches */
+    --text-gray: 210 11% 15%;             /* #212529 - Body text */
+    
+    /* Design System Mappings */
+    --background: 210 17% 98%;            /* Clinical White */
+    --foreground: 210 11% 15%;            /* Text Gray */
+    
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
-
+    --card-foreground: 210 11% 15%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
-
-    /* Deep navy primary - professional trust */
-    --primary: 215 35% 20%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Gold accent - luxury touch */
-    --accent: 43 74% 66%;
-    --accent-foreground: 215 35% 20%;
-
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 215 35% 20%;
-
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 15% 45%;
-
+    --popover-foreground: 210 11% 15%;
+    
+    --primary: 217 45% 21%;               /* Authority Blue */
+    --primary-foreground: 210 17% 98%;    /* Clinical White */
+    
+    --secondary: 210 14% 94%;             /* #F0F2F5 - Light accent */
+    --secondary-foreground: 217 45% 21%;  /* Authority Blue */
+    
+    --muted: 210 14% 94%;
+    --muted-foreground: 217 26% 46%;
+    
+    --accent: 195 100% 47%;               /* Precision Blue */
+    --accent-foreground: 210 17% 98%;
+    
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 215 15% 90%;
-    --input: 215 15% 90%;
-    --ring: 43 74% 66%;
-
-    --radius: 0.75rem;
-
-    /* Premium gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(43 74% 66%), hsl(38 92% 50%));
-    --gradient-navy: linear-gradient(135deg, hsl(215 35% 20%), hsl(215 45% 30%));
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 20% 98%));
-
-    /* Premium shadows */
-    --shadow-soft: 0 2px 20px -2px hsl(215 35% 20% / 0.08);
-    --shadow-medium: 0 8px 30px -4px hsl(215 35% 20% / 0.12);
-    --shadow-strong: 0 20px 60px -10px hsl(215 35% 20% / 0.2);
-    --shadow-gold: 0 4px 24px -2px hsl(43 74% 66% / 0.3);
-
-    /* Smooth transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --destructive-foreground: 210 17% 98%;
+    
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 195 100% 47%;
+    
+    --radius: 6px;                        /* Brand standard: 6px rounded corners */
+    
+    /* Premium Gold - limited use */
+    --gold-accent: 40 31% 59%;
+    
+    /* Brand Transitions */
+    --transition-smooth: all 0.25s ease-in-out;
   }
 
   .dark {
-    --background: 215 35% 12%;
-    --foreground: 0 0% 98%;
-
-    --card: 215 35% 16%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 215 35% 16%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 43 74% 66%;
-    --primary-foreground: 215 35% 20%;
-
-    --accent: 43 74% 66%;
-    --accent-foreground: 215 35% 20%;
-
-    --secondary: 215 25% 20%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 215 25% 20%;
-    --muted-foreground: 210 15% 65%;
-
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 215 25% 25%;
-    --input: 215 25% 25%;
-    --ring: 43 74% 66%;
+    --background: 217 45% 21%;
+    --foreground: 210 17% 98%;
+    
+    --card: 217 40% 25%;
+    --card-foreground: 210 17% 98%;
+    
+    --popover: 217 40% 25%;
+    --popover-foreground: 210 17% 98%;
+    
+    --primary: 195 100% 47%;
+    --primary-foreground: 217 45% 21%;
+    
+    --secondary: 217 35% 30%;
+    --secondary-foreground: 210 17% 98%;
+    
+    --muted: 217 35% 30%;
+    --muted-foreground: 215 20% 65%;
+    
+    --accent: 195 100% 47%;
+    --accent-foreground: 210 17% 98%;
+    
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 17% 98%;
+    
+    --border: 217 35% 30%;
+    --input: 217 35% 30%;
+    --ring: 195 100% 47%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+    transition: var(--transition-smooth);
   }
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Lora', serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6, button, .font-inter {
+    font-family: 'Inter', sans-serif;
   }
 }
 

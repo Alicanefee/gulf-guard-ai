@@ -95,26 +95,26 @@ export const WhySection = () => {
       </div>
       <div className="container relative z-10 mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16 animate-fade-in">
-          <div className="inline-flex items-center gap-3 bg-accent/10 px-4 py-2 rounded-full mb-6">
+          <div className="inline-flex items-center gap-3 bg-accent/10 px-4 py-2 rounded-[6px] mb-6">
             <Shield className="w-5 h-5 text-accent" />
-            <span className="text-[1.2rem] font-semibold text-foreground">Critical Insights</span>
+            <span className="font-inter text-[1.2rem] font-semibold text-foreground">Why Inspect?</span>
           </div>
           
           <div className="relative h-24 mb-4">
-            {titles.map((title, index) => <h2 key={index} className={`text-4xl md:text-5xl font-bold text-foreground absolute inset-0 flex items-center justify-center transition-all duration-1000 ${index === currentTitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <span className="block text-accent">{title}</span>
+            {titles.map((title, index) => <h2 key={index} className={`font-inter text-4xl md:text-[40px] font-bold text-primary uppercase tracking-wide absolute inset-0 flex items-center justify-center transition-all duration-1000 ${index === currentTitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                <span className="block">{title}</span>
               </h2>)}
           </div>
 
-          <p className={`text-xl text-muted-foreground leading-relaxed transition-opacity duration-1000 ${currentTitle === 0 ? 'opacity-0' : 'opacity-100'}`}>
+          <p className={`font-lora text-lg text-muted-foreground leading-relaxed transition-opacity duration-1000 ${currentTitle === 0 ? 'opacity-0' : 'opacity-100'}`}>
             Dubai's extreme climate and rapid construction growth create unique risks.
             Early detection saves an average of AED 47,000 in repair costs.
           </p>
         </div>
 
-          {/* Risk Problems Static Buttons */}
+        {/* Risk Problems Static Buttons */}
         <div className="mb-12 md:mb-16">
-          <h4 className="text-2xl md:text-3xl font-bold text-center mb-8 text-foreground">Common Property Risks in Dubai</h4>
+          <h4 className="font-inter text-2xl md:text-[40px] font-bold text-center mb-8 text-primary uppercase tracking-wide">Common Property Risks in Dubai</h4>
           <div className="flex flex-wrap justify-center gap-4 md:gap-6 px-2">
             {risks.map((risk, index) => {
               const buttonNames = [
@@ -160,7 +160,7 @@ export const WhySection = () => {
 
         {/* Certificate Images Scroll Banner */}
         <div className="mb-12 md:mb-16">
-          <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-foreground">Certified in Every Inspection Discipline</h3>
+          <h3 className="font-inter text-2xl md:text-[40px] font-bold text-center mb-8 text-primary uppercase tracking-wide">Certified in Every Inspection Discipline</h3>
           <Carousel
             opts={{
               align: "center",
@@ -197,7 +197,7 @@ export const WhySection = () => {
 
         {/* Case Studies Carousel */}
         <div className="mb-12 md:mb-16">
-          <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-foreground">Real Case Studies</h3>
+          <h3 className="font-inter text-2xl md:text-[40px] font-bold text-center mb-8 text-primary uppercase tracking-wide">Real Case Studies</h3>
           <Carousel opts={{
             align: "center",
             loop: true

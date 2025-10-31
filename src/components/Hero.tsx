@@ -48,12 +48,12 @@ export const Hero = () => {
             </div>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            Protect Your Dubai Investment From Hidden Defects
+          <h1 className="font-inter text-5xl md:text-[52px] font-extrabold text-primary-foreground mb-6 leading-tight uppercase tracking-wide">
+            See Your Investment's DNA
           </h1>
           
-          <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 leading-relaxed">
-            Same-Day 3D Home Scan, Advanced Air-Quality Testing & AI-Powered Risk Report
+          <p className="font-lora text-xl md:text-2xl text-primary-foreground/90 mb-8 leading-relaxed">
+            We look beyond the surface. Digital precision. Investment protection.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
@@ -61,17 +61,18 @@ export const Hero = () => {
               size="xl" 
               variant="premium"
               onClick={() => scrollToSection('booking')}
-              className="group"
+              className="group font-inter"
             >
-              Get Your Free AI Risk Assessment
+              Book Now
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
               size="xl" 
               variant="premium-outline"
               onClick={() => scrollToSection('booking')}
+              className="font-inter"
             >
-              View Our Exclusive Packages
+              Learn More
             </Button>
             <QuickQuotation />
           </div>
