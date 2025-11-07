@@ -79,19 +79,31 @@ export const RiskSection = () => {
             return (
               <Card 
                 key={index}
-                className="p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border"
+                className="p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border-2 relative overflow-hidden group"
                 style={{ 
                   backgroundColor: 'white',
-                  borderRadius: '8px',
-                  borderColor: '#E0E0E0'
+                  borderRadius: '12px',
+                  borderColor: 'hsl(var(--precision-blue) / 0.2)',
+                  background: 'linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(0,174,239,0.03) 100%)'
                 }}
               >
-                <div className="flex items-start gap-4 mb-4">
+                {/* Decorative corner accent */}
+                <div 
+                  className="absolute top-0 right-0 w-24 h-24 opacity-10 transform translate-x-8 -translate-y-8"
+                  style={{ 
+                    background: 'radial-gradient(circle, hsl(var(--precision-blue)) 0%, transparent 70%)'
+                  }}
+                />
+                
+                <div className="flex items-start gap-4 mb-4 relative z-10">
                   <div 
-                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: 'hsl(var(--precision-blue) / 0.1)' }}
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+                    style={{ 
+                      backgroundColor: 'hsl(var(--precision-blue) / 0.15)',
+                      boxShadow: '0 4px 12px rgba(0, 174, 239, 0.2)'
+                    }}
                   >
-                    <Icon className="w-6 h-6" style={{ color: 'hsl(var(--precision-blue))' }} />
+                    <Icon className="w-8 h-8" style={{ color: 'hsl(var(--precision-blue))' }} />
                   </div>
                   <div>
                     <div 

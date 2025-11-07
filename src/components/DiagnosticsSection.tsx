@@ -1,6 +1,6 @@
 import { Box, Thermometer, FlaskConical, Wind, Cpu, Camera } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ComparisonTableModal } from "./ComparisonTableModal";
 
 const features = [
   {
@@ -86,19 +86,31 @@ export const DiagnosticsSection = () => {
             return (
               <Card 
                 key={index}
-                className="p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border"
+                className="p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border-2 relative overflow-hidden group"
                 style={{ 
                   backgroundColor: 'white',
-                  borderRadius: '8px',
-                  borderColor: '#E0E0E0'
+                  borderRadius: '12px',
+                  borderColor: 'hsl(var(--authority-blue) / 0.2)',
+                  background: 'linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(29,44,77,0.03) 100%)'
                 }}
               >
-                <div className="mb-4">
+                {/* Decorative corner accent */}
+                <div 
+                  className="absolute top-0 left-0 w-24 h-24 opacity-10 transform -translate-x-8 -translate-y-8"
+                  style={{ 
+                    background: 'radial-gradient(circle, hsl(var(--authority-blue)) 0%, transparent 70%)'
+                  }}
+                />
+                
+                <div className="mb-4 relative z-10">
                   <div 
-                    className="w-14 h-14 rounded-lg flex items-center justify-center mb-4"
-                    style={{ backgroundColor: 'hsl(var(--precision-blue) / 0.1)' }}
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+                    style={{ 
+                      backgroundColor: 'hsl(var(--precision-blue) / 0.15)',
+                      boxShadow: '0 4px 12px rgba(0, 174, 239, 0.2)'
+                    }}
                   >
-                    <Icon className="w-7 h-7" style={{ color: 'hsl(var(--precision-blue))' }} />
+                    <Icon className="w-8 h-8" style={{ color: 'hsl(var(--precision-blue))' }} />
                   </div>
                   <h3 
                     className="font-inter text-xl font-semibold mb-2"
@@ -127,87 +139,9 @@ export const DiagnosticsSection = () => {
           })}
         </div>
 
-        {/* Comparison Table */}
-        <div className="max-w-5xl mx-auto mb-8">
-          <div className="overflow-x-auto">
-            <div className="min-w-[600px]">
-              {/* Header Row */}
-              <div className="grid grid-cols-4 gap-2 mb-2">
-                <div className="p-4"></div>
-                <div className="p-4 rounded-t-lg text-center" style={{ backgroundColor: 'hsl(var(--authority-blue))' }}>
-                  <span className="font-inter font-bold text-sm" style={{ color: 'hsl(var(--clinical-white))' }}>
-                    Dubai Property Inspection
-                  </span>
-                </div>
-                <div className="p-4 rounded-t-lg text-center" style={{ backgroundColor: '#D0D0D0' }}>
-                  <span className="font-inter font-semibold text-sm" style={{ color: 'hsl(var(--text-gray))' }}>
-                    Standard Competitors
-                  </span>
-                </div>
-                <div className="p-4 rounded-t-lg text-center" style={{ backgroundColor: '#D0D0D0' }}>
-                  <span className="font-inter font-semibold text-sm" style={{ color: 'hsl(var(--text-gray))' }}>
-                    Premium Competitors
-                  </span>
-                </div>
-              </div>
-
-              {/* Data Rows */}
-              {comparisonRows.map((row, index) => (
-                <div 
-                  key={index}
-                  className="grid grid-cols-4 gap-2 mb-1 transition-all duration-200 hover:shadow-md"
-                  style={{ 
-                    backgroundColor: 'white',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(192, 160, 110, 0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'white';
-                  }}
-                >
-                  <div className="p-4 flex items-center">
-                    <span className="font-inter text-sm" style={{ color: 'hsl(var(--text-gray))' }}>
-                      {row.feature}
-                    </span>
-                  </div>
-                  <div className="p-4 flex items-center justify-center">
-                    {row.you ? (
-                      <span className="text-2xl" style={{ color: 'hsl(var(--precision-blue))' }}>✓</span>
-                    ) : (
-                      <span className="text-2xl" style={{ color: '#999' }}>×</span>
-                    )}
-                  </div>
-                  <div className="p-4 flex items-center justify-center">
-                    {row.standard ? (
-                      <span className="text-2xl" style={{ color: '#666' }}>✓</span>
-                    ) : (
-                      <span className="text-2xl" style={{ color: '#999' }}>×</span>
-                    )}
-                  </div>
-                  <div className="p-4 flex items-center justify-center">
-                    {row.premium ? (
-                      <span className="text-2xl" style={{ color: '#666' }}>✓</span>
-                    ) : (
-                      <span className="text-2xl" style={{ color: '#999' }}>×</span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* CTA */}
         <div className="text-center">
-          <Button 
-            variant="outline" 
-            size="lg"
-            onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Learn More About Our Advantage
-          </Button>
+          <ComparisonTableModal />
         </div>
       </div>
     </section>

@@ -122,27 +122,22 @@ export const Footer = () => {
             <h3 className="font-inter font-semibold mb-4 text-sm uppercase tracking-wider">Legal & Contact</h3>
             <ul className="space-y-2 text-sm font-lora mb-6">
               <li>
-                <a href="#" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
+                <a href="/legal" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
+                  Legal Disclaimer
+                </a>
+              </li>
+              <li>
+                <a href="/legal" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
+                <a href="/legal" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
                   Terms of Service
                 </a>
               </li>
               <li>
-                <a href="#" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
-                  Inspection Agreement
-                </a>
-              </li>
-              <li>
-                <a href="#" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
-                  Cancellation Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
+                <a href="/legal" className="transition-colors" style={{ color: 'rgba(248, 249, 250, 0.7)' }} onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--clinical-white))'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(248, 249, 250, 0.7)'}>
                   Cookie Policy
                 </a>
               </li>
