@@ -9,6 +9,7 @@ import QuickQuotation from "@/components/QuickQuotation";
 export const Hero = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showUI, setShowUI] = useState(false);
+  const [isSticky, setIsSticky] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLElement>(null);
 
@@ -39,6 +40,9 @@ export const Hero = () => {
       // Progress from 0 to 1 over 3 viewport heights
       const progress = Math.min(Math.max(scrollY / heroHeight, 0), 1);
       setScrollProgress(progress);
+
+      // Release sticky when hero section is complete
+      setIsSticky(scrollY < heroHeight);
     };
 
     handleScroll(); // Initial call
@@ -102,12 +106,12 @@ export const Hero = () => {
 
   return (
     <>
-      {/* Spacer to allow scrolling through hero content */}
-      <div style={{ height: '300vh' }} />
+      {/* Spacer to allow scrolling through hero content - only when sticky */}
+      {isSticky && <div style={{ height: '300vh' }} />}
       
       <section
         ref={heroRef}
-        className="fixed top-0 left-0 w-full h-screen flex items-center overflow-hidden z-0"
+        className={`${isSticky ? 'fixed top-0 left-0' : 'relative'} w-full h-screen flex items-center overflow-hidden z-0`}
       >
         {/* Background */}
         <div className="absolute inset-0 overflow-hidden">
