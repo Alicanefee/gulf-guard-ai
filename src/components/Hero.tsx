@@ -11,6 +11,7 @@ export const Hero = () => {
   const [showUI, setShowUI] = useState(false);
   const [canScroll, setCanScroll] = useState(false);
   const [scrollAccumulator, setScrollAccumulator] = useState(0);
+  const [canContinue, setCanContinue] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLElement>(null);
 
@@ -51,8 +52,8 @@ export const Hero = () => {
           } else if (e.deltaY < 0 && currentSlide > 0) {
             // Scroll up
             setCurrentSlide(prevSlide => prevSlide - 1);
-          } else if (e.deltaY > 0 && currentSlide === 2) {
-            // Allow normal scrolling after last slide
+          } else if (e.deltaY > 0 && currentSlide === 2 && canContinue) {
+            // Allow normal scrolling after last slide only if continue was clicked
             setCanScroll(false);
           }
           return 0; // Reset accumulator
@@ -86,7 +87,8 @@ export const Hero = () => {
       headline: "See the unseen, Protect Your Investment",
       subtitle: null,
       showCTAs: showUI,
-      trustBadges: showUI
+      trustBadges: showUI,
+      showContinueButton: false
     },
     {
       background: (
@@ -99,7 +101,8 @@ export const Hero = () => {
       headline: "See the unseen, Protect Your Investment",
       subtitle: "We look beyond the surface. Digital precision. Investment protection.",
       showCTAs: true,
-      trustBadges: false
+      trustBadges: false,
+      showContinueButton: false
     },
     {
       background: (
@@ -112,7 +115,8 @@ export const Hero = () => {
       headline: "Increase return investment not cost",
       subtitle: null,
       showCTAs: true,
-      trustBadges: false
+      trustBadges: false,
+      showContinueButton: true
     }
   ];
 
@@ -200,12 +204,41 @@ export const Hero = () => {
               <QuickQuotation />
               <Button
                 size="xl"
+                variant="premium-outline"
+                onClick={() => scrollToSection('why')}
+                className="font-inter"
+              >
+                Find why
+              </Button>
+              <Button
+                size="xl"
                 variant="premium"
                 onClick={() => scrollToSection('booking')}
                 className="group font-inter"
               >
                 Book Now
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          )}
+
+          {/* Continue Button (only on last slide) */}
+          {currentSlideData.showContinueButton && (
+            <div
+              className="mt-8 animate-fade-in transition-all duration-500"
+              style={{
+                transform: `translateY(${currentSlide * 5}px)`,
+                opacity: 1 - (currentSlide * 0.1)
+              }}
+            >
+              <Button
+                size="xl"
+                variant="secondary"
+                onClick={() => setCanContinue(true)}
+                className="font-inter bg-white/10 hover:bg-white/20 text-white border-white/30"
+              >
+                Continue to Services
+                <ChevronDown className="ml-2" />
               </Button>
             </div>
           )}
