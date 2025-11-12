@@ -200,14 +200,6 @@ export const Hero = () => {
               <QuickQuotation />
               <Button
                 size="xl"
-                variant="premium-outline"
-                onClick={() => scrollToSection('why')}
-                className="font-inter"
-              >
-                Find why
-              </Button>
-              <Button
-                size="xl"
                 variant="premium"
                 onClick={() => scrollToSection('booking')}
                 className="group font-inter"
