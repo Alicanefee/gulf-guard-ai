@@ -48,7 +48,7 @@ export const Hero = () => {
 
   // Determine current content based on scroll progress
   const getCurrentContent = () => {
-    if (scrollProgress < 0.3) {
+    if (scrollProgress < 0.5) {
       return {
         headline: "See the unseen, Protect Your Investment",
         subtitle: null,
@@ -65,7 +65,7 @@ export const Hero = () => {
           </video>
         )
       };
-    } else if (scrollProgress < 0.7) {
+    } else {
       return {
         headline: "See the unseen, Protect Your Investment",
         subtitle: "We look beyond the surface. Digital precision. Investment protection.",
@@ -74,19 +74,6 @@ export const Hero = () => {
           <img
             src={heroImage}
             alt="Property inspection"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )
-      };
-    } else {
-      return {
-        headline: "Increase return investment not cost",
-        subtitle: null,
-        showTrustBadges: false,
-        background: (
-          <img
-            src={heroImage2}
-            alt="Investment returns visualization"
             className="absolute inset-0 w-full h-full object-cover"
           />
         )
