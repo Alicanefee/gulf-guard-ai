@@ -10,8 +10,6 @@ export const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showUI, setShowUI] = useState(false);
   const [canScroll, setCanScroll] = useState(false);
-  const [scrollAccumulator, setScrollAccumulator] = useState(0);
-  const [canContinue, setCanContinue] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLElement>(null);
 
@@ -32,35 +30,28 @@ export const Hero = () => {
     };
   }, []);
 
-  // Handle wheel events for slide transitions with accumulation
+  // Handle wheel events for slide transitions (fixed 10 lines threshold)
   useEffect(() => {
     if (!canScroll) return;
 
-    const SCROLL_THRESHOLD = 300; // Accumulate 300px of scroll before changing slide
+    const SCROLL_THRESHOLD = 200; // 10 lines of scroll (20px per line)
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
-      setScrollAccumulator(prev => {
-        const newAccum = prev + Math.abs(e.deltaY);
-
-        if (newAccum >= SCROLL_THRESHOLD) {
-          // Change slide based on direction
-          if (e.deltaY > 0 && currentSlide < 2) {
-            // Scroll down
-            setCurrentSlide(prevSlide => prevSlide + 1);
-          } else if (e.deltaY < 0 && currentSlide > 0) {
-            // Scroll up
-            setCurrentSlide(prevSlide => prevSlide - 1);
-          } else if (e.deltaY > 0 && currentSlide === 2 && canContinue) {
-            // Allow normal scrolling after last slide only if continue was clicked
-            setCanScroll(false);
-          }
-          return 0; // Reset accumulator
+      // Check if scroll delta exceeds threshold
+      if (Math.abs(e.deltaY) >= SCROLL_THRESHOLD) {
+        if (e.deltaY > 0 && currentSlide < 2) {
+          // Scroll down
+          setCurrentSlide(prevSlide => prevSlide + 1);
+        } else if (e.deltaY < 0 && currentSlide > 0) {
+          // Scroll up
+          setCurrentSlide(prevSlide => prevSlide - 1);
+        } else if (e.deltaY > 0 && currentSlide === 2) {
+          // Allow normal scrolling after last slide
+          setCanScroll(false);
         }
-
-        return newAccum;
-      });
+      }
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
@@ -87,8 +78,7 @@ export const Hero = () => {
       headline: "See the unseen, Protect Your Investment",
       subtitle: null,
       showCTAs: showUI,
-      trustBadges: showUI,
-      showContinueButton: false
+      trustBadges: showUI
     },
     {
       background: (
@@ -101,8 +91,7 @@ export const Hero = () => {
       headline: "See the unseen, Protect Your Investment",
       subtitle: "We look beyond the surface. Digital precision. Investment protection.",
       showCTAs: true,
-      trustBadges: false,
-      showContinueButton: false
+      trustBadges: false
     },
     {
       background: (
@@ -115,8 +104,7 @@ export const Hero = () => {
       headline: "Increase return investment not cost",
       subtitle: null,
       showCTAs: true,
-      trustBadges: false,
-      showContinueButton: true
+      trustBadges: false
     }
   ];
 
@@ -222,26 +210,7 @@ export const Hero = () => {
             </div>
           )}
 
-          {/* Continue Button (only on last slide) */}
-          {currentSlideData.showContinueButton && (
-            <div
-              className="mt-8 animate-fade-in transition-all duration-500"
-              style={{
-                transform: `translateY(${currentSlide * 5}px)`,
-                opacity: 1 - (currentSlide * 0.1)
-              }}
-            >
-              <Button
-                size="xl"
-                variant="secondary"
-                onClick={() => setCanContinue(true)}
-                className="font-inter bg-white/10 hover:bg-white/20 text-white border-white/30"
-              >
-                Continue to Services
-                <ChevronDown className="ml-2" />
-              </Button>
-            </div>
-          )}
+
         </div>
       </div>
 
