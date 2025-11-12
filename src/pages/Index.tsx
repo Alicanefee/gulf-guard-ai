@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
-import { InteractiveComparisonSlider } from "@/components/InteractiveComparisonSlider";
 import { ServicePackages } from "@/components/ServicePackages";
 import { ProcessTimeline } from "@/components/ProcessTimeline";
 import { Testimonials } from "@/components/Testimonials";
@@ -25,7 +24,6 @@ const Index = () => {
     <div className="min-h-screen">
       {showNavbar && <Navbar />}
       <Hero />
-      <InteractiveComparisonSlider />
       <ServicePackages />
       <ProcessTimeline />
       <Testimonials />
