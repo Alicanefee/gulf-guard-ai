@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { InteractiveComparisonSlider } from "@/components/InteractiveComparisonSlider";
@@ -9,9 +10,20 @@ import { Footer } from "@/components/Footer";
 import { FloatingCTA } from "@/components/FloatingCTA";
 
 const Index = () => {
+  const [showNavbar, setShowNavbar] = useState(false);
+
+  useEffect(() => {
+    // Show navbar 3 seconds after video starts
+    const navbarTimer = setTimeout(() => {
+      setShowNavbar(true);
+    }, 3000);
+
+    return () => clearTimeout(navbarTimer);
+  }, []);
+
   return (
     <div className="min-h-screen">
-      <Navbar />
+      {showNavbar && <Navbar />}
       <Hero />
       <InteractiveComparisonSlider />
       <ServicePackages />
