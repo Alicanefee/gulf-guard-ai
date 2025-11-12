@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import heroImage from "@/assets/new-hero-image.png";
 import heroImage2 from "@/assets/new-hero-image-2.png";
-import heroVideo from "@/assets/videos/hero.mp4";
+import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import QuickQuotation from "@/components/QuickQuotation";
 
 export const Hero = () => {
