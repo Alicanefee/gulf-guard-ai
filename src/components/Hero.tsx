@@ -17,7 +17,7 @@ export const Hero = () => {
   useEffect(() => {
     const showUITimer = setTimeout(() => {
       setShowUI(true);
-    
+      setCanScroll(true);
     }, 4000);
 
     const pauseVideoTimer = setTimeout(() => {
@@ -37,20 +37,24 @@ export const Hero = () => {
     const SCROLL_THRESHOLD = 200; // 10 lines of scroll (20px per line)
 
     const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-
       // Check if scroll delta exceeds threshold
       if (Math.abs(e.deltaY) >= SCROLL_THRESHOLD) {
         if (e.deltaY > 0 && currentSlide < 2) {
-          // Scroll down
+          // Scroll down - prevent and change slide
+          e.preventDefault();
           setCurrentSlide(prevSlide => prevSlide + 1);
         } else if (e.deltaY < 0 && currentSlide > 0) {
-          // Scroll up
+          // Scroll up - prevent and change slide
+          e.preventDefault();
           setCurrentSlide(prevSlide => prevSlide - 1);
         } else if (e.deltaY > 0 && currentSlide === 2) {
-          // Allow normal scrolling after last slide
+          // Allow normal scrolling after last slide - don't prevent
           setCanScroll(false);
+          // Don't prevent default here so normal scrolling can happen
         }
+      } else {
+        // Small scrolls - prevent if we're still in hero
+        e.preventDefault();
       }
     };
 
