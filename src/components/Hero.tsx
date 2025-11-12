@@ -7,17 +7,13 @@ import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import QuickQuotation from "@/components/QuickQuotation";
 
 export const Hero = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [showUI, setShowUI] = useState(false);
-  const [canScroll, setCanScroll] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const heroRef = useRef<HTMLElement>(null);
 
   // Video sequence: video (4s) → show UI
   useEffect(() => {
     const showUITimer = setTimeout(() => {
       setShowUI(true);
-      setCanScroll(true);
     }, 4000);
 
     const pauseVideoTimer = setTimeout(() => {
@@ -30,45 +26,14 @@ export const Hero = () => {
     };
   }, []);
 
-  // Handle wheel events for slide transitions (fixed 10 lines threshold)
-  useEffect(() => {
-    if (!canScroll) return;
-
-    const SCROLL_THRESHOLD = 200; // 10 lines of scroll (20px per line)
-
-    const handleWheel = (e: WheelEvent) => {
-      // Check if scroll delta exceeds threshold
-      if (Math.abs(e.deltaY) >= SCROLL_THRESHOLD) {
-        if (e.deltaY > 0 && currentSlide < 2) {
-          // Scroll down - prevent and change slide
-          e.preventDefault();
-          setCurrentSlide(prevSlide => prevSlide + 1);
-        } else if (e.deltaY < 0 && currentSlide > 0) {
-          // Scroll up - prevent and change slide
-          e.preventDefault();
-          setCurrentSlide(prevSlide => prevSlide - 1);
-        } else if (e.deltaY > 0 && currentSlide === 2) {
-          // Allow normal scrolling after last slide - don't prevent
-          setCanScroll(false);
-          // Don't prevent default here so normal scrolling can happen
-        }
-      } else {
-        // Small scrolls - prevent if we're still in hero
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, [currentSlide, canScroll]);
-
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const slides = [
-    {
-      background: (
+  return (
+    <section className="relative h-screen flex items-center overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 overflow-hidden">
         <video
           ref={videoRef}
           autoPlay
@@ -78,61 +43,10 @@ export const Hero = () => {
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
-      ),
-      headline: "See the unseen, Protect Your Investment",
-      subtitle: null,
-      showCTAs: showUI,
-      trustBadges: showUI
-    },
-    {
-      background: (
-        <img
-          src={heroImage}
-          alt="Property inspection"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      ),
-      headline: "See the unseen, Protect Your Investment",
-      subtitle: "We look beyond the surface. Digital precision. Investment protection.",
-      showCTAs: true,
-      trustBadges: false
-    },
-    {
-      background: (
-        <img
-          src={heroImage2}
-          alt="Investment returns visualization"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      ),
-      headline: "Increase return investment not cost",
-      subtitle: null,
-      showCTAs: true,
-      trustBadges: false
-    }
-  ];
-
-  const currentSlideData = slides[currentSlide];
-
-  return (
-    <section
-      ref={heroRef}
-      className="relative h-screen flex items-center overflow-hidden"
-      style={{
-        position: canScroll ? 'fixed' : 'relative',
-        top: 0,
-        left: 0,
-        width: '100%',
-        zIndex: 10
-      }}
-    >
-      {/* Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {currentSlideData.background}
 
         {/* Blue overlay */}
         <div
-          className="absolute inset-0 transition-opacity duration-500"
+          className="absolute inset-0"
           style={{
             backgroundColor: `hsl(var(--authority-blue))`,
             opacity: 0.7
@@ -143,8 +57,8 @@ export const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-4 py-20">
         <div className="max-w-3xl animate-fade-in-up">
-          {/* Trust badges (only on first slide after UI shows) */}
-          {currentSlideData.trustBadges && currentSlide === 0 && (
+          {/* Trust badges (only after UI shows) */}
+          {showUI && (
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               {['InterNACHI® certified', '10+ years engineering expertise', 'Global service network'].map((badge) => (
                 <div key={badge} className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
@@ -157,42 +71,13 @@ export const Hero = () => {
           )}
 
           {/* Headline */}
-          <h1
-            className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide transition-all duration-500"
-            style={{
-              color: 'hsl(var(--clinical-white))',
-              letterSpacing: '1.5px',
-              textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-              transform: `translateY(${currentSlide * 20}px)`,
-              opacity: 1 - (currentSlide * 0.1)
-            }}
-          >
-            {currentSlideData.headline}
+          <h1 className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide">
+            See the unseen, Protect Your Investment
           </h1>
 
-          {/* Subtitle */}
-          {currentSlideData.subtitle && (
-            <p
-              className="font-lora text-lg md:text-xl mb-8 leading-relaxed transition-all duration-500"
-              style={{
-                color: 'hsl(var(--clinical-white))',
-                transform: `translateY(${currentSlide * 15}px)`,
-                opacity: 1 - (currentSlide * 0.1)
-              }}
-            >
-              {currentSlideData.subtitle}
-            </p>
-          )}
-
           {/* CTAs */}
-          {currentSlideData.showCTAs && (
-            <div
-              className="flex flex-col sm:flex-row gap-4 animate-fade-in transition-all duration-500"
-              style={{
-                transform: `translateY(${currentSlide * 10}px)`,
-                opacity: 1 - (currentSlide * 0.1)
-              }}
-            >
+          {showUI && (
+            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
               <QuickQuotation />
               <Button
                 size="xl"
@@ -213,13 +98,11 @@ export const Hero = () => {
               </Button>
             </div>
           )}
-
-
         </div>
       </div>
 
-      {/* Scroll indicator (only on first slide) */}
-      {currentSlide === 0 && !showUI && (
+      {/* Scroll indicator (only before UI shows) */}
+      {!showUI && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
           <div className="flex flex-col items-center gap-2">
             <span className="text-xs uppercase tracking-wider" style={{ color: 'hsl(var(--precision-blue))' }}>
@@ -229,8 +112,6 @@ export const Hero = () => {
           </div>
         </div>
       )}
-
-
     </section>
   );
 };
