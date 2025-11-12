@@ -7,8 +7,10 @@ import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import QuickQuotation from "@/components/QuickQuotation";
 
 export const Hero = () => {
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [showUI, setShowUI] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
 
   // Video sequence: video (4s) → show UI
   useEffect(() => {
@@ -26,23 +28,82 @@ export const Hero = () => {
     };
   }, []);
 
+  // Track scroll progress within hero section
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!heroRef.current) return;
+
+      const rect = heroRef.current.getBoundingClientRect();
+      const progress = Math.min(Math.max((window.innerHeight - rect.top) / window.innerHeight, 0), 1);
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Determine current content based on scroll progress
+  const getCurrentContent = () => {
+    if (scrollProgress < 0.3) {
+      return {
+        headline: "See the unseen, Protect Your Investment",
+        subtitle: null,
+        showTrustBadges: showUI,
+        background: (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src={heroVideo} type="video/mp4" />
+          </video>
+        )
+      };
+    } else if (scrollProgress < 0.7) {
+      return {
+        headline: "See the unseen, Protect Your Investment",
+        subtitle: "We look beyond the surface. Digital precision. Investment protection.",
+        showTrustBadges: false,
+        background: (
+          <img
+            src={heroImage}
+            alt="Property inspection"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )
+      };
+    } else {
+      return {
+        headline: "Increase return investment not cost",
+        subtitle: null,
+        showTrustBadges: false,
+        background: (
+          <img
+            src={heroImage2}
+            alt="Investment returns visualization"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )
+      };
+    }
+  };
+
+  const currentContent = getCurrentContent();
+
   return (
-    <section className="relative h-screen flex items-center overflow-hidden">
+    <section
+      ref={heroRef}
+      className="relative h-screen flex items-center overflow-hidden"
+    >
       {/* Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={heroVideo} type="video/mp4" />
-        </video>
+      <div className="absolute inset-0 overflow-hidden transition-all duration-1000">
+        {currentContent.background}
 
         {/* Blue overlay */}
         <div
@@ -57,8 +118,8 @@ export const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-4 py-20">
         <div className="max-w-3xl animate-fade-in-up">
-          {/* Trust badges (only after UI shows) */}
-          {showUI && (
+          {/* Trust badges */}
+          {currentContent.showTrustBadges && (
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               {['InterNACHI® certified', '10+ years engineering expertise', 'Global service network'].map((badge) => (
                 <div key={badge} className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
@@ -71,13 +132,20 @@ export const Hero = () => {
           )}
 
           {/* Headline */}
-          <h1 className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide">
-            See the unseen, Protect Your Investment
+          <h1 className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide transition-all duration-1000">
+            {currentContent.headline}
           </h1>
+
+          {/* Subtitle */}
+          {currentContent.subtitle && (
+            <p className="font-lora text-lg md:text-xl mb-8 leading-relaxed transition-all duration-1000">
+              {currentContent.subtitle}
+            </p>
+          )}
 
           {/* CTAs */}
           {showUI && (
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
+            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in transition-all duration-1000">
               <QuickQuotation />
               <Button
                 size="xl"
