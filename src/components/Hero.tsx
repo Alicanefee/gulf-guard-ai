@@ -17,7 +17,7 @@ export const Hero = () => {
   useEffect(() => {
     const showUITimer = setTimeout(() => {
       setShowUI(true);
-      setCanScroll(true);
+    
     }, 4000);
 
     const pauseVideoTimer = setTimeout(() => {
