@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import heroImage from "@/assets/dubai-skyline-hero.jpg";
-import heroVideo from "@/assets/videos/hero.mp4";
+import heroImage from "@/assets/new-hero-image.png";
+import heroImage2 from "@/assets/new-hero-image-2.png";
+import heroVideo from "@/assets/videos/hero-video-2.mp4";
 
 export const Hero = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [videoPhase, setVideoPhase] = useState<'initial' | 'with-ui' | 'paused' | 'image1' | 'image2'>('initial');
+  const [showUI, setShowUI] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,11 +20,41 @@ export const Hero = () => {
         const scrolled = Math.abs(rect.top);
         const progress = Math.min((scrolled / sectionHeight) * 100, 100);
         setScrollProgress(progress);
+
+        // Update video phase based on scroll
+        if (progress >= 50 && videoPhase === 'image1') {
+          setVideoPhase('image2');
+        }
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, [videoPhase]);
+
+  // Video sequence timer
+  useEffect(() => {
+    const timer1 = setTimeout(() => {
+      setShowUI(true);
+      setVideoPhase('with-ui');
+    }, 3000); // 3 seconds
+
+    const timer2 = setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
+      setVideoPhase('paused');
+    }, 4000); // 4 seconds
+
+    const timer3 = setTimeout(() => {
+      setVideoPhase('image1');
+    }, 4500); // 4.5 seconds to allow transition
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
   }, []);
 
   const scrollToSection = (id: string) => {
@@ -28,14 +62,19 @@ export const Hero = () => {
   };
 
   const getHeadline = () => {
-    if (scrollProgress < 10) return "See Your Investment's DNA";
-    if (scrollProgress < 40) return "We Look Beyond the Surface";
-    if (scrollProgress < 70) return "We Detect the Smallest Anomaly";
-    return "Your Investment, Secured";
+    if (videoPhase === 'initial' || videoPhase === 'with-ui' || videoPhase === 'paused' || videoPhase === 'image1') {
+      return "See the unseen, Protect Your Investment";
+    }
+    if (videoPhase === 'image2') {
+      return "Increase return investment not cost";
+    }
+    return "See the unseen, Protect Your Investment";
   };
 
   const getSubtitle = () => {
-    if (scrollProgress < 10) return "We look beyond the surface. Digital precision. Investment protection.";
+    if (videoPhase === 'image1') {
+      return "We look beyond the surface. Digital precision. Investment protection.";
+    }
     return null;
   };
 
@@ -57,24 +96,55 @@ export const Hero = () => {
     return {};
   };
 
-  return (
-    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden pt-16">
-      {/* Background Video with Overlay */}
-      <div className="absolute inset-0 overflow-hidden">
+  const getCurrentBackground = () => {
+    if (videoPhase === 'initial' || videoPhase === 'with-ui' || videoPhase === 'paused') {
+      return (
         <video
+          ref={videoRef}
           autoPlay
-          loop
           muted
           playsInline
-          poster={heroImage}
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ 
-            opacity: scrollProgress < 40 ? 1 - (scrollProgress / 40) * 0.3 : 0.7,
+          style={{
+            opacity: videoPhase === 'paused' ? 0.7 : 1,
             filter: scrollProgress >= 10 ? `blur(${Math.min((scrollProgress - 10) / 10, 2)}px)` : 'none'
           }}
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
+      );
+    }
+    if (videoPhase === 'image1' || scrollProgress < 50) {
+      return (
+        <img
+          src={heroImage}
+          alt="Hero background"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: scrollProgress < 40 ? 1 - (scrollProgress / 40) * 0.3 : 0.7,
+            filter: scrollProgress >= 10 ? `blur(${Math.min((scrollProgress - 10) / 10, 2)}px)` : 'none'
+          }}
+        />
+      );
+    }
+    return (
+      <img
+        src={heroImage2}
+        alt="Hero background 2"
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          opacity: scrollProgress < 40 ? 1 - (scrollProgress / 40) * 0.3 : 0.7,
+          filter: scrollProgress >= 10 ? `blur(${Math.min((scrollProgress - 10) / 10, 2)}px)` : 'none'
+        }}
+      />
+    );
+  };
+
+  return (
+    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden pt-16">
+      {/* Background Video/Image with Overlay */}
+      <div className="absolute inset-0 overflow-hidden">
+        {getCurrentBackground()}
         <div 
           className="absolute inset-0 transition-all duration-300"
           style={{ 
@@ -110,69 +180,73 @@ export const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="container relative z-10 mx-auto px-4 py-20">
-        <div className="max-w-3xl animate-fade-in-up">
-          {scrollProgress < 10 && (
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
-              <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
-                <p className="text-primary-foreground text-sm font-medium text-center">
-                  InterNACHI® certified
-                </p>
+      {showUI && (
+        <div className="container relative z-10 mx-auto px-4 py-20">
+          <div className="max-w-3xl animate-fade-in-up">
+            {scrollProgress < 10 && (
+              <div className="flex flex-wrap justify-center gap-3 mb-8">
+                <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
+                  <p className="text-primary-foreground text-sm font-medium text-center">
+                    InterNACHI® certified
+                  </p>
+                </div>
+                <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
+                  <p className="text-primary-foreground text-sm font-medium text-center">
+                    10+ years engineering expertise
+                  </p>
+                </div>
+                <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
+                  <p className="text-primary-foreground text-sm font-medium text-center">
+                    Global service network
+                  </p>
+                </div>
               </div>
-              <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
-                <p className="text-primary-foreground text-sm font-medium text-center">
-                  10+ years engineering expertise
-                </p>
-              </div>
-              <div className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
-                <p className="text-primary-foreground text-sm font-medium text-center">
-                  Global service network
-                </p>
-              </div>
-            </div>
-          )}
+            )}
 
-          <h1 
-            className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide transition-all duration-500"
-            style={{ 
-              color: 'hsl(var(--clinical-white))',
-              letterSpacing: '1.5px'
-            }}
-          >
-            {getHeadline()}
-          </h1>
-          
-          {getSubtitle() && (
-            <p className="font-lora text-lg md:text-xl mb-8 leading-relaxed" style={{ color: 'hsl(var(--clinical-white))' }}>
-              {getSubtitle()}
-            </p>
-          )}
+            <h1
+              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide transition-all duration-500"
+              style={{
+                color: 'hsl(var(--clinical-white))',
+                letterSpacing: '1.5px',
+                transform: `perspective(1000px) rotateX(${scrollProgress * 0.1}deg) translateZ(${scrollProgress * 2}px)`,
+                textShadow: `0 ${scrollProgress * 0.1}px ${scrollProgress * 0.2}px rgba(0,0,0,0.3)`
+              }}
+            >
+              {getHeadline()}
+            </h1>
 
-          {(scrollProgress < 10 || scrollProgress >= 70) && (
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
-              <Button 
-                size="xl" 
-                variant="premium"
-                onClick={() => scrollToSection('booking')}
-                className="group font-inter"
-              >
-                Book Now
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              {scrollProgress < 10 && (
-                <Button 
-                  size="xl" 
-                  variant="premium-outline"
-                  onClick={() => scrollToSection('why')}
-                  className="font-inter"
+            {getSubtitle() && (
+              <p className="font-lora text-lg md:text-xl mb-8 leading-relaxed" style={{ color: 'hsl(var(--clinical-white))' }}>
+                {getSubtitle()}
+              </p>
+            )}
+
+            {(scrollProgress < 10 || scrollProgress >= 70) && (
+              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
+                <Button
+                  size="xl"
+                  variant="premium"
+                  onClick={() => scrollToSection('booking')}
+                  className="group font-inter"
                 >
-                  Learn More
+                  Book Now
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
-              )}
-            </div>
-          )}
+                {scrollProgress < 10 && (
+                  <Button
+                    size="xl"
+                    variant="premium-outline"
+                    onClick={() => scrollToSection('why')}
+                    className="font-inter"
+                  >
+                    Learn More
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Scroll Indicator */}
       {scrollProgress < 5 && (
