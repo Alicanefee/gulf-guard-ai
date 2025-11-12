@@ -54,7 +54,6 @@ export const Hero = () => {
           } else if (e.deltaY > 0 && currentSlide === 2) {
             // Allow normal scrolling after last slide
             setCanScroll(false);
-            window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
           }
           return 0; // Reset accumulator
         }
