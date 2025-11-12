@@ -233,17 +233,7 @@ export const Hero = () => {
         </div>
       )}
 
-      {/* Slide indicators */}
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-2">
-        {slides.map((_, index) => (
-          <div
-            key={index}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide ? 'bg-white' : 'bg-white/30'
-            }`}
-          />
-        ))}
-      </div>
+
     </section>
   );
 };
