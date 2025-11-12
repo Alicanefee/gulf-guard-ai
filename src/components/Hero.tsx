@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import heroImage from "@/assets/new-hero-image.png";
 import heroImage2 from "@/assets/new-hero-image-2.png";
-import heroVideo from "@/assets/videos/hero-video-2.mp4";
+import heroVideo from "@/assets/videos/hero.mp4";
+import QuickQuotation from "@/components/QuickQuotation";
 
 export const Hero = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [videoPhase, setVideoPhase] = useState<'video' | 'image1' | 'image2'>('video');
   const [showUI, setShowUI] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Handle scroll progress
@@ -21,6 +23,11 @@ export const Hero = () => {
       const progress = Math.min((Math.abs(rect.top) / rect.height) * 100, 100);
       setScrollProgress(progress);
 
+      // Transition to image1 after video ends on scroll
+      if (progress > 10 && videoEnded && videoPhase === 'video') {
+        setVideoPhase('image1');
+      }
+
       // Transition to second image at 50% scroll
       if (progress >= 50 && videoPhase === 'image1') {
         setVideoPhase('image2');
@@ -29,24 +36,20 @@ export const Hero = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [videoPhase]);
+  }, [videoPhase, videoEnded]);
 
-  // Video sequence: video (3s) → pause + show UI (1.5s) → image1
+  // Video sequence: video (4s) → pause + show UI → image1 on scroll
   useEffect(() => {
-    const showUITimer = setTimeout(() => setShowUI(true), 3000);
-    
+    const showUITimer = setTimeout(() => setShowUI(true), 4000);
+
     const pauseVideoTimer = setTimeout(() => {
       videoRef.current?.pause();
+      setVideoEnded(true);
     }, 4000);
-
-    const switchToImageTimer = setTimeout(() => {
-      setVideoPhase('image1');
-    }, 4500);
 
     return () => {
       clearTimeout(showUITimer);
       clearTimeout(pauseVideoTimer);
-      clearTimeout(switchToImageTimer);
     };
   }, []);
 
@@ -191,6 +194,15 @@ export const Hero = () => {
             {/* CTAs (visible at top and bottom) */}
             {(scrollProgress < 10 || scrollProgress >= 70) && (
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
+                <QuickQuotation />
+                <Button
+                  size="xl"
+                  variant="premium-outline"
+                  onClick={() => scrollToSection('why')}
+                  className="font-inter"
+                >
+                  Find why
+                </Button>
                 <Button
                   size="xl"
                   variant="premium"
@@ -200,16 +212,6 @@ export const Hero = () => {
                   Book Now
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
-                {scrollProgress < 10 && (
-                  <Button
-                    size="xl"
-                    variant="premium-outline"
-                    onClick={() => scrollToSection('why')}
-                    className="font-inter"
-                  >
-                    Learn More
-                  </Button>
-                )}
               </div>
             )}
           </div>
