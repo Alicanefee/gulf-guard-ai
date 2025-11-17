@@ -47,8 +47,7 @@ export const Hero = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       videoRef.current?.pause();
-      // Smooth scroll to second section
-      document.getElementById('section-two')?.scrollIntoView({ behavior: 'smooth' });
+      // Removed auto-scroll since section-two is removed
     }, 4000);
     return () => clearTimeout(timer);
   }, []);
@@ -61,11 +60,10 @@ export const Hero = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
       
-      // 4 sticky sections: video, image1, image2, warnings-moving
+      // 2 sections: video, warnings-moving
       // Each section takes full viewport scroll to complete
-      const totalStickyHeight = viewportHeight * 4;
       
-      // Calculate current section (0-3)
+      // Calculate current section (0-1)
       const rawSection = scrollY / viewportHeight;
       const section = Math.floor(rawSection);
       const sectionProgress = rawSection - section; // 0 to 1 within current section
@@ -73,89 +71,57 @@ export const Hero = () => {
       setCurrentSection(section);
       setStickyProgress(sectionProgress);
       
+      // Release sticky when warnings start moving (section 1 at 40%)
+      if (section === 1 && sectionProgress > 0.4) {
+        containerRef.current.style.position = 'relative';
+        containerRef.current.style.top = 'auto';
+        containerRef.current.style.left = 'auto';
+      } else {
+        containerRef.current.style.position = 'fixed';
+        containerRef.current.style.top = '0';
+        containerRef.current.style.left = '0';
+      }
+      
       // Section 0 (video): stays sticky, no fading
       
-      // Section 1 (image1): title fades out as soon as scroll starts
-      if (section === 1 && section2TitleRef.current) {
-        const titleOpacity = 1 - sectionProgress; // Fades from 1 to 0
-        section2TitleRef.current.style.opacity = titleOpacity.toString();
-      }
-
-      // Section 2 (image2): title fades out as scroll starts, warnings appear
-      if (section === 2 && section3TitleRef.current && warningRef.current) {
-        // Title fades out immediately on scroll
-        const titleOpacity = 1 - sectionProgress;
-        section3TitleRef.current.style.opacity = titleOpacity.toString();
+      // Section 1 (warnings moving): title appears first, then warnings come, then text fades left to right, then warnings move
+      if (section === 1 && warningRef.current) {
+        // Title appears at start, fades out as scroll starts
+        if (section3TitleRef.current) {
+          section3TitleRef.current.style.opacity = Math.max(0, 1 - sectionProgress).toString();
+        }
         
-        // Warnings appear as soon as scroll starts (stay in place)
-        if (sectionProgress > 0) {
+        // Warnings appear at 20%
+        if (sectionProgress > 0.2) {
           warningRef.current.style.opacity = '1';
           warningRef.current.style.transform = 'translateY(0)';
         } else {
           warningRef.current.style.opacity = '0';
         }
-      }
-
-      // Movement parameters
-      const movementStart = 0.2; // start moving warnings after 20% into the section
-      const textTrigger = 0.3; // start showing per-warning text after 30%
-
-      // Section 3 (warnings moving): screen moves with warnings
-      if (section === 3 && warningRef.current) {
-        // effectiveProgress starts at 0 when sectionProgress === movementStart and goes to 1 at sectionProgress === 1
-        const effectiveProgress = Math.min(Math.max((sectionProgress - movementStart) / (1 - movementStart), 0), 1);
-
-        // Translate warnings down based on effectiveProgress
-        const translateY = effectiveProgress * 100;
-        warningRef.current.style.transform = `translateY(${translateY}vh)`;
-        warningRef.current.style.opacity = '1';
-
-        // Fade out section3 title proportionally as warnings move
-        if (section3TitleRef.current) {
-          section3TitleRef.current.style.opacity = Math.max(0, 1 - effectiveProgress).toString();
-        }
-
-        // Show per-warning labels when past textTrigger
+        
+        // Text next to warnings fades out left to right at 30%
         const labels = warningRef.current.querySelectorAll('.warning-label');
-        labels.forEach((el) => {
-          if (sectionProgress > textTrigger) {
-            const labelProgress = Math.min(Math.max((sectionProgress - textTrigger) / (1 - textTrigger), 0), 1);
-            (el as HTMLElement).style.opacity = labelProgress.toString();
-            (el as HTMLElement).style.transform = `translateY(${translateY * 0.2}vh)`;
-          } else {
-            (el as HTMLElement).style.opacity = '0';
-            (el as HTMLElement).style.transform = 'translateY(0)';
-          }
-        });
-
-        // Fade in section-four placeholders proportionally
-        if (sectionFourRef.current) {
-          const placeholders = sectionFourRef.current.querySelectorAll('.placeholder-text');
-          placeholders.forEach((p) => {
-            (p as HTMLElement).style.opacity = effectiveProgress.toString();
+        if (sectionProgress > 0.3) {
+          const fadeProgress = Math.min(Math.max((sectionProgress - 0.3) / 0.1, 0), 1); // fades over 10% scroll
+          labels.forEach((el, idx) => {
+            const delay = idx * 0.1; // stagger left to right
+            const opacity = Math.max(0, 1 - (fadeProgress - delay));
+            (el as HTMLElement).style.opacity = opacity.toString();
+          });
+        } else {
+          labels.forEach((el) => {
+            (el as HTMLElement).style.opacity = '1';
           });
         }
-
-        // New title appears when effectiveProgress > 0.5 (keeps earlier behavior but smoother)
-        if (newTitleRef.current) {
-          const titleOpacity = effectiveProgress > 0.5 ? (effectiveProgress - 0.5) / 0.5 : 0;
-          newTitleRef.current.style.opacity = titleOpacity.toString();
-        }
-
-        // Docking: when almost finished moving, mark as docked so section-four shows the same warnings
-        if (effectiveProgress >= 0.98) {
-          setDocked(true);
-        } else {
-          setDocked(false);
+        
+        // Warnings start moving at 40%
+        if (sectionProgress > 0.4) {
+          const moveProgress = Math.min(Math.max((sectionProgress - 0.4) / 0.6, 0), 1);
+          const translateY = moveProgress * 100;
+          warningRef.current.style.transform = `translateY(${translateY}vh)`;
         }
       } else {
-        if (newTitleRef.current) newTitleRef.current.style.opacity = '0';
-        if (section > 3) {
-          // fully past warnings movement - keep docked
-          setDocked(true);
-        } else if (section < 3) {
-          setDocked(false);
-        }
+        if (section3TitleRef.current) section3TitleRef.current.style.opacity = '1';
       }
     };
 
@@ -170,8 +136,8 @@ export const Hero = () => {
 
   return (
     <>
-      {/* Spacer to allow scrolling through 4 sticky sections */}
-      <div style={{ height: '400vh' }} />
+      {/* Spacer to allow scrolling through 2 sections */}
+      <div style={{ height: '200vh' }} />
       
       <div 
         ref={containerRef} 
@@ -276,86 +242,18 @@ export const Hero = () => {
         </div>
       </section>
 
-        {/* Section 2: First Image with Title - visible during section 1 */}
+        {/* Section 1: Warnings - visible during section 1 */}
         <section 
-          ref={sectionTwoRef}
+          ref={sectionThreeRef}
           id="section-two" 
           className="section absolute inset-0 w-full h-full flex items-center"
           style={{ 
             opacity: currentSection === 1 ? 1 : 0,
             transition: 'opacity 0.5s ease-in-out',
-            pointerEvents: currentSection === 1 ? 'auto' : 'none'
+            pointerEvents: currentSection === 1 ? 'auto' : 'none',
+            backgroundColor: 'black' // or transparent
           }}
         >
-        {/* Image Background */}
-        <div className="absolute inset-0">
-          <img
-            src={heroImage}
-            alt="Property inspection"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          
-          {/* Blue overlay */}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: `hsl(var(--authority-blue))`,
-              opacity: 0.7
-            }}
-          />
-        </div>
-
-        {/* Content */}
-        <div className="container relative z-10 mx-auto px-4">
-          <div ref={section2TitleRef} className="max-w-3xl transition-opacity duration-500">
-            <h1 
-              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
-              style={{
-                color: 'hsl(var(--clinical-white))',
-                letterSpacing: '1.5px'
-              }}
-            >
-              See the unseen, Protect Your Investment
-            </h1>
-
-            <p 
-              className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
-              style={{ color: 'hsl(var(--clinical-white))' }}
-            >
-              We look beyond the surface. Digital precision. Investment protection.
-            </p>
-          </div>
-        </div>
-      </section>
-
-        {/* Section 3: Second Image with Warnings - visible during sections 2 & 3 */}
-        <section 
-          ref={sectionThreeRef}
-          id="section-three" 
-          className="section absolute inset-0 w-full h-full flex items-center"
-          style={{ 
-            opacity: currentSection >= 2 && currentSection <= 3 ? 1 : 0,
-            transition: 'opacity 0.5s ease-in-out',
-            pointerEvents: currentSection >= 2 && currentSection <= 3 ? 'auto' : 'none'
-          }}
-        >
-        {/* Image Background */}
-        <div className="absolute inset-0">
-          <img
-            src={heroImage}
-            alt="Investment returns"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          
-          {/* Blue overlay */}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: `hsl(var(--authority-blue))`,
-              opacity: 0.7
-            }}
-          />
-        </div>
 
         {/* Title that fades out on scroll */}
         <div className="container relative z-10 mx-auto px-4">
@@ -434,64 +332,6 @@ export const Hero = () => {
 
       </section>
       </div>
-
-      {/* Empty white section to receive warnings (3 left, 3 right) */}
-      <section id="section-four" className="relative w-full min-h-screen bg-white flex items-center">
-        <div ref={sectionFourRef} className="container mx-auto px-4">
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-6 py-12">
-              {/* Left column: docked warnings will appear here when docking completes */}
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
-                </div>
-                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Roof defect details' : ''}</div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
-                </div>
-                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Electrical hazard details' : ''}</div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
-                </div>
-                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Structural concern details' : ''}</div>
-              </div>
-            </div>
-
-            <div className="space-y-6 py-12">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
-                </div>
-                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Moisture ingress details' : ''}</div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
-                </div>
-                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: HVAC concern details' : ''}</div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
-                </div>
-                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Safety/accessibility details' : ''}</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Hidden title that appears when warnings fully placed */}
-          <div ref={newTitleRef} className="text-center mt-12 opacity-0 transition-opacity duration-700">
-            <h2 className="text-3xl font-bold">All Issues Identified</h2>
-            {docked && (
-              <p className="mt-3 text-lg text-muted-foreground">These warnings have been collected and mapped to the inspection report.</p>
-            )}
-          </div>
-        </div>
-      </section>
 
       {/* CSS animations */}
       <style>{`
