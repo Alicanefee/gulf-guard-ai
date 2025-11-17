@@ -365,33 +365,50 @@ export const Hero = () => {
           ))}
         </div>
 
-        {/* New title that appears when warnings move (at 50% of section 3) */}
-        <div className="container relative z-10 mx-auto px-4">
-          <div 
-            ref={newTitleRef}
-            className="max-w-3xl transition-opacity duration-700"
-            style={{ opacity: 0 }}
-          >
-            <h1 
-              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
-              style={{
-                color: 'hsl(var(--clinical-white))',
-                letterSpacing: '1.5px'
-              }}
-            >
-              Hidden Risks Detected
-            </h1>
+      </section>
+      </div>
 
-            <p 
-              className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
-              style={{ color: 'hsl(var(--clinical-white))' }}
-            >
-              Professional inspection reveals what others miss.
-            </p>
+      {/* Empty white section to receive warnings (3 left, 3 right) */}
+      <section id="section-four" className="relative w-full min-h-screen bg-white flex items-center">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 gap-8">
+            <div className="space-y-6 py-12">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">1</div>
+                <div>exp1</div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">2</div>
+                <div>exp1</div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">3</div>
+                <div>exp1</div>
+              </div>
+            </div>
+
+            <div className="space-y-6 py-12">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">4</div>
+                <div>exp1</div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">5</div>
+                <div>exp1</div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">6</div>
+                <div>exp1</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Hidden title that appears when warnings fully placed */}
+          <div ref={newTitleRef} className="text-center mt-12 opacity-0 transition-opacity duration-700">
+            <h2 className="text-3xl font-bold">All Issues Identified</h2>
           </div>
         </div>
       </section>
-      </div>
 
       {/* CSS animations */}
       <style>{`
