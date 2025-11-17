@@ -76,23 +76,23 @@ export const Hero = () => {
   const [showTrustBadges, setShowTrustBadges] = useState(false);
   const [warningSigns, setWarningSigns] = useState(
     risks.map((risk, index) => {
-      // Random position on right side of hero section
-      const randomTop = 20 + Math.random() * 40; // Random vertical position
-      const randomLeft = 65 + Math.random() * 25; // Right side: 65-90% from left
+      // Random position on right side (35%+ from right, which is 65%+ from left)
+      const randomTop = 15 + Math.random() * 50; // Random vertical position
+      const randomLeft = 65 + Math.random() * 30; // Right side: 65-95% from left
       
       return {
         id: index,
         visible: false,
-        startPosition: { top: `${randomTop}%`, left: `${randomLeft}%` },
+        startPosition: { top: `${randomTop}%`, left: `${randomLeft}%` }, // Start positions on right side
         currentPosition: { top: `${randomTop}%`, left: `${randomLeft}%` },
-        finalPosition: { // Will be calculated dynamically based on percentage button positions
-          top: '0%',
-          left: '0%'
-        }
+        finalPosition: { // Target positions next to the percentages in why section
+          top: `${20 + index * 13}%`, // Distribute vertically next to each percentage
+          left: '2%' // Far left side, next to percentages
+        },
+        stat: risk.stat // Store the stat value for positioning logic
       };
     })
   );
-  const [highlightedPercentages, setHighlightedPercentages] = useState<number[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // WhySection state
@@ -114,30 +114,19 @@ export const Hero = () => {
 
 
 
-  // Control video playback (stop after 5 seconds or on scroll)
+  // Control video playback (stop after 5 seconds)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const handleTimeUpdate = () => {
       if (video.currentTime >= 5) {
-        video.pause(); // Pause after 5 seconds
-      }
-    };
-
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        video.pause(); // Pause when user scrolls down
+        video.pause(); // Pause instead of looping
       }
     };
 
     video.addEventListener('timeupdate', handleTimeUpdate);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      video.removeEventListener('timeupdate', handleTimeUpdate);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => video.removeEventListener('timeupdate', handleTimeUpdate);
   }, []);
 
   // Show warning signs when user starts scrolling
@@ -157,49 +146,26 @@ export const Hero = () => {
     return () => window.removeEventListener('scroll', handleScrollStart);
   }, []);
 
-  // Handle warning signs movement with scroll (bidirectional)
+  // Handle warning signs movement with scroll
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
-      const whySection = document.getElementById('why');
-      const newHighlighted: number[] = [];
 
       setWarningSigns(prevSigns =>
-        prevSigns.map((sign, index) => {
+        prevSigns.map(sign => {
           if (!sign.visible) return sign;
-
-          // Calculate final position based on percentage button location
-          const percentageButton = document.querySelectorAll('.percentage-stat')[index];
-          let finalTop = '50%';
-          let finalLeft = '50%';
-          
-          if (percentageButton && whySection) {
-            const buttonRect = percentageButton.getBoundingClientRect();
-            const whySectionRect = whySection.getBoundingClientRect();
-            
-            // Position warning sign to the left of the percentage
-            finalTop = `${((buttonRect.top - whySectionRect.top) / whySectionRect.height) * 100}%`;
-            finalLeft = `${((buttonRect.left - whySectionRect.left - 60) / whySectionRect.width) * 100}%`;
-          }
 
           // Why section starts around 100vh, animate from scroll start to ~150vh
           const startScroll = 100; // Start moving after 100px scroll
           const endScroll = viewportHeight * 1.5; // 150vh
 
-          // Calculate progress (0 to 1), works bidirectionally with scroll
           const progress = Math.min(Math.max((scrollY - startScroll) / (endScroll - startScroll), 0), 1);
 
-          // Highlight percentage when warning sign arrives (progress > 0.85)
-          if (progress > 0.85) {
-            newHighlighted.push(index);
-          }
-
-          // Interpolate position based on scroll progress
           const currentTop = parseFloat(sign.startPosition.top) +
-            (parseFloat(finalTop) - parseFloat(sign.startPosition.top)) * progress;
+            (parseFloat(sign.finalPosition.top) - parseFloat(sign.startPosition.top)) * progress;
           const currentLeft = parseFloat(sign.startPosition.left) +
-            (parseFloat(finalLeft) - parseFloat(sign.startPosition.left)) * progress;
+            (parseFloat(sign.finalPosition.left) - parseFloat(sign.startPosition.left)) * progress;
 
           return {
             ...sign,
@@ -210,8 +176,6 @@ export const Hero = () => {
           };
         })
       );
-
-      setHighlightedPercentages(newHighlighted);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -390,13 +354,7 @@ export const Hero = () => {
                 ];
                 return (
                   <div key={index} className="flex flex-col items-center gap-2 min-w-[140px]">
-                    <div 
-                      className={`percentage-stat text-5xl md:text-7xl font-bold text-accent drop-shadow-lg transition-all duration-500 ${
-                        highlightedPercentages.includes(index) 
-                          ? 'animate-pulse scale-110 drop-shadow-[0_0_20px_hsl(var(--accent))]' 
-                          : ''
-                      }`}
-                    >
+                    <div className="text-5xl md:text-7xl font-bold text-accent drop-shadow-lg">
                       {risk.stat}
                     </div>
                     <Button
