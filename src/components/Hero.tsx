@@ -140,12 +140,13 @@ export const Hero = () => {
       {/* Image Section - sticks for 1 scroll then releases */}
       {showImageSection && (
         <div
-          className="w-full h-screen overflow-hidden"
+          className="w-full h-screen overflow-hidden transition-opacity duration-500"
           style={{
             position: 'fixed',
             top: '0',
             left: '0',
-            zIndex: 40
+            zIndex: 40,
+            opacity: showImageSection ? 1 : 0
           }}
         >
           {/* Image Background */}
@@ -170,19 +171,23 @@ export const Hero = () => {
           <div className="container relative z-10 mx-auto px-4 h-full flex items-center">
             <div className="max-w-3xl">
               <h1
-                className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
+                className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide transition-all duration-700"
                 style={{
                   color: 'hsl(var(--clinical-white))',
-                  letterSpacing: '1.5px'
+                  letterSpacing: '1.5px',
+                  opacity: showImageSection ? 1 : 0,
+                  transform: showImageSection ? 'translateY(0)' : 'translateY(20px)'
                 }}
               >
                 Increase Return Investment Not Cost
               </h1>
 
               <p
-                className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
+                className="font-lora text-lg md:text-xl mb-8 leading-relaxed transition-all duration-700"
                 style={{
-                  color: 'hsl(var(--clinical-white))'
+                  color: 'hsl(var(--clinical-white))',
+                  opacity: showImageSection ? 1 : 0,
+                  transform: showImageSection ? 'translateY(0)' : 'translateY(10px)'
                 }}
               >
                 Smart inspections maximize your investment value.
