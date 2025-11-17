@@ -113,19 +113,30 @@ export const Hero = () => {
 
 
 
-  // Control video playback (stop after 5 seconds)
+  // Control video playback (stop after 5 seconds or on scroll)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const handleTimeUpdate = () => {
       if (video.currentTime >= 5) {
-        video.pause(); // Pause instead of looping
+        video.pause(); // Pause after 5 seconds
+      }
+    };
+
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        video.pause(); // Pause when user scrolls down
       }
     };
 
     video.addEventListener('timeupdate', handleTimeUpdate);
-    return () => video.removeEventListener('timeupdate', handleTimeUpdate);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   // Show warning signs when user starts scrolling
@@ -145,7 +156,7 @@ export const Hero = () => {
     return () => window.removeEventListener('scroll', handleScrollStart);
   }, []);
 
-  // Handle warning signs movement with scroll
+  // Handle warning signs movement with scroll (bidirectional)
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -159,8 +170,10 @@ export const Hero = () => {
           const startScroll = 100; // Start moving after 100px scroll
           const endScroll = viewportHeight * 1.5; // 150vh
 
+          // Calculate progress (0 to 1), works bidirectionally with scroll
           const progress = Math.min(Math.max((scrollY - startScroll) / (endScroll - startScroll), 0), 1);
 
+          // Interpolate position based on scroll progress
           const currentTop = parseFloat(sign.startPosition.top) +
             (parseFloat(sign.finalPosition.top) - parseFloat(sign.startPosition.top)) * progress;
           const currentLeft = parseFloat(sign.startPosition.left) +
