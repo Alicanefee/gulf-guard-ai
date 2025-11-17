@@ -28,11 +28,13 @@ const initializeGSAPAnimations = () => {
     gsap.fromTo(sign,
       {
         y: 0, // Start position
-        x: 0
+        x: 0,
+        opacity: 1
       },
       {
         y: `${20 + index * 13}vh`, // Move to final position (percentage area)
         x: '-35vw', // Move left to next to percentages
+        opacity: 0, // Fade out as it scrolls
         ease: "power2.out",
         duration: 2,
         scrollTrigger: {
