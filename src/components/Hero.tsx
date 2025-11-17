@@ -138,58 +138,59 @@ export const Hero = () => {
       </section>
 
       {/* Image Section - sticks for 1 scroll then releases */}
-      <div
-        className="w-full h-screen overflow-hidden"
-        style={{
-          opacity: showImageSection ? 1 : 0,
-          position: showImageSection ? 'fixed' : 'relative',
-          top: showImageSection ? '0' : 'auto',
-          left: showImageSection ? '0' : 'auto',
-          zIndex: showImageSection ? 40 : 'auto'
-        }}
-      >
-        {/* Image Background */}
-        <div className="absolute inset-0">
-          <img
-            src={heroImage}
-            alt="Hero background"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+      {showImageSection && (
+        <div
+          className="w-full h-screen overflow-hidden"
+          style={{
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            zIndex: 40
+          }}
+        >
+          {/* Image Background */}
+          <div className="absolute inset-0">
+            <img
+              src={heroImage}
+              alt="Hero background"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
 
-          {/* Blue overlay */}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: `hsl(var(--authority-blue))`,
-              opacity: 0.7
-            }}
-          />
-        </div>
-
-        {/* Content */}
-        <div className="container relative z-10 mx-auto px-4 h-full flex items-center">
-          <div className="max-w-3xl">
-            <h1
-              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
+            {/* Blue overlay */}
+            <div
+              className="absolute inset-0"
               style={{
-                color: 'hsl(var(--clinical-white))',
-                letterSpacing: '1.5px'
+                backgroundColor: `hsl(var(--authority-blue))`,
+                opacity: 0.7
               }}
-            >
-              Increase Return Investment Not Cost
-            </h1>
+            />
+          </div>
 
-            <p
-              className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
-              style={{
-                color: 'hsl(var(--clinical-white))'
-              }}
-            >
-              Smart inspections maximize your investment value.
-            </p>
+          {/* Content */}
+          <div className="container relative z-10 mx-auto px-4 h-full flex items-center">
+            <div className="max-w-3xl">
+              <h1
+                className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
+                style={{
+                  color: 'hsl(var(--clinical-white))',
+                  letterSpacing: '1.5px'
+                }}
+              >
+                Increase Return Investment Not Cost
+              </h1>
+
+              <p
+                className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
+                style={{
+                  color: 'hsl(var(--clinical-white))'
+                }}
+              >
+                Smart inspections maximize your investment value.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
