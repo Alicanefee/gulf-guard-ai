@@ -20,7 +20,16 @@ export const Hero = () => {
   const sectionOneRef = useRef<HTMLElement>(null);
   const sectionTwoRef = useRef<HTMLElement>(null);
   const sectionThreeRef = useRef<HTMLElement>(null);
+  const sectionFourRef = useRef<HTMLDivElement>(null);
   const [docked, setDocked] = useState(false);
+  const warningTexts = [
+    'Roof defect details',
+    'Electrical hazard details',
+    'Structural concern details',
+    'Moisture ingress details',
+    'HVAC concern details',
+    'Safety/accessibility details'
+  ];
 
   // Show CTA after 1 second
   useEffect(() => {
@@ -87,25 +96,54 @@ export const Hero = () => {
         }
       }
 
-      // Section 3 (warnings moving): screen moves with warnings, new title appears at 50%
+      // Movement parameters
+      const movementStart = 0.2; // start moving warnings after 20% into the section
+      const textTrigger = 0.3; // start showing per-warning text after 30%
+
+      // Section 3 (warnings moving): screen moves with warnings
       if (section === 3 && warningRef.current) {
-        // Warnings move down 100vh to next section
-        const translateY = sectionProgress * 100;
+        // effectiveProgress starts at 0 when sectionProgress === movementStart and goes to 1 at sectionProgress === 1
+        const effectiveProgress = Math.min(Math.max((sectionProgress - movementStart) / (1 - movementStart), 0), 1);
+
+        // Translate warnings down based on effectiveProgress
+        const translateY = effectiveProgress * 100;
         warningRef.current.style.transform = `translateY(${translateY}vh)`;
         warningRef.current.style.opacity = '1';
 
-        // New title appears when warnings are 50% moved
-        if (newTitleRef.current) {
-          if (sectionProgress > 0.5) {
-            const titleOpacity = (sectionProgress - 0.5) / 0.5; // 0 to 1 from 50% to 100%
-            newTitleRef.current.style.opacity = titleOpacity.toString();
+        // Fade out section3 title proportionally as warnings move
+        if (section3TitleRef.current) {
+          section3TitleRef.current.style.opacity = Math.max(0, 1 - effectiveProgress).toString();
+        }
+
+        // Show per-warning labels when past textTrigger
+        const labels = warningRef.current.querySelectorAll('.warning-label');
+        labels.forEach((el) => {
+          if (sectionProgress > textTrigger) {
+            const labelProgress = Math.min(Math.max((sectionProgress - textTrigger) / (1 - textTrigger), 0), 1);
+            (el as HTMLElement).style.opacity = labelProgress.toString();
+            (el as HTMLElement).style.transform = `translateY(${translateY * 0.2}vh)`;
           } else {
-            newTitleRef.current.style.opacity = '0';
+            (el as HTMLElement).style.opacity = '0';
+            (el as HTMLElement).style.transform = 'translateY(0)';
           }
+        });
+
+        // Fade in section-four placeholders proportionally
+        if (sectionFourRef.current) {
+          const placeholders = sectionFourRef.current.querySelectorAll('.placeholder-text');
+          placeholders.forEach((p) => {
+            (p as HTMLElement).style.opacity = effectiveProgress.toString();
+          });
+        }
+
+        // New title appears when effectiveProgress > 0.5 (keeps earlier behavior but smoother)
+        if (newTitleRef.current) {
+          const titleOpacity = effectiveProgress > 0.5 ? (effectiveProgress - 0.5) / 0.5 : 0;
+          newTitleRef.current.style.opacity = titleOpacity.toString();
         }
 
         // Docking: when almost finished moving, mark as docked so section-four shows the same warnings
-        if (sectionProgress >= 0.98) {
+        if (effectiveProgress >= 0.98) {
           setDocked(true);
         } else {
           setDocked(false);
@@ -372,6 +410,24 @@ export const Hero = () => {
                 className="w-8 h-8 md:w-12 md:h-12 text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                 fill="rgba(250,204,21,0.3)"
               />
+              <div
+                className="warning-label"
+                style={{
+                  position: 'absolute',
+                  left: '44px',
+                  top: '-6px',
+                  background: 'rgba(255,255,255,0.9)',
+                  padding: '6px 8px',
+                  borderRadius: '6px',
+                  color: '#1f2937',
+                  fontSize: '13px',
+                  opacity: 0,
+                  transform: 'translateY(0)',
+                  transition: 'opacity 200ms ease, transform 200ms ease'
+                }}
+              >
+                {warningTexts[idx]}
+              </div>
             </div>
           ))}
         </div>
@@ -381,7 +437,7 @@ export const Hero = () => {
 
       {/* Empty white section to receive warnings (3 left, 3 right) */}
       <section id="section-four" className="relative w-full min-h-screen bg-white flex items-center">
-        <div className="container mx-auto px-4">
+        <div ref={sectionFourRef} className="container mx-auto px-4">
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-6 py-12">
               {/* Left column: docked warnings will appear here when docking completes */}
@@ -389,19 +445,19 @@ export const Hero = () => {
                 <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5 text-yellow-800" />
                 </div>
-                <div>{docked ? 'Issue: Roof defect details' : ''}</div>
+                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Roof defect details' : ''}</div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5 text-yellow-800" />
                 </div>
-                <div>{docked ? 'Issue: Electrical hazard details' : ''}</div>
+                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Electrical hazard details' : ''}</div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5 text-yellow-800" />
                 </div>
-                <div>{docked ? 'Issue: Structural concern details' : ''}</div>
+                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Structural concern details' : ''}</div>
               </div>
             </div>
 
@@ -410,19 +466,19 @@ export const Hero = () => {
                 <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5 text-yellow-800" />
                 </div>
-                <div>{docked ? 'Issue: Moisture ingress details' : ''}</div>
+                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Moisture ingress details' : ''}</div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5 text-yellow-800" />
                 </div>
-                <div>{docked ? 'Issue: HVAC concern details' : ''}</div>
+                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: HVAC concern details' : ''}</div>
               </div>
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5 text-yellow-800" />
                 </div>
-                <div>{docked ? 'Issue: Safety/accessibility details' : ''}</div>
+                <div className="placeholder-text" style={{ opacity: docked ? 1 : 0 }}>{docked ? 'Issue: Safety/accessibility details' : ''}</div>
               </div>
             </div>
           </div>
