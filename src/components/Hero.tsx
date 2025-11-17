@@ -122,20 +122,21 @@ export const Hero = () => {
     return () => video.removeEventListener('timeupdate', handleTimeUpdate);
   }, []);
 
-  // Show warning signs after video stops (after 5.1 seconds)
+  // Show warning signs when user starts scrolling
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handlePause = () => {
-      // Show all warning signs slightly after pause
-      setTimeout(() => {
+    const handleScrollStart = () => {
+      const scrollY = window.scrollY;
+      
+      // Show warning signs when user scrolls past the video section
+      if (scrollY > 100) {
         setWarningSigns(prev => prev.map(sign => ({ ...sign, visible: true })));
-      }, 100);
+        // Remove this listener after first trigger
+        window.removeEventListener('scroll', handleScrollStart);
+      }
     };
 
-    video.addEventListener('pause', handlePause);
-    return () => video.removeEventListener('pause', handlePause);
+    window.addEventListener('scroll', handleScrollStart, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollStart);
   }, []);
 
   // Handle warning signs movement with scroll
