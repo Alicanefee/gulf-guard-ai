@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, AlertTriangle } from "lucide-react";
 import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import heroImage from "@/assets/new-hero-image.png";
+import heroImage2 from "@/assets/new-hero-image-2.png";
 import QuickQuotation from "@/components/QuickQuotation";
 
 export const Hero = () => {
@@ -12,6 +13,8 @@ export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const warningRef = useRef<HTMLDivElement>(null);
+  const section2TitleRef = useRef<HTMLDivElement>(null);
+  const section3TitleRef = useRef<HTMLDivElement>(null);
 
   // Show CTA after 1 second
   useEffect(() => {
@@ -25,7 +28,7 @@ export const Hero = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Pause video and transition to image section after 4 seconds
+  // Pause video and transition to second image section after 4 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       videoRef.current?.pause();
@@ -43,27 +46,42 @@ export const Hero = () => {
       const scrollY = window.scrollY;
       const sectionHeight = window.innerHeight;
       
-      // Calculate which section we're in (0 = video, 1 = image, 2+ = after hero)
+      // Calculate which section we're in (0 = video, 1 = image1, 2 = image2 with warnings)
       const section = Math.floor(scrollY / sectionHeight);
       setCurrentSection(section);
       
-      // Show warnings only when image section is fully visible
-      if (section === 1) {
+      // Section 2: Show title, then fade out as scroll continues
+      if (section === 1 && section2TitleRef.current) {
+        const scrollProgress = (scrollY % sectionHeight) / sectionHeight;
+        // Title visible at start, fades out by 30% scroll
+        const titleOpacity = scrollProgress < 0.3 ? 1 : 1 - ((scrollProgress - 0.3) / 0.3);
+        section2TitleRef.current.style.opacity = Math.max(0, titleOpacity).toString();
+      }
+
+      // Section 3: Title fades out, warnings appear and move
+      if (section === 2 && section3TitleRef.current && warningRef.current) {
         const scrollProgress = (scrollY % sectionHeight) / sectionHeight;
         
-        // Warnings appear when section is fully in view, then move down on further scroll
-        if (scrollProgress < 0.1) {
-          // Just entered section - warnings appear at original positions
-          warningRef.current.style.transform = 'translateY(0)';
+        // Title fades out in first 20% of scroll
+        const titleOpacity = scrollProgress < 0.2 ? 1 - (scrollProgress / 0.2) : 0;
+        section3TitleRef.current.style.opacity = titleOpacity.toString();
+        
+        // Warnings appear after title fades (after 20% scroll)
+        if (scrollProgress > 0.2) {
+          const warningProgress = (scrollProgress - 0.2) / 0.8; // 0 to 1 range
           warningRef.current.style.opacity = '1';
-        } else {
-          // Scrolling within section - warnings move down toward next section
-          const moveProgress = (scrollProgress - 0.1) / 0.9; // 0 to 1 range
-          const translateY = moveProgress * 150; // Move 150vh to go into next section
+          // Warnings move down 150vh to next section
+          const translateY = warningProgress * 150;
           warningRef.current.style.transform = `translateY(${translateY}vh)`;
-          warningRef.current.style.opacity = moveProgress < 0.8 ? '1' : (1 - (moveProgress - 0.8) / 0.2).toString();
+          // Fade out when reaching next section
+          if (warningProgress > 0.8) {
+            const fadeOut = 1 - ((warningProgress - 0.8) / 0.2);
+            warningRef.current.style.opacity = Math.max(0, fadeOut).toString();
+          }
+        } else {
+          warningRef.current.style.opacity = '0';
         }
-      } else {
+      } else if (section !== 2 && warningRef.current) {
         warningRef.current.style.opacity = '0';
       }
     };
