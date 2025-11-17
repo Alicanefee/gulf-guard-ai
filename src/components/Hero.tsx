@@ -1,102 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, AlertTriangle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import heroImage from "@/assets/new-hero-image.png";
 import QuickQuotation from "@/components/QuickQuotation";
-
-const WarningSignsSection = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      // Calculate progress for warning signs section (from 100vh to 200vh)
-      const sectionStart = viewportHeight;
-      const sectionHeight = viewportHeight;
-      const progress = Math.min(Math.max((scrollY - sectionStart) / sectionHeight, 0), 1);
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const warningTexts = [
-    'Roof defect details',
-    'Electrical hazard details',
-    'Structural concern details',
-    'Moisture ingress details',
-    'HVAC concern details'
-  ];
-
-  return (
-    <section className="relative w-full h-screen bg-black flex items-center overflow-hidden">
-      {/* Warning Signs */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 10 }}>
-        {warningTexts.map((text, idx) => {
-          const appearThreshold = idx * 0.2; // Each sign appears at 20% intervals
-          const isVisible = scrollProgress > appearThreshold;
-          const opacity = isVisible ? Math.min((scrollProgress - appearThreshold) / 0.1, 1) : 0;
-
-          return (
-            <div
-              key={idx}
-              className="absolute"
-              style={{
-                left: `${15 + idx * 17}%`, // Spread across the screen
-                top: `${20 + idx * 12}%`, // Stagger vertically
-                animation: isVisible ? `pulse 2s ease-in-out infinite ${idx * 0.3}s` : 'none',
-                zIndex: 20
-              }}
-            >
-              <AlertTriangle
-                className="w-8 h-8 md:w-12 md:h-12 text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]"
-                fill="rgba(250,204,21,0.3)"
-                style={{ opacity }}
-              />
-              <div
-                className="warning-label"
-                style={{
-                  position: 'absolute',
-                  left: '44px',
-                  top: '-6px',
-                  background: 'rgba(255,255,255,0.9)',
-                  padding: '6px 8px',
-                  borderRadius: '6px',
-                  color: '#1f2937',
-                  fontSize: '13px',
-                  opacity: opacity,
-                  transform: 'translateY(0)',
-                  transition: 'opacity 200ms ease, transform 200ms ease',
-                  zIndex: 30
-                }}
-              >
-                {text}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Title that appears at the end */}
-      {scrollProgress > 0.8 && (
-        <div className="container relative z-10 mx-auto px-4 text-center" style={{ zIndex: 50 }}>
-          <h2
-            className="font-inter text-3xl md:text-4xl font-extrabold text-white uppercase tracking-wide"
-            style={{
-              opacity: Math.min((scrollProgress - 0.8) / 0.2, 1),
-              transform: `translateY(${20 - 20 * Math.min((scrollProgress - 0.8) / 0.2, 1)}px)`
-            }}
-          >
-            Comprehensive Property Inspection
-          </h2>
-        </div>
-      )}
-    </section>
-  );
-};
 
 export const Hero = () => {
   const [showCTA, setShowCTA] = useState(false);
@@ -116,18 +23,14 @@ export const Hero = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle scroll for image section and warnings
+  // Handle scroll for image section
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const viewportHeight = window.innerHeight;
 
-      // Show image section when scrolling starts (immediately)
-      // Release sticky after one viewport height of scrolling (1 viewport height total)
-      if (scrollY > 0 && scrollY < viewportHeight) {
+      // Show image section when scrolling starts and keep it fixed
+      if (scrollY > 0) {
         setShowImageSection(true);
-      } else if (scrollY >= viewportHeight) {
-        setShowImageSection(false);
       } else {
         setShowImageSection(false);
       }
@@ -287,25 +190,14 @@ export const Hero = () => {
         </div>
       </div>
 
-      {/* Warning Signs Section */}
-      <WarningSignsSection />
+      {/* Spacer to allow scrolling past the fixed image section */}
+      <div style={{ height: '100vh' }} />
     </>
   );
 };
 
 // CSS animations
-const styles = `
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.6;
-      transform: scale(1.1);
-    }
-  }
-`;
+const styles = ``;
 
 // Inject styles
 if (typeof document !== 'undefined') {
