@@ -4,6 +4,11 @@ import { ArrowRight, AlertTriangle } from "lucide-react";
 import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import QuickQuotation from "@/components/QuickQuotation";
 
+// GSAP imports
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+
 // WhySection imports and data
 import { Card } from "@/components/ui/card";
 import { Droplets, Zap, Wind, Shield, Skull, Droplet } from "lucide-react";
@@ -94,6 +99,13 @@ export const Hero = () => {
     })
   );
   const videoRef = useRef<HTMLVideoElement>(null);
+  const mainContainerRef = useRef<HTMLDivElement>(null);
+  const warningSignsRef = useRef<HTMLDivElement[]>([]);
+
+  // Register GSAP ScrollTrigger
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+  }, []);
 
   // WhySection state
   const [currentStory, setCurrentStory] = useState(0);
@@ -146,41 +158,63 @@ export const Hero = () => {
     return () => window.removeEventListener('scroll', handleScrollStart);
   }, []);
 
-  // Handle warning signs movement with scroll
+  // GSAP ScrollTrigger animations for warning signs
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const viewportHeight = window.innerHeight;
+    if (warningSignsRef.current.length === 0) return;
 
-      setWarningSigns(prevSigns =>
-        prevSigns.map(sign => {
-          if (!sign.visible) return sign;
+    // Create ScrollTrigger animations for each warning sign
+    warningSignsRef.current.forEach((sign, index) => {
+      if (!sign) return;
 
-          // Why section starts around 100vh, animate from scroll start to ~150vh
-          const startScroll = 100; // Start moving after 100px scroll
-          const endScroll = viewportHeight * 1.5; // 150vh
-
-          const progress = Math.min(Math.max((scrollY - startScroll) / (endScroll - startScroll), 0), 1);
-
-          const currentTop = parseFloat(sign.startPosition.top) +
-            (parseFloat(sign.finalPosition.top) - parseFloat(sign.startPosition.top)) * progress;
-          const currentLeft = parseFloat(sign.startPosition.left) +
-            (parseFloat(sign.finalPosition.left) - parseFloat(sign.startPosition.left)) * progress;
-
-          return {
-            ...sign,
-            currentPosition: {
-              top: `${currentTop}%`,
-              left: `${currentLeft}%`
-            }
-          };
-        })
+      gsap.fromTo(sign,
+        {
+          y: 0, // Start position
+          x: 0
+        },
+        {
+          y: `${20 + index * 13}vh`, // Move to final position (percentage area)
+          x: '-35vw', // Move left to next to percentages
+          ease: "power2.out",
+          duration: 2,
+          scrollTrigger: {
+            trigger: mainContainerRef.current,
+            start: "top top",
+            end: "150vh top",
+            scrub: 1, // Smooth scrubbing
+            markers: false // Set to true for debugging
+          }
+        }
       );
-    };
+    });
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    // Scroll-snap functionality
+    const sections = gsap.utils.toArray('.section');
+    sections.forEach((section: any) => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top bottom-=1",
+        end: "bottom top+=1",
+        onEnter: () => {
+          gsap.to(window, {
+            duration: 1,
+            scrollTo: { y: section.offsetTop, autoKill: false },
+            ease: "power2.inOut"
+          });
+        },
+        onEnterBack: () => {
+          gsap.to(window, {
+            duration: 1,
+            scrollTo: { y: section.offsetTop, autoKill: false },
+            ease: "power2.inOut"
+          });
+        }
+      });
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, [warningSigns]);
 
   // WhySection effects
   useEffect(() => {
@@ -201,9 +235,14 @@ export const Hero = () => {
   };
 
   return (
-    <>
+    <div ref={mainContainerRef} className="relative w-full overflow-hidden" style={{
+      scrollSnapType: 'y mandatory',
+      scrollBehavior: 'smooth'
+    }}>
       {/* Hero Section */}
-      <section className="relative w-full h-screen flex items-center overflow-hidden">
+      <section className="relative w-full h-screen flex items-center overflow-hidden section" id="hero-section" style={{
+        scrollSnapAlign: 'start'
+      }}>
         {/* Video Background */}
         <div className="absolute inset-0">
           <video
@@ -230,11 +269,16 @@ export const Hero = () => {
         </div>
 
         {/* Warning Signs */}
-        {warningSigns.map((sign) => (
+        {warningSigns.map((sign, index) => (
           sign.visible && (
             <div
               key={sign.id}
-              className="absolute z-50 transition-all duration-1000 ease-out"
+              ref={(el) => {
+                if (el && !warningSignsRef.current[index]) {
+                  warningSignsRef.current[index] = el;
+                }
+              }}
+              className="absolute z-50 warning-symbol"
               style={{
                 top: sign.currentPosition.top,
                 left: sign.currentPosition.left,
@@ -315,7 +359,10 @@ export const Hero = () => {
       </section>
 
       {/* Why Section */}
-      <section id="why" className="py-16 md:py-24 bg-gradient-to-b from-background via-secondary/20 to-muted/30 relative overflow-hidden">
+      <section id="why" className="py-16 md:py-24 bg-gradient-to-b from-background via-secondary/20 to-muted/30 relative overflow-hidden section" style={{
+        scrollSnapAlign: 'start',
+        minHeight: '100vh'
+      }}>
         {/* Decorative background elements */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-10 w-72 h-72 bg-accent rounded-full blur-3xl" />
@@ -640,6 +687,6 @@ export const Hero = () => {
           </DialogContent>
         </Dialog>
       </section>
-    </>
+    </div>
   );
 };
