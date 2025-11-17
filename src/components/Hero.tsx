@@ -200,6 +200,7 @@ export const Hero = () => {
   );
 };
 
-
+// CSS animations
+const styles = ``;
 
 
