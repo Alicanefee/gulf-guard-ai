@@ -12,8 +12,8 @@ const WarningSignsSection = () => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
-      // Calculate progress for warning signs section (from 200vh to 300vh)
-      const sectionStart = viewportHeight * 2;
+      // Calculate progress for warning signs section (from 100vh to 200vh)
+      const sectionStart = viewportHeight;
       const sectionHeight = viewportHeight;
       const progress = Math.min(Math.max((scrollY - sectionStart) / sectionHeight, 0), 1);
       setScrollProgress(progress);
@@ -34,7 +34,7 @@ const WarningSignsSection = () => {
   return (
     <section className="relative w-full h-screen bg-black flex items-center overflow-hidden">
       {/* Warning Signs */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 10 }}>
         {warningTexts.map((text, idx) => {
           const appearThreshold = idx * 0.2; // Each sign appears at 20% intervals
           const isVisible = scrollProgress > appearThreshold;
@@ -47,7 +47,8 @@ const WarningSignsSection = () => {
               style={{
                 left: `${15 + idx * 17}%`, // Spread across the screen
                 top: `${20 + idx * 12}%`, // Stagger vertically
-                animation: isVisible ? `pulse 2s ease-in-out infinite ${idx * 0.3}s` : 'none'
+                animation: isVisible ? `pulse 2s ease-in-out infinite ${idx * 0.3}s` : 'none',
+                zIndex: 20
               }}
             >
               <AlertTriangle
@@ -68,7 +69,8 @@ const WarningSignsSection = () => {
                   fontSize: '13px',
                   opacity: opacity,
                   transform: 'translateY(0)',
-                  transition: 'opacity 200ms ease, transform 200ms ease'
+                  transition: 'opacity 200ms ease, transform 200ms ease',
+                  zIndex: 30
                 }}
               >
                 {text}
@@ -80,7 +82,7 @@ const WarningSignsSection = () => {
 
       {/* Title that appears at the end */}
       {scrollProgress > 0.8 && (
-        <div className="container relative z-10 mx-auto px-4 text-center">
+        <div className="container relative z-10 mx-auto px-4 text-center" style={{ zIndex: 50 }}>
           <h2
             className="font-inter text-3xl md:text-4xl font-extrabold text-white uppercase tracking-wide"
             style={{
@@ -121,10 +123,10 @@ export const Hero = () => {
       const viewportHeight = window.innerHeight;
 
       // Show image section when scrolling starts (immediately)
-      // Release sticky after one full scroll (2 viewport heights total)
-      if (scrollY > 0 && scrollY < viewportHeight * 2) {
+      // Release sticky after one viewport height of scrolling (1 viewport height total)
+      if (scrollY > 0 && scrollY < viewportHeight) {
         setShowImageSection(true);
-      } else if (scrollY >= viewportHeight * 2) {
+      } else if (scrollY >= viewportHeight) {
         setShowImageSection(false);
       } else {
         setShowImageSection(false);
