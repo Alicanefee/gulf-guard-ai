@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, AlertTriangle } from "lucide-react";
 import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import heroImage from "@/assets/new-hero-image.png";
-// removed heroImage2 per design: we will reuse heroImage for the warning transition
 import QuickQuotation from "@/components/QuickQuotation";
 
 export const Hero = () => {
@@ -14,13 +13,8 @@ export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const warningRef = useRef<HTMLDivElement>(null);
-  const section2TitleRef = useRef<HTMLDivElement>(null);
-  const section3TitleRef = useRef<HTMLDivElement>(null);
-  const newTitleRef = useRef<HTMLDivElement>(null);
+  const sectionTitleRef = useRef<HTMLDivElement>(null);
   const sectionOneRef = useRef<HTMLElement>(null);
-  const sectionTwoRef = useRef<HTMLElement>(null);
-  const sectionThreeRef = useRef<HTMLElement>(null);
-  const sectionFourRef = useRef<HTMLDivElement>(null);
   const [docked, setDocked] = useState(false);
   const warningTexts = [
     'Roof defect details',
@@ -43,15 +37,6 @@ export const Hero = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Pause video and transition to second image section after 4 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      videoRef.current?.pause();
-      // Removed auto-scroll since section-two is removed
-    }, 4000);
-    return () => clearTimeout(timer);
-  }, []);
-
   // Scroll-snap and warning symbol animation
   useEffect(() => {
     const handleScroll = () => {
@@ -60,19 +45,17 @@ export const Hero = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
       
-      // 2 sections: video, warnings-moving
-      // Each section takes full viewport scroll to complete
+      // 1 section: warnings-moving
+      // Section takes 80vh scroll to complete (reduced by 60% from 200vh)
       
-      // Calculate current section (0-1)
-      const rawSection = scrollY / viewportHeight;
-      const section = Math.floor(rawSection);
-      const sectionProgress = rawSection - section; // 0 to 1 within current section
+      // Calculate section progress (0 to 1)
+      const sectionProgress = Math.min(scrollY / (viewportHeight * 0.8), 1);
       
-      setCurrentSection(section);
+      setCurrentSection(0);
       setStickyProgress(sectionProgress);
       
-      // Release sticky when warnings start moving (section 1 at 40%)
-      if (section === 1 && sectionProgress > 0.4) {
+      // Release sticky when warnings start moving (at 40%)
+      if (sectionProgress > 0.4) {
         containerRef.current.style.position = 'relative';
         containerRef.current.style.top = 'auto';
         containerRef.current.style.left = 'auto';
@@ -82,13 +65,11 @@ export const Hero = () => {
         containerRef.current.style.left = '0';
       }
       
-      // Section 0 (video): stays sticky, no fading
-      
-      // Section 1 (warnings moving): title appears first, then warnings come, then text fades left to right, then warnings move
-      if (section === 1 && warningRef.current) {
+      // Section 0 (warnings moving): title appears first, then warnings come, then text fades left to right, then warnings move
+      if (warningRef.current) {
         // Title appears at start, fades out as scroll starts
-        if (section3TitleRef.current) {
-          section3TitleRef.current.style.opacity = Math.max(0, 1 - sectionProgress).toString();
+        if (sectionTitleRef.current) {
+          sectionTitleRef.current.style.opacity = Math.max(0, 1 - sectionProgress).toString();
         }
         
         // Warnings appear at 20%
@@ -121,7 +102,7 @@ export const Hero = () => {
           warningRef.current.style.transform = `translateY(${translateY}vh)`;
         }
       } else {
-        if (section3TitleRef.current) section3TitleRef.current.style.opacity = '1';
+        if (sectionTitleRef.current) sectionTitleRef.current.style.opacity = '1';
       }
     };
 
@@ -136,15 +117,15 @@ export const Hero = () => {
 
   return (
     <>
-      {/* Spacer to allow scrolling through 2 sections */}
-      <div style={{ height: '200vh' }} />
+      {/* Spacer to allow scrolling through 1 section (reduced by 60%) */}
+      <div style={{ height: '80vh' }} />
       
       <div 
         ref={containerRef} 
         className="fixed top-0 left-0 w-full h-screen overflow-hidden"
         style={{ zIndex: 50 }}
       >
-        {/* Section 1: Video - always visible during section 0 */}
+        {/* Section 1: Warnings with image background - visible during section 0 */}
         <section 
           ref={sectionOneRef}
           id="section-one" 
@@ -155,17 +136,13 @@ export const Hero = () => {
             pointerEvents: currentSection === 0 ? 'auto' : 'none'
           }}
         >
-        {/* Video Background */}
+        {/* Image Background */}
         <div className="absolute inset-0">
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
+          <img
+            src={heroImage}
+            alt="Hero background"
             className="absolute inset-0 w-full h-full object-cover"
-          >
-            <source src={heroVideo} type="video/mp4" />
-          </video>
+          />
           
           {/* Blue overlay */}
           <div
@@ -177,87 +154,9 @@ export const Hero = () => {
           />
         </div>
 
-        {/* Content */}
-        <div className="container relative z-10 mx-auto px-4">
-          <div className="max-w-3xl">
-            {/* Trust badges - show after 3s */}
-            <div 
-              className="flex flex-wrap justify-center gap-3 mb-8 transition-all duration-700"
-              style={{
-                opacity: showTrustBadges ? 1 : 0,
-                transform: showTrustBadges ? 'translateY(0)' : 'translateY(-20px)',
-                pointerEvents: showTrustBadges ? 'auto' : 'none'
-              }}
-            >
-              {['InterNACHI® certified', '10+ years engineering expertise', 'Global service network'].map((badge) => (
-                <div key={badge} className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
-                  <p className="text-primary-foreground text-sm font-medium text-center">
-                    {badge}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <h1 
-              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide transition-all duration-700"
-              style={{
-                color: 'hsl(var(--clinical-white))',
-                letterSpacing: '1.5px',
-                opacity: showTrustBadges ? 1 : 0,
-                transform: showTrustBadges ? 'translateY(0)' : 'translateY(10px)'
-              }}
-            >
-              See the unseen, Protect Your Investment
-            </h1>
-
-            {/* CTAs - show after 1s */}
-            <div 
-              className="flex flex-col sm:flex-row gap-4 transition-all duration-700"
-              style={{
-                opacity: showCTA ? 1 : 0,
-                transform: showCTA ? 'translateY(0)' : 'translateY(20px)',
-                pointerEvents: showCTA ? 'auto' : 'none'
-              }}
-            >
-              <QuickQuotation />
-              <Button
-                size="xl"
-                variant="premium-outline"
-                onClick={() => scrollToSection('why')}
-                className="font-inter"
-              >
-                Find why
-              </Button>
-              <Button
-                size="xl"
-                variant="premium"
-                onClick={() => scrollToSection('booking')}
-                className="group font-inter"
-              >
-                Book Now
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-        {/* Section 1: Warnings - visible during section 1 */}
-        <section 
-          ref={sectionThreeRef}
-          id="section-two" 
-          className="section absolute inset-0 w-full h-full flex items-center"
-          style={{ 
-            opacity: currentSection === 1 ? 1 : 0,
-            transition: 'opacity 0.5s ease-in-out',
-            pointerEvents: currentSection === 1 ? 'auto' : 'none',
-            backgroundColor: 'black' // or transparent
-          }}
-        >
-
         {/* Title that fades out on scroll */}
         <div className="container relative z-10 mx-auto px-4">
-          <div ref={section3TitleRef} className="max-w-3xl transition-opacity duration-500">
+          <div ref={sectionTitleRef} className="max-w-3xl transition-opacity duration-500">
             <h1 
               className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
               style={{
