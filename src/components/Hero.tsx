@@ -92,6 +92,7 @@ export const Hero = () => {
       };
     })
   );
+  const [highlightedPercentages, setHighlightedPercentages] = useState<number[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // WhySection state
@@ -162,6 +163,7 @@ export const Hero = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
       const whySection = document.getElementById('why');
+      const newHighlighted: number[] = [];
 
       setWarningSigns(prevSigns =>
         prevSigns.map((sign, index) => {
@@ -188,6 +190,11 @@ export const Hero = () => {
           // Calculate progress (0 to 1), works bidirectionally with scroll
           const progress = Math.min(Math.max((scrollY - startScroll) / (endScroll - startScroll), 0), 1);
 
+          // Highlight percentage when warning sign arrives (progress > 0.85)
+          if (progress > 0.85) {
+            newHighlighted.push(index);
+          }
+
           // Interpolate position based on scroll progress
           const currentTop = parseFloat(sign.startPosition.top) +
             (parseFloat(finalTop) - parseFloat(sign.startPosition.top)) * progress;
@@ -203,6 +210,8 @@ export const Hero = () => {
           };
         })
       );
+
+      setHighlightedPercentages(newHighlighted);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -381,7 +390,13 @@ export const Hero = () => {
                 ];
                 return (
                   <div key={index} className="flex flex-col items-center gap-2 min-w-[140px]">
-                    <div className="percentage-stat text-5xl md:text-7xl font-bold text-accent drop-shadow-lg">
+                    <div 
+                      className={`percentage-stat text-5xl md:text-7xl font-bold text-accent drop-shadow-lg transition-all duration-500 ${
+                        highlightedPercentages.includes(index) 
+                          ? 'animate-pulse scale-110 drop-shadow-[0_0_20px_hsl(var(--accent))]' 
+                          : ''
+                      }`}
+                    >
                       {risk.stat}
                     </div>
                     <Button
