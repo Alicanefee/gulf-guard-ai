@@ -12,8 +12,8 @@ const WarningSignsSection = () => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
-      // Calculate progress for warning signs section (from 100vh to 200vh)
-      const sectionStart = viewportHeight;
+      // Calculate progress for warning signs section (from 200vh to 300vh)
+      const sectionStart = viewportHeight * 2;
       const sectionHeight = viewportHeight;
       const progress = Math.min(Math.max((scrollY - sectionStart) / sectionHeight, 0), 1);
       setScrollProgress(progress);
@@ -121,8 +121,11 @@ export const Hero = () => {
       const viewportHeight = window.innerHeight;
 
       // Show image section when scrolling starts (immediately)
-      if (scrollY > 0) {
+      // Release sticky after one full scroll (2 viewport heights total)
+      if (scrollY > 0 && scrollY < viewportHeight * 2) {
         setShowImageSection(true);
+      } else if (scrollY >= viewportHeight * 2) {
+        setShowImageSection(false);
       } else {
         setShowImageSection(false);
       }
@@ -281,9 +284,6 @@ export const Hero = () => {
           </div>
         </div>
       </div>
-
-      {/* Spacer to allow scrolling past the fixed image section */}
-      <div style={{ height: '100vh' }} />
 
       {/* Warning Signs Section */}
       <WarningSignsSection />
