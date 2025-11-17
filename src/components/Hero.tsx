@@ -27,9 +27,10 @@ export const Hero = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
 
-      // Show image section when scrolling starts and keep it fixed
-      if (scrollY > 0) {
+      // Show image section when scrolling starts, release after 1 viewport height
+      if (scrollY > 0 && scrollY < viewportHeight) {
         setShowImageSection(true);
       } else {
         setShowImageSection(false);
@@ -136,9 +137,9 @@ export const Hero = () => {
         </div>
       </section>
 
-      {/* Image Section - sticks when scrolling */}
+      {/* Image Section - sticks for 1 scroll then releases */}
       <div
-        className="w-full h-screen overflow-hidden transition-opacity duration-500"
+        className="w-full h-screen overflow-hidden"
         style={{
           opacity: showImageSection ? 1 : 0,
           position: showImageSection ? 'fixed' : 'relative',
@@ -189,9 +190,6 @@ export const Hero = () => {
           </div>
         </div>
       </div>
-
-      {/* Spacer to allow scrolling past the fixed image section */}
-      <div style={{ height: '100vh' }} />
     </>
   );
 };
