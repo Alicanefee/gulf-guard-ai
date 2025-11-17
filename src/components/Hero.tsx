@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, AlertTriangle } from "lucide-react";
 import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import heroImage from "@/assets/new-hero-image.png";
-import heroImage2 from "@/assets/new-hero-image-2.png";
+// removed heroImage2 per design: we will reuse heroImage for the warning transition
 import QuickQuotation from "@/components/QuickQuotation";
 
 export const Hero = () => {
@@ -20,6 +20,7 @@ export const Hero = () => {
   const sectionOneRef = useRef<HTMLElement>(null);
   const sectionTwoRef = useRef<HTMLElement>(null);
   const sectionThreeRef = useRef<HTMLElement>(null);
+  const [docked, setDocked] = useState(false);
 
   // Show CTA after 1 second
   useEffect(() => {
@@ -87,26 +88,36 @@ export const Hero = () => {
       }
 
       // Section 3 (warnings moving): screen moves with warnings, new title appears at 50%
-      if (section === 3 && warningRef.current && newTitleRef.current) {
+      if (section === 3 && warningRef.current) {
         // Warnings move down 100vh to next section
         const translateY = sectionProgress * 100;
         warningRef.current.style.transform = `translateY(${translateY}vh)`;
         warningRef.current.style.opacity = '1';
-        
+
         // New title appears when warnings are 50% moved
-        if (sectionProgress > 0.5) {
-          const titleOpacity = (sectionProgress - 0.5) / 0.5; // 0 to 1 from 50% to 100%
-          newTitleRef.current.style.opacity = titleOpacity.toString();
-        } else {
-          newTitleRef.current.style.opacity = '0';
+        if (newTitleRef.current) {
+          if (sectionProgress > 0.5) {
+            const titleOpacity = (sectionProgress - 0.5) / 0.5; // 0 to 1 from 50% to 100%
+            newTitleRef.current.style.opacity = titleOpacity.toString();
+          } else {
+            newTitleRef.current.style.opacity = '0';
+          }
         }
-      } else if (section < 3 && newTitleRef.current) {
-        newTitleRef.current.style.opacity = '0';
-      }
-      
-      // Hide warnings after section 3
-      if (section > 3 && warningRef.current) {
-        warningRef.current.style.opacity = '0';
+
+        // Docking: when almost finished moving, mark as docked so section-four shows the same warnings
+        if (sectionProgress >= 0.98) {
+          setDocked(true);
+        } else {
+          setDocked(false);
+        }
+      } else {
+        if (newTitleRef.current) newTitleRef.current.style.opacity = '0';
+        if (section > 3) {
+          // fully past warnings movement - keep docked
+          setDocked(true);
+        } else if (section < 3) {
+          setDocked(false);
+        }
       }
     };
 
@@ -127,7 +138,7 @@ export const Hero = () => {
       <div 
         ref={containerRef} 
         className="fixed top-0 left-0 w-full h-screen overflow-hidden"
-        style={{ zIndex: 0 }}
+        style={{ zIndex: 50 }}
       >
         {/* Section 1: Video - always visible during section 0 */}
         <section 
@@ -293,7 +304,7 @@ export const Hero = () => {
         {/* Image Background */}
         <div className="absolute inset-0">
           <img
-            src={heroImage2}
+            src={heroImage}
             alt="Investment returns"
             className="absolute inset-0 w-full h-full object-cover"
           />
@@ -336,7 +347,7 @@ export const Hero = () => {
           className="absolute inset-0 pointer-events-none transition-opacity duration-500"
           style={{ 
             opacity: 0,
-            zIndex: 5
+            zIndex: 60
           }}
         >
           {/* Warning symbols scattered across the image */}
@@ -373,32 +384,45 @@ export const Hero = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-6 py-12">
+              {/* Left column: docked warnings will appear here when docking completes */}
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">1</div>
-                <div>exp1</div>
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
+                </div>
+                <div>{docked ? 'Issue: Roof defect details' : ''}</div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">2</div>
-                <div>exp1</div>
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
+                </div>
+                <div>{docked ? 'Issue: Electrical hazard details' : ''}</div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">3</div>
-                <div>exp1</div>
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
+                </div>
+                <div>{docked ? 'Issue: Structural concern details' : ''}</div>
               </div>
             </div>
 
             <div className="space-y-6 py-12">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">4</div>
-                <div>exp1</div>
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
+                </div>
+                <div>{docked ? 'Issue: Moisture ingress details' : ''}</div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">5</div>
-                <div>exp1</div>
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
+                </div>
+                <div>{docked ? 'Issue: HVAC concern details' : ''}</div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">6</div>
-                <div>exp1</div>
+                <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-yellow-800" />
+                </div>
+                <div>{docked ? 'Issue: Safety/accessibility details' : ''}</div>
               </div>
             </div>
           </div>
@@ -406,6 +430,9 @@ export const Hero = () => {
           {/* Hidden title that appears when warnings fully placed */}
           <div ref={newTitleRef} className="text-center mt-12 opacity-0 transition-opacity duration-700">
             <h2 className="text-3xl font-bold">All Issues Identified</h2>
+            {docked && (
+              <p className="mt-3 text-lg text-muted-foreground">These warnings have been collected and mapped to the inspection report.</p>
+            )}
           </div>
         </div>
       </section>
