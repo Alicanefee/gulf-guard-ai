@@ -190,7 +190,7 @@ export const Hero = () => {
         </div>
       </section>
 
-      {/* Section 2: Image with Warning Symbols */}
+      {/* Section 2: First Image with Title */}
       <section 
         id="section-two" 
         className="section relative h-screen w-full flex items-center overflow-hidden"
@@ -212,6 +212,75 @@ export const Hero = () => {
               opacity: 0.7
             }}
           />
+        </div>
+
+        {/* Content */}
+        <div className="container relative z-10 mx-auto px-4">
+          <div ref={section2TitleRef} className="max-w-3xl transition-opacity duration-500">
+            <h1 
+              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
+              style={{
+                color: 'hsl(var(--clinical-white))',
+                letterSpacing: '1.5px'
+              }}
+            >
+              See the unseen, Protect Your Investment
+            </h1>
+
+            <p 
+              className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
+              style={{ color: 'hsl(var(--clinical-white))' }}
+            >
+              We look beyond the surface. Digital precision. Investment protection.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Second Image with Warnings */}
+      <section 
+        id="section-three" 
+        className="section relative h-screen w-full flex items-center overflow-hidden"
+        style={{ scrollSnapAlign: 'start' }}
+      >
+        {/* Image Background */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage2}
+            alt="Investment returns"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          
+          {/* Blue overlay */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundColor: `hsl(var(--authority-blue))`,
+              opacity: 0.7
+            }}
+          />
+        </div>
+
+        {/* Title that fades out on scroll */}
+        <div className="container relative z-10 mx-auto px-4">
+          <div ref={section3TitleRef} className="max-w-3xl transition-opacity duration-500">
+            <h1 
+              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
+              style={{
+                color: 'hsl(var(--clinical-white))',
+                letterSpacing: '1.5px'
+              }}
+            >
+              Increase Return Investment Not Cost
+            </h1>
+
+            <p 
+              className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
+              style={{ color: 'hsl(var(--clinical-white))' }}
+            >
+              Smart inspections maximize your investment value.
+            </p>
+          </div>
         </div>
 
         {/* Animated Warning Symbols */}
@@ -247,28 +316,6 @@ export const Hero = () => {
               />
             </div>
           ))}
-        </div>
-
-        {/* Content */}
-        <div className="container relative z-10 mx-auto px-4">
-          <div className="max-w-3xl">
-            <h1 
-              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
-              style={{
-                color: 'hsl(var(--clinical-white))',
-                letterSpacing: '1.5px'
-              }}
-            >
-              See the unseen, Protect Your Investment
-            </h1>
-
-            <p 
-              className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
-              style={{ color: 'hsl(var(--clinical-white))' }}
-            >
-              We look beyond the surface. Digital precision. Investment protection.
-            </p>
-          </div>
         </div>
       </section>
 
