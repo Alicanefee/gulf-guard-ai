@@ -10,11 +10,16 @@ export const Hero = () => {
   const [showCTA, setShowCTA] = useState(false);
   const [showTrustBadges, setShowTrustBadges] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
+  const [stickyProgress, setStickyProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const warningRef = useRef<HTMLDivElement>(null);
   const section2TitleRef = useRef<HTMLDivElement>(null);
   const section3TitleRef = useRef<HTMLDivElement>(null);
+  const newTitleRef = useRef<HTMLDivElement>(null);
+  const sectionOneRef = useRef<HTMLElement>(null);
+  const sectionTwoRef = useRef<HTMLElement>(null);
+  const sectionThreeRef = useRef<HTMLElement>(null);
 
   // Show CTA after 1 second
   useEffect(() => {
@@ -41,47 +46,66 @@ export const Hero = () => {
   // Scroll-snap and warning symbol animation
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current || !warningRef.current) return;
+      if (!containerRef.current) return;
 
       const scrollY = window.scrollY;
-      const sectionHeight = window.innerHeight;
+      const viewportHeight = window.innerHeight;
       
-      // Calculate which section we're in (0 = video, 1 = image1, 2 = image2 with warnings)
-      const section = Math.floor(scrollY / sectionHeight);
+      // 4 sticky sections: video, image1, image2, warnings-moving
+      // Each section takes full viewport scroll to complete
+      const totalStickyHeight = viewportHeight * 4;
+      
+      // Calculate current section (0-3)
+      const rawSection = scrollY / viewportHeight;
+      const section = Math.floor(rawSection);
+      const sectionProgress = rawSection - section; // 0 to 1 within current section
+      
       setCurrentSection(section);
+      setStickyProgress(sectionProgress);
       
-      // Section 2: Show title, then fade out as scroll continues
+      // Section 0 (video): stays sticky, no fading
+      
+      // Section 1 (image1): title fades out as soon as scroll starts
       if (section === 1 && section2TitleRef.current) {
-        const scrollProgress = (scrollY % sectionHeight) / sectionHeight;
-        // Title visible at start, fades out by 30% scroll
-        const titleOpacity = scrollProgress < 0.3 ? 1 : 1 - ((scrollProgress - 0.3) / 0.3);
-        section2TitleRef.current.style.opacity = Math.max(0, titleOpacity).toString();
+        const titleOpacity = 1 - sectionProgress; // Fades from 1 to 0
+        section2TitleRef.current.style.opacity = titleOpacity.toString();
       }
 
-      // Section 3: Title fades out, warnings appear and move
+      // Section 2 (image2): title fades out as scroll starts, warnings appear
       if (section === 2 && section3TitleRef.current && warningRef.current) {
-        const scrollProgress = (scrollY % sectionHeight) / sectionHeight;
-        
-        // Title fades out in first 20% of scroll
-        const titleOpacity = scrollProgress < 0.2 ? 1 - (scrollProgress / 0.2) : 0;
+        // Title fades out immediately on scroll
+        const titleOpacity = 1 - sectionProgress;
         section3TitleRef.current.style.opacity = titleOpacity.toString();
         
-        // Warnings appear after title fades (after 20% scroll)
-        if (scrollProgress > 0.2) {
-          const warningProgress = (scrollProgress - 0.2) / 0.8; // 0 to 1 range
+        // Warnings appear as soon as scroll starts (stay in place)
+        if (sectionProgress > 0) {
           warningRef.current.style.opacity = '1';
-          // Warnings move down 150vh to next section
-          const translateY = warningProgress * 150;
-          warningRef.current.style.transform = `translateY(${translateY}vh)`;
-          // Fade out when reaching next section
-          if (warningProgress > 0.8) {
-            const fadeOut = 1 - ((warningProgress - 0.8) / 0.2);
-            warningRef.current.style.opacity = Math.max(0, fadeOut).toString();
-          }
+          warningRef.current.style.transform = 'translateY(0)';
         } else {
           warningRef.current.style.opacity = '0';
         }
-      } else if (section !== 2 && warningRef.current) {
+      }
+
+      // Section 3 (warnings moving): screen moves with warnings, new title appears at 50%
+      if (section === 3 && warningRef.current && newTitleRef.current) {
+        // Warnings move down 100vh to next section
+        const translateY = sectionProgress * 100;
+        warningRef.current.style.transform = `translateY(${translateY}vh)`;
+        warningRef.current.style.opacity = '1';
+        
+        // New title appears when warnings are 50% moved
+        if (sectionProgress > 0.5) {
+          const titleOpacity = (sectionProgress - 0.5) / 0.5; // 0 to 1 from 50% to 100%
+          newTitleRef.current.style.opacity = titleOpacity.toString();
+        } else {
+          newTitleRef.current.style.opacity = '0';
+        }
+      } else if (section < 3 && newTitleRef.current) {
+        newTitleRef.current.style.opacity = '0';
+      }
+      
+      // Hide warnings after section 3
+      if (section > 3 && warningRef.current) {
         warningRef.current.style.opacity = '0';
       }
     };
@@ -96,13 +120,26 @@ export const Hero = () => {
   };
 
   return (
-    <div ref={containerRef} className="relative" style={{ scrollSnapType: 'y mandatory' }}>
-      {/* Section 1: Video */}
-      <section 
-        id="section-one" 
-        className="section relative h-screen w-full flex items-center overflow-hidden"
-        style={{ scrollSnapAlign: 'start' }}
+    <>
+      {/* Spacer to allow scrolling through 4 sticky sections */}
+      <div style={{ height: '400vh' }} />
+      
+      <div 
+        ref={containerRef} 
+        className="fixed top-0 left-0 w-full h-screen overflow-hidden"
+        style={{ zIndex: 0 }}
       >
+        {/* Section 1: Video - always visible during section 0 */}
+        <section 
+          ref={sectionOneRef}
+          id="section-one" 
+          className="section absolute inset-0 w-full h-full flex items-center"
+          style={{ 
+            opacity: currentSection === 0 ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out',
+            pointerEvents: currentSection === 0 ? 'auto' : 'none'
+          }}
+        >
         {/* Video Background */}
         <div className="absolute inset-0">
           <video
@@ -190,12 +227,17 @@ export const Hero = () => {
         </div>
       </section>
 
-      {/* Section 2: First Image with Title */}
-      <section 
-        id="section-two" 
-        className="section relative h-screen w-full flex items-center overflow-hidden"
-        style={{ scrollSnapAlign: 'start' }}
-      >
+        {/* Section 2: First Image with Title - visible during section 1 */}
+        <section 
+          ref={sectionTwoRef}
+          id="section-two" 
+          className="section absolute inset-0 w-full h-full flex items-center"
+          style={{ 
+            opacity: currentSection === 1 ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out',
+            pointerEvents: currentSection === 1 ? 'auto' : 'none'
+          }}
+        >
         {/* Image Background */}
         <div className="absolute inset-0">
           <img
@@ -237,12 +279,17 @@ export const Hero = () => {
         </div>
       </section>
 
-      {/* Section 3: Second Image with Warnings */}
-      <section 
-        id="section-three" 
-        className="section relative h-screen w-full flex items-center overflow-hidden"
-        style={{ scrollSnapAlign: 'start' }}
-      >
+        {/* Section 3: Second Image with Warnings - visible during sections 2 & 3 */}
+        <section 
+          ref={sectionThreeRef}
+          id="section-three" 
+          className="section absolute inset-0 w-full h-full flex items-center"
+          style={{ 
+            opacity: currentSection >= 2 && currentSection <= 3 ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out',
+            pointerEvents: currentSection >= 2 && currentSection <= 3 ? 'auto' : 'none'
+          }}
+        >
         {/* Image Background */}
         <div className="absolute inset-0">
           <img
@@ -286,7 +333,7 @@ export const Hero = () => {
         {/* Animated Warning Symbols */}
         <div 
           ref={warningRef}
-          className="absolute inset-0 pointer-events-none transition-all duration-300"
+          className="absolute inset-0 pointer-events-none transition-opacity duration-500"
           style={{ 
             opacity: 0,
             zIndex: 5
@@ -317,7 +364,34 @@ export const Hero = () => {
             </div>
           ))}
         </div>
+
+        {/* New title that appears when warnings move (at 50% of section 3) */}
+        <div className="container relative z-10 mx-auto px-4">
+          <div 
+            ref={newTitleRef}
+            className="max-w-3xl transition-opacity duration-700"
+            style={{ opacity: 0 }}
+          >
+            <h1 
+              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
+              style={{
+                color: 'hsl(var(--clinical-white))',
+                letterSpacing: '1.5px'
+              }}
+            >
+              Hidden Risks Detected
+            </h1>
+
+            <p 
+              className="font-lora text-lg md:text-xl mb-8 leading-relaxed"
+              style={{ color: 'hsl(var(--clinical-white))' }}
+            >
+              Professional inspection reveals what others miss.
+            </p>
+          </div>
+        </div>
       </section>
+      </div>
 
       {/* CSS animations */}
       <style>{`
@@ -331,12 +405,7 @@ export const Hero = () => {
             transform: scale(1.1);
           }
         }
-
-        /* Smooth scroll snap */
-        html {
-          scroll-behavior: smooth;
-        }
       `}</style>
-    </div>
+    </>
   );
 };
