@@ -18,6 +18,59 @@ let gsap: any;
 let ScrollTrigger: any;
 let ScrollToPlugin: any;
 
+// Function to initialize GSAP animations after GSAP is loaded
+const initializeGSAPAnimations = () => {
+  // GSAP ScrollTrigger animations for warning signs
+  const warningSignsElements = document.querySelectorAll('.warning-symbol');
+  warningSignsElements.forEach((sign, index) => {
+    if (!sign) return;
+
+    gsap.fromTo(sign,
+      {
+        y: 0, // Start position
+        x: 0
+      },
+      {
+        y: `${20 + index * 13}vh`, // Move to final position (percentage area)
+        x: '-35vw', // Move left to next to percentages
+        ease: "power2.out",
+        duration: 2,
+        scrollTrigger: {
+          trigger: document.querySelector('.relative.w-full.overflow-hidden'),
+          start: "top top",
+          end: "150vh top",
+          scrub: 1, // Smooth scrubbing
+          markers: false // Set to true for debugging
+        }
+      }
+    );
+  });
+
+  // Scroll-snap functionality
+  const sections = gsap.utils.toArray('.section');
+  sections.forEach((section: any) => {
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top bottom-=1",
+      end: "bottom top+=1",
+      onEnter: () => {
+        gsap.to(window, {
+          duration: 1,
+          scrollTo: { y: section.offsetTop, autoKill: false },
+          ease: "power2.inOut"
+        });
+      },
+      onEnterBack: () => {
+        gsap.to(window, {
+          duration: 1,
+          scrollTo: { y: section.offsetTop, autoKill: false },
+          ease: "power2.inOut"
+        });
+      }
+    });
+  });
+};
+
 const loadGSAP = async () => {
   if (typeof window !== 'undefined') {
     const gsapModule = await import('gsap');
@@ -29,6 +82,9 @@ const loadGSAP = async () => {
     ScrollToPlugin = scrollToModule.ScrollToPlugin;
 
     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    // Initialize animations after GSAP is loaded
+    initializeGSAPAnimations();
   }
 };
 
@@ -172,64 +228,6 @@ export const Hero = () => {
     window.addEventListener('scroll', handleScrollStart, { passive: true });
     return () => window.removeEventListener('scroll', handleScrollStart);
   }, []);
-
-  // GSAP ScrollTrigger animations for warning signs
-  useEffect(() => {
-    if (!gsap || !ScrollTrigger) return;
-
-    // Create ScrollTrigger animations for each warning sign
-    warningSignsRef.current.forEach((sign, index) => {
-      if (!sign) return;
-
-      gsap.fromTo(sign,
-        {
-          y: 0, // Start position
-          x: 0
-        },
-        {
-          y: `${20 + index * 13}vh`, // Move to final position (percentage area)
-          x: '-35vw', // Move left to next to percentages
-          ease: "power2.out",
-          duration: 2,
-          scrollTrigger: {
-            trigger: mainContainerRef.current,
-            start: "top top",
-            end: "150vh top",
-            scrub: 1, // Smooth scrubbing
-            markers: false // Set to true for debugging
-          }
-        }
-      );
-    });
-
-    // Scroll-snap functionality
-    const sections = gsap.utils.toArray('.section');
-    sections.forEach((section: any) => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top bottom-=1",
-        end: "bottom top+=1",
-        onEnter: () => {
-          gsap.to(window, {
-            duration: 1,
-            scrollTo: { y: section.offsetTop, autoKill: false },
-            ease: "power2.inOut"
-          });
-        },
-        onEnterBack: () => {
-          gsap.to(window, {
-            duration: 1,
-            scrollTo: { y: section.offsetTop, autoKill: false },
-            ease: "power2.inOut"
-          });
-        }
-      });
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, [warningSigns]);
 
   // WhySection effects
   useEffect(() => {
@@ -456,9 +454,9 @@ export const Hero = () => {
                 align: "center",
                 loop: true
               }}
-              plugins={[Autoplay({
+              plugins={[new Autoplay({
                 delay: 1500
-              }) as any]}
+              })]}
               className="w-full max-w-7xl mx-auto"
             >
               <CarouselContent className="-ml-2">
@@ -493,9 +491,9 @@ export const Hero = () => {
                 align: "center",
                 loop: true
               }}
-              plugins={[Autoplay({
+              plugins={[new Autoplay({
                 delay: 8000
-              }) as any]}
+              })]}
               className="w-full max-w-4xl mx-auto"
             >
               <CarouselContent>
