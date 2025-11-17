@@ -76,18 +76,18 @@ export const Hero = () => {
   const [showTrustBadges, setShowTrustBadges] = useState(false);
   const [warningSigns, setWarningSigns] = useState(
     risks.map((risk, index) => {
-      // Random position on right side (35%+ from right, which is 65%+ from left)
-      const randomTop = 15 + Math.random() * 50; // Random vertical position
-      const randomLeft = 65 + Math.random() * 30; // Right side: 65-95% from left
+      // Random position on right side of hero section
+      const randomTop = 20 + Math.random() * 40; // Random vertical position
+      const randomLeft = 65 + Math.random() * 25; // Right side: 65-90% from left
       
       return {
         id: index,
         visible: false,
-        startPosition: { top: `${randomTop}%`, left: `${randomLeft}%` }, // Start positions on right side
+        startPosition: { top: `${randomTop}%`, left: `${randomLeft}%` },
         currentPosition: { top: `${randomTop}%`, left: `${randomLeft}%` },
-        finalPosition: { // Target positions next to the percentages in why section
-          top: `${15 + index * 14}%`, // Distribute vertically next to each percentage
-          left: '8%' // Left side, next to percentages
+        finalPosition: { // Will be calculated dynamically based on percentage button positions
+          top: '0%',
+          left: '0%'
         }
       };
     })
@@ -161,10 +161,25 @@ export const Hero = () => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
+      const whySection = document.getElementById('why');
 
       setWarningSigns(prevSigns =>
-        prevSigns.map(sign => {
+        prevSigns.map((sign, index) => {
           if (!sign.visible) return sign;
+
+          // Calculate final position based on percentage button location
+          const percentageButton = document.querySelectorAll('.percentage-stat')[index];
+          let finalTop = '50%';
+          let finalLeft = '50%';
+          
+          if (percentageButton && whySection) {
+            const buttonRect = percentageButton.getBoundingClientRect();
+            const whySectionRect = whySection.getBoundingClientRect();
+            
+            // Position warning sign to the left of the percentage
+            finalTop = `${((buttonRect.top - whySectionRect.top) / whySectionRect.height) * 100}%`;
+            finalLeft = `${((buttonRect.left - whySectionRect.left - 60) / whySectionRect.width) * 100}%`;
+          }
 
           // Why section starts around 100vh, animate from scroll start to ~150vh
           const startScroll = 100; // Start moving after 100px scroll
@@ -175,9 +190,9 @@ export const Hero = () => {
 
           // Interpolate position based on scroll progress
           const currentTop = parseFloat(sign.startPosition.top) +
-            (parseFloat(sign.finalPosition.top) - parseFloat(sign.startPosition.top)) * progress;
+            (parseFloat(finalTop) - parseFloat(sign.startPosition.top)) * progress;
           const currentLeft = parseFloat(sign.startPosition.left) +
-            (parseFloat(sign.finalPosition.left) - parseFloat(sign.startPosition.left)) * progress;
+            (parseFloat(finalLeft) - parseFloat(sign.startPosition.left)) * progress;
 
           return {
             ...sign,
@@ -366,7 +381,7 @@ export const Hero = () => {
                 ];
                 return (
                   <div key={index} className="flex flex-col items-center gap-2 min-w-[140px]">
-                    <div className="text-5xl md:text-7xl font-bold text-accent drop-shadow-lg">
+                    <div className="percentage-stat text-5xl md:text-7xl font-bold text-accent drop-shadow-lg">
                       {risk.stat}
                     </div>
                     <Button
