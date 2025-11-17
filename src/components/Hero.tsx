@@ -1,13 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+// GSAP imports - using dynamic imports for better build compatibility
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, AlertTriangle } from "lucide-react";
-import heroVideo from "@/assets/videos/hero-video-2.mp4";
+import heroVideo from "@/assets/videos/hero.mp4";
 import QuickQuotation from "@/components/QuickQuotation";
-
-// GSAP imports
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
 // WhySection imports and data
 import { Card } from "@/components/ui/card";
@@ -16,6 +12,25 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import Autoplay from "embla-carousel-autoplay";
 import { caseStudyImages } from "./CaseStudyImages";
+
+// Dynamic GSAP imports
+let gsap: any;
+let ScrollTrigger: any;
+let ScrollToPlugin: any;
+
+const loadGSAP = async () => {
+  if (typeof window !== 'undefined') {
+    const gsapModule = await import('gsap');
+    const scrollTriggerModule = await import('gsap/ScrollTrigger');
+    const scrollToModule = await import('gsap/ScrollToPlugin');
+
+    gsap = gsapModule.gsap;
+    ScrollTrigger = scrollTriggerModule.ScrollTrigger;
+    ScrollToPlugin = scrollToModule.ScrollToPlugin;
+
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+  }
+};
 
 // Certificate images array
 const certificateImages = [
@@ -104,7 +119,7 @@ export const Hero = () => {
 
   // Register GSAP ScrollTrigger
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+    loadGSAP();
   }, []);
 
   // WhySection state
@@ -160,7 +175,7 @@ export const Hero = () => {
 
   // GSAP ScrollTrigger animations for warning signs
   useEffect(() => {
-    if (warningSignsRef.current.length === 0) return;
+    if (!gsap || !ScrollTrigger) return;
 
     // Create ScrollTrigger animations for each warning sign
     warningSignsRef.current.forEach((sign, index) => {
