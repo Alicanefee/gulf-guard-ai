@@ -36,17 +36,6 @@ const certificateImages = [
 ];
 
 export const Hero = () => {
-  const [showCTA, setShowCTA] = useState(false);
-  const [showTrustBadges, setShowTrustBadges] = useState(false);
-  const [warningSignPosition, setWarningSignPosition] = useState({ top: '50%', left: '50%' });
-  const [warningSignVisible, setWarningSignVisible] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  // WhySection state
-  const [currentStory, setCurrentStory] = useState(0);
-  const [currentTitle, setCurrentTitle] = useState(0);
-  const [selectedRisk, setSelectedRisk] = useState<typeof risks[0] | null>(null);
-
   // WhySection data
   const titles = ["Breathe easy - live healthy", "Inspect before invest"];
   const stories = ["Detecting hidden mold in my new flat avoided AED 18,000 in repairs—inspection pays off.", "Early air quality test stopped my daughter's asthma attacks. Peace of mind earned.", "Minor sand infiltration saved my HVAC 35% efficiency—don't skip inspection.", "Initial wiring check caught code violations, saved AED 12,500 instantly.", "Mold inspection meant I could rent out my flat 4x faster and at premium."];
@@ -83,6 +72,27 @@ export const Hero = () => {
 
   }];
 
+  const [showCTA, setShowCTA] = useState(false);
+  const [showTrustBadges, setShowTrustBadges] = useState(false);
+  const [warningSigns, setWarningSigns] = useState(
+    risks.map((risk, index) => ({
+      id: index,
+      stat: risk.stat,
+      visible: false,
+      position: { top: `${20 + index * 15}%`, left: '80%' }, // Start positions on right side
+      finalPosition: { // Target positions near the percentages in why section
+        top: '65%', // Approximate top position for the percentage area
+        left: `${10 + index * 15}%` // Distribute across the width: 10%, 25%, 40%, 55%, 70%, 85%
+      }
+    }))
+  );
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // WhySection state
+  const [currentStory, setCurrentStory] = useState(0);
+  const [currentTitle, setCurrentTitle] = useState(0);
+  const [selectedRisk, setSelectedRisk] = useState<typeof risks[0] | null>(null);
+
   // Show CTA after 1 second
   useEffect(() => {
     const timer = setTimeout(() => setShowCTA(true), 1000);
@@ -95,20 +105,16 @@ export const Hero = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Show warning sign after 4 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => setWarningSignVisible(true), 4000);
-    return () => clearTimeout(timer);
-  }, []);
 
-  // Control video playback (4 seconds)
+
+  // Control video playback (stop after 5 seconds)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const handleTimeUpdate = () => {
-      if (video.currentTime >= 4) {
-        video.currentTime = 0; // Loop back to start
+      if (video.currentTime >= 5) {
+        video.pause(); // Pause instead of looping
       }
     };
 
@@ -116,42 +122,60 @@ export const Hero = () => {
     return () => video.removeEventListener('timeupdate', handleTimeUpdate);
   }, []);
 
-  // Handle warning sign movement with scroll
+  // Show warning signs after video stops (after 5.1 seconds)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handlePause = () => {
+      // Show all warning signs slightly after pause
+      setTimeout(() => {
+        setWarningSigns(prev => prev.map(sign => ({ ...sign, visible: true })));
+      }, 100);
+    };
+
+    video.addEventListener('pause', handlePause);
+    return () => video.removeEventListener('pause', handlePause);
+  }, []);
+
+  // Handle warning signs movement with scroll
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
 
-      if (!warningSignVisible) return;
+      const visibleSigns = warningSigns.filter(sign => sign.visible);
+      if (visibleSigns.length === 0) return;
 
-      // Calculate position based on scroll
-      // Start position: center of hero (50%, 50%)
-      // End position: left of numbers in why section
-
-      // Why section starts around 100vh, numbers are around 150vh
+      // Why section starts around 100vh, numbers are around 120vh-140vh
       const startScroll = 0;
-      const endScroll = viewportHeight * 1.5; // 150vh
+      const endScroll = viewportHeight * 1.2; // 120vh
 
       const progress = Math.min(Math.max((scrollY - startScroll) / (endScroll - startScroll), 0), 1);
 
-      // Interpolate position
-      const startTop = 50; // 50%
-      const endTop = 65; // Position near the numbers in why section
-      const startLeft = 50; // 50%
-      const endLeft = 15; // Left side for the numbers
+      setWarningSigns(prevSigns =>
+        prevSigns.map(sign => {
+          if (!sign.visible) return sign;
 
-      const currentTop = startTop + (endTop - startTop) * progress;
-      const currentLeft = startLeft + (endLeft - startLeft) * progress;
+          const currentTop = parseFloat(sign.position.top) +
+            (parseFloat(sign.finalPosition.top) - parseFloat(sign.position.top)) * progress;
+          const currentLeft = parseFloat(sign.position.left) +
+            (parseFloat(sign.finalPosition.left) - parseFloat(sign.position.left)) * progress;
 
-      setWarningSignPosition({
-        top: `${currentTop}%`,
-        left: `${currentLeft}%`
-      });
+          return {
+            ...sign,
+            position: {
+              top: `${currentTop}%`,
+              left: `${currentLeft}%`
+            }
+          };
+        })
+      );
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [warningSignVisible]);
+  }, [warningSigns]);
 
   // WhySection effects
   useEffect(() => {
@@ -200,22 +224,32 @@ export const Hero = () => {
           />
         </div>
 
-        {/* Warning Sign */}
-        {warningSignVisible && (
-          <div
-            className="absolute z-50 transition-all duration-1000 ease-out"
-            style={{
-              top: warningSignPosition.top,
-              left: warningSignPosition.left,
-              transform: 'translate(-50%, -50%)'
-            }}
-          >
-            <AlertTriangle
-              className="w-12 h-12 md:w-16 md:h-16 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-pulse"
-              fill="rgba(250,204,21,0.3)"
-            />
-          </div>
-        )}
+        {/* Warning Signs */}
+        {warningSigns.map((sign) => (
+          sign.visible && (
+            <div
+              key={sign.id}
+              className="absolute z-50 transition-all duration-1000 ease-out"
+              style={{
+                top: sign.position.top,
+                left: sign.position.left,
+                transform: 'translate(-50%, -50%)'
+              }}
+            >
+              <div className="relative">
+                <AlertTriangle
+                  className="w-12 h-12 md:w-16 md:h-16 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-pulse"
+                  fill="rgba(250,204,21,0.3)"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xs md:text-sm font-bold text-black bg-yellow-400 rounded px-1 py-0.5">
+                    {sign.stat}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )
+        ))}
 
         {/* Content */}
         <div className="container relative z-10 mx-auto px-4">
@@ -394,12 +428,16 @@ export const Hero = () => {
           {/* Case Studies Carousel */}
           <div className="mb-12 md:mb-16">
             <h3 className="font-inter text-2xl md:text-[40px] font-bold text-center mb-8 text-primary uppercase tracking-wide">Real Case Studies</h3>
-            <Carousel opts={{
-              align: "center",
-              loop: true
-            }} plugins={[Autoplay({
-              delay: 8000
-            }) as any]} className="w-full max-w-4xl mx-auto">
+            <Carousel
+              opts={{
+                align: "center",
+                loop: true
+              }}
+              plugins={[Autoplay({
+                delay: 8000
+              }) as any]}
+              className="w-full max-w-4xl mx-auto"
+            >
               <CarouselContent>
                 {/* Case Study #1 - Dubai Marina Villa */}
                 <CarouselItem>
