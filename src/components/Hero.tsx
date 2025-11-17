@@ -7,6 +7,8 @@ import QuickQuotation from "@/components/QuickQuotation";
 
 export const Hero = () => {
   const [showCTA, setShowCTA] = useState(false);
+  const [showTrustBadges, setShowTrustBadges] = useState(false);
+  const [currentSection, setCurrentSection] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const warningRef = useRef<HTMLDivElement>(null);
@@ -17,10 +19,18 @@ export const Hero = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Pause video after 4 seconds
+  // Show trust badges after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setShowTrustBadges(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Pause video and transition to image section after 4 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       videoRef.current?.pause();
+      // Smooth scroll to second section
+      document.getElementById('section-two')?.scrollIntoView({ behavior: 'smooth' });
     }, 4000);
     return () => clearTimeout(timer);
   }, []);
@@ -33,17 +43,26 @@ export const Hero = () => {
       const scrollY = window.scrollY;
       const sectionHeight = window.innerHeight;
       
-      // Calculate which section we're in (0 = video, 1 = image)
-      const currentSection = Math.floor(scrollY / sectionHeight);
+      // Calculate which section we're in (0 = video, 1 = image, 2+ = after hero)
+      const section = Math.floor(scrollY / sectionHeight);
+      setCurrentSection(section);
       
-      // Move warning symbols down as we scroll
-      const scrollProgress = (scrollY % sectionHeight) / sectionHeight;
-      const translateY = scrollProgress * 100; // Move from 0 to 100vh
-      
-      if (currentSection === 1) {
-        // Warning symbols visible and moving on second section (image)
-        warningRef.current.style.transform = `translateY(${translateY}vh)`;
-        warningRef.current.style.opacity = '1';
+      // Show warnings only when image section is fully visible
+      if (section === 1) {
+        const scrollProgress = (scrollY % sectionHeight) / sectionHeight;
+        
+        // Warnings appear when section is fully in view, then move down on further scroll
+        if (scrollProgress < 0.1) {
+          // Just entered section - warnings appear at original positions
+          warningRef.current.style.transform = 'translateY(0)';
+          warningRef.current.style.opacity = '1';
+        } else {
+          // Scrolling within section - warnings move down toward next section
+          const moveProgress = (scrollProgress - 0.1) / 0.9; // 0 to 1 range
+          const translateY = moveProgress * 150; // Move 150vh to go into next section
+          warningRef.current.style.transform = `translateY(${translateY}vh)`;
+          warningRef.current.style.opacity = moveProgress < 0.8 ? '1' : (1 - (moveProgress - 0.8) / 0.2).toString();
+        }
       } else {
         warningRef.current.style.opacity = '0';
       }
@@ -91,8 +110,15 @@ export const Hero = () => {
         {/* Content */}
         <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-3xl">
-            {/* Trust badges */}
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
+            {/* Trust badges - show after 3s */}
+            <div 
+              className="flex flex-wrap justify-center gap-3 mb-8 transition-all duration-700"
+              style={{
+                opacity: showTrustBadges ? 1 : 0,
+                transform: showTrustBadges ? 'translateY(0)' : 'translateY(-20px)',
+                pointerEvents: showTrustBadges ? 'auto' : 'none'
+              }}
+            >
               {['InterNACHI® certified', '10+ years engineering expertise', 'Global service network'].map((badge) => (
                 <div key={badge} className="bg-background/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-accent/30">
                   <p className="text-primary-foreground text-sm font-medium text-center">
@@ -103,10 +129,12 @@ export const Hero = () => {
             </div>
 
             <h1 
-              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide"
+              className="font-inter text-4xl md:text-5xl font-extrabold mb-6 leading-tight uppercase tracking-wide transition-all duration-700"
               style={{
                 color: 'hsl(var(--clinical-white))',
-                letterSpacing: '1.5px'
+                letterSpacing: '1.5px',
+                opacity: showTrustBadges ? 1 : 0,
+                transform: showTrustBadges ? 'translateY(0)' : 'translateY(10px)'
               }}
             >
               See the unseen, Protect Your Investment
