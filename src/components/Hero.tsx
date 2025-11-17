@@ -75,16 +75,22 @@ export const Hero = () => {
   const [showCTA, setShowCTA] = useState(false);
   const [showTrustBadges, setShowTrustBadges] = useState(false);
   const [warningSigns, setWarningSigns] = useState(
-    risks.map((risk, index) => ({
-      id: index,
-      stat: risk.stat,
-      visible: false,
-      position: { top: `${20 + index * 15}%`, left: '80%' }, // Start positions on right side
-      finalPosition: { // Target positions near the percentages in why section
-        top: '65%', // Approximate top position for the percentage area
-        left: `${10 + index * 15}%` // Distribute across the width: 10%, 25%, 40%, 55%, 70%, 85%
-      }
-    }))
+    risks.map((risk, index) => {
+      // Random position on right side (35%+ from right, which is 65%+ from left)
+      const randomTop = 15 + Math.random() * 50; // Random vertical position
+      const randomLeft = 65 + Math.random() * 30; // Right side: 65-95% from left
+      
+      return {
+        id: index,
+        visible: false,
+        startPosition: { top: `${randomTop}%`, left: `${randomLeft}%` }, // Start positions on right side
+        currentPosition: { top: `${randomTop}%`, left: `${randomLeft}%` },
+        finalPosition: { // Target positions next to the percentages in why section
+          top: `${15 + index * 14}%`, // Distribute vertically next to each percentage
+          left: '8%' // Left side, next to percentages
+        }
+      };
+    })
   );
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -127,7 +133,7 @@ export const Hero = () => {
     const handleScrollStart = () => {
       const scrollY = window.scrollY;
       
-      // Show warning signs when user scrolls past the video section
+      // Show warning signs when user scrolls past the video section (100px)
       if (scrollY > 100) {
         setWarningSigns(prev => prev.map(sign => ({ ...sign, visible: true })));
         // Remove this listener after first trigger
@@ -145,27 +151,24 @@ export const Hero = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
 
-      const visibleSigns = warningSigns.filter(sign => sign.visible);
-      if (visibleSigns.length === 0) return;
-
-      // Why section starts around 100vh, numbers are around 120vh-140vh
-      const startScroll = 0;
-      const endScroll = viewportHeight * 1.2; // 120vh
-
-      const progress = Math.min(Math.max((scrollY - startScroll) / (endScroll - startScroll), 0), 1);
-
       setWarningSigns(prevSigns =>
         prevSigns.map(sign => {
           if (!sign.visible) return sign;
 
-          const currentTop = parseFloat(sign.position.top) +
-            (parseFloat(sign.finalPosition.top) - parseFloat(sign.position.top)) * progress;
-          const currentLeft = parseFloat(sign.position.left) +
-            (parseFloat(sign.finalPosition.left) - parseFloat(sign.position.left)) * progress;
+          // Why section starts around 100vh, animate from scroll start to ~150vh
+          const startScroll = 100; // Start moving after 100px scroll
+          const endScroll = viewportHeight * 1.5; // 150vh
+
+          const progress = Math.min(Math.max((scrollY - startScroll) / (endScroll - startScroll), 0), 1);
+
+          const currentTop = parseFloat(sign.startPosition.top) +
+            (parseFloat(sign.finalPosition.top) - parseFloat(sign.startPosition.top)) * progress;
+          const currentLeft = parseFloat(sign.startPosition.left) +
+            (parseFloat(sign.finalPosition.left) - parseFloat(sign.startPosition.left)) * progress;
 
           return {
             ...sign,
-            position: {
+            currentPosition: {
               top: `${currentTop}%`,
               left: `${currentLeft}%`
             }
@@ -176,7 +179,7 @@ export const Hero = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [warningSigns]);
+  }, []);
 
   // WhySection effects
   useEffect(() => {
@@ -232,22 +235,15 @@ export const Hero = () => {
               key={sign.id}
               className="absolute z-50 transition-all duration-1000 ease-out"
               style={{
-                top: sign.position.top,
-                left: sign.position.left,
+                top: sign.currentPosition.top,
+                left: sign.currentPosition.left,
                 transform: 'translate(-50%, -50%)'
               }}
             >
-              <div className="relative">
-                <AlertTriangle
-                  className="w-12 h-12 md:w-16 md:h-16 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-pulse"
-                  fill="rgba(250,204,21,0.3)"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xs md:text-sm font-bold text-black bg-yellow-400 rounded px-1 py-0.5">
-                    {sign.stat}
-                  </span>
-                </div>
-              </div>
+              <AlertTriangle
+                className="w-12 h-12 md:w-16 md:h-16 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-pulse"
+                fill="rgba(250,204,21,0.3)"
+              />
             </div>
           )
         ))}
