@@ -456,7 +456,7 @@ export const Hero = () => {
                 align: "center",
                 loop: true
               }}
-              plugins={[new Autoplay({
+              plugins={[Autoplay({
                 delay: 1500
               })]}
               className="w-full max-w-7xl mx-auto"
@@ -493,7 +493,7 @@ export const Hero = () => {
                 align: "center",
                 loop: true
               }}
-              plugins={[new Autoplay({
+              plugins={[Autoplay({
                 delay: 8000
               })]}
               className="w-full max-w-4xl mx-auto"
