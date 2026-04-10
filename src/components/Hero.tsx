@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, AlertTriangle } from "lucide-react";
-import heroVideo from "@/assets/videos/hero.mp4";
+import heroVideo from "@/assets/videos/hero-video-2.mp4";
 import QuickQuotation from "@/components/QuickQuotation";
 
 // WhySection imports and data
